@@ -1,0 +1,58 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
+    </head>
+    <body>
+        <div class="container">
+
+            <div class="hero-unit">
+                <h1>'Allo, 'Allo!</h1>
+            </div>
+
+            <p>Here is our main image, we load this regardless of JavaScript support.</p>
+            <img src="http://placehold.it/480">
+
+            <p>Here is an image of width 640px which we set a data-width of 340 to. Note that this causes the image being loaded to change to the 340px version.</p>
+            <div class="delayed-image-load" data-src="http://placehold.it/640" data-width="340"></div>
+     
+            <p>Below are three <code>div</code> elements that will lazy-load more images (as long as JavaScript is enabled).</p>
+            <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
+
+        </div>
+
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+
+        <!-- build:js scripts/main.js -->
+        <script src="scripts/imager.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
