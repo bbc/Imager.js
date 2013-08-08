@@ -46,8 +46,7 @@ licence. Take a look at the LICENSE file in the code.
 
  * [Mark McDonnell](http://twitter.com/integralist)
  * [Tom Maslen](http://twitter.com/tmaslen)
- * [Addy Osmani](http://twitter.com/addyosmani)
- * 
+ * [Addy Osmani](http://twitter.com/addyosmani) 
 
 ## Background
 
