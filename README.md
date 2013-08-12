@@ -19,6 +19,8 @@ For the purpose of demonstration we're using the 3rd party service [Placehold.it
 
 ## Using Imager.js
 
+See the `Demo` directory for full example and source files.
+
 Wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded. 
 
 Then within your JavaScript, initialise a new instance of the Imager Enhancer library: `new ImageEnhancer();`
@@ -57,8 +59,12 @@ At present, support for `srcset` and `PictureFill` are not widespread and the po
 
 [Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
 
-The goal of this project is to automate the process with the help of the [Grunt](http://gruntjs.com/) JavaScript task runner.
+The goal of this project is to automate the process with the help of the [Grunt](http://gruntjs.com/) JavaScript task runner (potentially via `grunt-responsive-images` for image generation based on a source directory).
 
 Much of this work can be repurposed to work with a more standards-based approach once support improves in modern browsers.
 
 For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it Imager.js
+
+## Why not srcset/Picturefill polyfills:
+
+Having reviewed the polyfills for these implementations, the cons outweigh the pros at this point. You either take performance hits or have to deal with 2x image requests, which is counter-intuitive. I'd prefer to just use srcset on its own, but other than WebKit other browsers have yet to implement at this point.
