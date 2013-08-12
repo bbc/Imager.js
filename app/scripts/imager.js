@@ -6,6 +6,19 @@ window.requestAnimationFrame = window.requestAnimationFrame
   window.setTimeout(callback, 1000 / 60);
 };
 
+
+// jQuery substitute, if necessary.
+$ = (function (dollar) {
+
+  if (dollar) {
+    return dollar;
+  }
+
+  return function (selector) {
+    return Array.prototype.slice.call(document.querySelectorAll(selector));
+  };
+})(window.$);
+
 var pubsub = (function(){
 
     var doc = document;
