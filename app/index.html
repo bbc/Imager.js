@@ -29,11 +29,11 @@
 
             <p>Here is an image of width 640px which we set a data-width of 340 to. Note that this causes the image being loaded to change to the 340px version.</p>
             <div class="delayed-image-load" data-src="http://placehold.it/640" data-width="340"></div>
-     
+
             <p>Below are three <code>div</code> elements that will lazy-load more images (as long as JavaScript is enabled).</p>
             <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
-            <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
-            <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/485" data-width="485"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/736" data-width="736"></div>
 
         </div>
 
@@ -54,5 +54,8 @@
         <!-- build:js scripts/main.js -->
         <script src="scripts/imager.js"></script>
         <!-- endbuild -->
+        <script>
+            new Imager();
+        </script>
 </body>
 </html>
