@@ -1,3 +1,11 @@
+// requestAnimationFrame shim.
+window.requestAnimationFrame = window.requestAnimationFrame
+|| window.mozRequestAnimationFrame
+|| window.webkitRequestAnimationFrame
+|| function (callback) {
+  window.setTimeout(callback, 1000 / 60);
+};
+
 var pubsub = (function(){
 
     var doc = document;
@@ -77,7 +85,7 @@ ImageEnhancer.prototype = {
                 img.className = 'image-replace';
                 img.width     = div.getAttribute('data-width');
                 img.setAttribute('data-src', div.getAttribute('data-src'));
-            
+
             div.parentNode.replaceChild(img, div);
         }
 
@@ -89,7 +97,7 @@ ImageEnhancer.prototype = {
     init: function(){
         this.initialised = true;
         this.resizeImages();
-        
+
         window.addEventListener('resize', function() {
             pubsub.publish('imageEnhancer:resize');
         }, false);
