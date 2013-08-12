@@ -77,98 +77,162 @@ var pubsub = (function(){
     return pubsub;
 }());
 
-function ImageEnhancer(){
-    pubsub.subscribe('imageEnhancer:resize', this.resizeImages.bind(this));
-    pubsub.subscribe('div:added', this.changeDivsToEmptyImages.bind(this));
-    pubsub.subscribe('div:changed', this.resizeImages.bind(this));
-    this.availableWidthsFromOurImageProviderService = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
-    this.divs = document.getElementsByClassName('delayed-image-load'); // we use `getElementsByClassName` so we get a live NodeList
-    this.changeDivsToEmptyImages();
-    window.requestAnimationFrame(this.init.bind(this));
-}
 
-ImageEnhancer.prototype = {
-    changeDivsToEmptyImages: function(){
-        var i = this.divs.length;
+// Construct a new Imager instance, passing an optional configuration object,
+// e.g.
+//
+//   {
+//     // Available widths for your images.
+//     availableWidths: [Number]
+//
+//     // Selector your div placeholders share.
+//     selector: '',
+//
+//     // Class name to give your resizable images.
+//     className: '',
+//
+//     // Regular expression to match against your image endpoint's naming
+//     // conventions (e.g. http://yourserver.com/image/horse/400)
+//     regex: RegExp
+//   }
+//
+// @param  {object}
+// @return {Imager}
+window.Imager = Imager = function (opts) {
 
-        while (i--) {
-            var div           = this.divs[i],
-                img           = document.createElement('img');
-                img.src       = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-                img.className = 'image-replace';
-                img.width     = div.getAttribute('data-width');
-                img.setAttribute('data-src', div.getAttribute('data-src'));
+  var self = this;
+  opts = opts || {};
 
-            div.parentNode.replaceChild(img, div);
-        }
+  this.availableWidths = opts.availableWidths || [ 96, 130, 165, 200, 235,
+  270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736 ];
 
-        if (this.initialised) {
-            pubsub.publish('div:changed');
-        }
-    },
+  this.selector = opts.selector || '.delayed-image-load';
+  this.className = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
+  this.regex = opts.regex || /^(.+\/)\d+$/i;
 
-    init: function(){
-        this.initialised = true;
-        this.resizeImages();
+  this.gif = document.createElement('img');
+  this.gif.src = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
+  this.gif.className = this.className.replace(/^[#.]/, '');
 
-        window.addEventListener('resize', function() {
-            pubsub.publish('imageEnhancer:resize');
-        }, false);
-    },
+  this.divs = $(this.selector);
+  this.changeDivsToEmptyImages();
 
-    resizeImages: function(){
-        var imageList = Array.prototype.slice.call(document.querySelectorAll('.image-replace'));
+  this.cache = {};
 
-        if (!this.isResizing) {
-            this.isResizing = true;
-
-            imageList.forEach(function (img) {
-                img.src = this.calculateNewImageSrc(img);
-            }.bind(this));
-
-            this.isResizing = false;
-        }
-    },
-
-    calculateNewImageSrc: function (img) {
-        var imageSrc      = img.getAttribute('data-src'),
-            imageWidth    = img.clientWidth,
-            selectedWidth = this.availableWidthsFromOurImageProviderService[0];
-
-        this.availableWidthsFromOurImageProviderService.forEach(function (currentlyAvailableWidth, index) {
-            if (imageWidth > currentlyAvailableWidth) {
-                selectedWidth = this.availableWidthsFromOurImageProviderService[index + 1];
-            }
-        }.bind(this));
-
-        return imageSrc.replace(/^(.+\/)\d+$/i, function (match, captured) {
-            return captured + selectedWidth;
-        });
-    }
+  window.requestAnimationFrame(function () {
+    self.init();
+  });
 };
 
-function createAnchor(){
-    var anchor = document.createElement('a');
-        anchor.href = '#my_new_element';
-        anchor.innerHTML = 'Click me to add a new image to the DOM after Imager.js has already been instantiated'
 
-    document.body.appendChild(anchor);
+// At instantiation, assign a resize listener, responsible for triggering an
+// Imager resize callback.
+//
+// @return {undefined}
+Imager.prototype.init = function () {
 
-    anchor.onclick = createNewImage;
-}
+  var self = this;
 
-function createNewImage(){
-    var div = document.createElement('div');
-        div.className = 'delayed-image-load';
-        div.setAttribute('name', 'my_new_element');
-        div.setAttribute('data-src', 'http://placehold.it/340');
-        div.setAttribute('data-width', '340');
+  this.initialized = true;
+  this.resizeImages();
 
-    document.body.appendChild(div);
+  window.addEventListener('resize', function () {
+    self.resizeImages();
+  }, false);
+};
 
-    pubsub.publish('div:added');
-}
 
-createAnchor();
+// At instantiation, replace all `image replacer` div elements with empty
+// images.
+//
+// @return {undefined}
+Imager.prototype.changeDivsToEmptyImages = function () {
 
-new ImageEnhancer();
+  var divs = this.divs,
+      i = divs.length,
+      gif;
+
+  while (i--) {
+    gif = this.gif.cloneNode(false);
+    gif.width = divs[i].getAttribute('data-width');
+    gif.setAttribute('data-src', divs[i].getAttribute('data-src'));
+    divs[i].parentNode.replaceChild(gif, divs[i]);
+  }
+
+  if (this.initialized) {
+    this.resizeImages();
+  }
+};
+
+
+// Iterate over the images discovered on the document, replacing them with the
+// appropriate image for a user's device.
+//
+// @return {undefined}
+Imager.prototype.resizeImages = function () {
+
+  var self = this,
+      images = $(this.className),
+      i = images.length;
+
+  if (!this.isResizing) {
+    this.isResizing = true;
+
+    while (i--) {
+      this.placeMaxResolutionImage(images[i]);
+    }
+
+    this.isResizing = false;
+  }
+};
+
+// Modify an image object with new properties, tailored to the resolution the
+// user's device fits.
+//
+// A caching mechanism is used when a particular resolution for an image has
+// already been downloaded.
+//
+// @param  {object} image
+// @return {undefined}
+Imager.prototype.placeMaxResolutionImage = function (image) {
+
+  var src = this.determineMaxResolution(image),
+      parent = image.parentNode,
+      replacedImage;
+
+  if (this.cache[src]) {
+    replacedImage = this.cache[src].cloneNode(false);
+    replacedImage.width = image.getAttribute('width');
+  } else {
+    replacedImage = image.cloneNode(false);
+    replacedImage.src = src;
+    this.cache[src] = replacedImage;
+  }
+
+  parent.replaceChild(replacedImage, image);
+};
+
+
+// Determine the appropriate resolution image to download, based on the width
+// the image passed in is being viewed at.
+//
+// @param  {object} image
+// @return {string} the path to the image
+Imager.prototype.determineMaxResolution = function (image) {
+
+  var self = this,
+      src = image.getAttribute('data-src'),
+      width = image.clientWidth,
+      selectedWidth = this.availableWidths[0],
+      i = this.availableWidths.length;
+
+  while (i--) {
+    if (width <= this.availableWidths[i]) {
+      selectedWidth = this.availableWidths[i];
+    }
+  }
+
+  return src.replace(this.regex, function (match, captured) {
+    return captured + selectedWidth;
+  });
+};
