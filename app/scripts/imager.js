@@ -19,64 +19,6 @@ $ = (function (dollar) {
   };
 })(window.$);
 
-var pubsub = (function(){
-
-    var doc = document;
-    var topics = {};
-    var id = -1;
-    var pubsub = {};
-
-    pubsub.subscribe =  function (topic, fn) {
-        if (!topics[topic]) {
-            topics[topic] = [];
-        }
-
-        var token = (++id).toString();
-
-        topics[topic].push({
-            token: token,
-            fn: fn
-        });
-
-        return token;
-    };
-
-    pubsub.unsubscribe =  function (token) {
-        for (var m in topics) {
-            if (topics[m]) {
-                for (var i = 0, j = topics[m].length; i < j; i++) {
-                    if (topics[m][i].token === token) {
-                        topics[m].splice(i, 1);
-                        return token;
-                    }
-                }
-            }
-        }
-
-        return false;
-    };
-
-    pubsub.publish =  function (topic, data) {
-        if (!topics[topic]) {
-            return false;
-        }
-
-        setTimeout(function(){
-            var subscribers = topics[topic],
-
-            len = topics[topic].length;
-
-            while (len--) {
-                subscribers[len].fn(topic, data);
-            }
-        }, 0);
-
-        return true;
-    };
-
-    return pubsub;
-}());
-
 
 // Construct a new Imager instance, passing an optional configuration object,
 // e.g.
