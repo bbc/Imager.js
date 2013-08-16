@@ -42,8 +42,8 @@ If you want to add functionality to this project, pull requests are welcome.
 
 ## Licence
 
-Imager.js is available to everyone under the terms of the MIT open source
-licence. Take a look at the LICENSE file in the code.
+Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
+Take a look at the LICENSE file in the code.
 
 ## Credits
 
