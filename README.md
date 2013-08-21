@@ -1,11 +1,9 @@
 # Imager.js
 
- * Website: http://responsivenews.co.uk/
- * Source: http://github.com/bbc-news/Imager.js 
- 
-*Note: this project is not ready for production and is currently in development*
- 
-Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.
+Imager.js is an alternative solution to the issue of how to handle responsive image loading.
+This is baked by developers at [BBC News](http://responsivenews.co.uk/) as part of the Responsive News initiative.
+
+**Warning**: this project is not ready for production and is currently in development.
 
 ## What is it?
 
@@ -19,38 +17,49 @@ For the purpose of demonstration we're using the 3rd party service [Placehold.it
 
 ## Using Imager.js
 
-See the `Demo` directory for full example and source files.
+Consider the following HTML structure wherever you need a responsive image to be loaded:
 
-Wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded. 
+```html
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+```
 
-Then within your JavaScript, initialise a new instance of the Imager Enhancer library: `new ImageEnhancer();`
+ * `data-width` is the size of the image placeholder (where the actual image will eventually be loaded)
+ * `data-src` is the initial URL to be loaded
+
+You have then to perform the replacement using the following JavaScript code:
+
+```javascript
+var images = document.querySelector(".delayed-image-load");
+Imager.init(images);
+```
+
+Browse the [`Demo`](Demo) directory for full example and source files.
+Read the [JavaScript API below](README.md#Javascript-API) to learn more about how to use `Imager.js` API.
+
+## HTML API
+
+## JavaScript API
+
+### `new Imager(NodeList collection[, Object options])`
+
+### `Imager.init(NodeList collection[, Object options])`
 
 ## Contributing
 
-If you want to add functionality to this project, pull requests are welcome.
-
- * Create a branch based off master and do all of your changes with in it.
- * Make sure commits are as 'atomic' as possible (this way specific changes can be removed or cherry-picked more easily)
- * If you have to pause to add a 'and' anywhere in the title, it should be two pull requests.
- * Make commits of logical units and describe them properly
- * Check for unnecessary whitespace with git diff --check before committing.
- * If possible, submit tests to your patch / new feature so it can be tested easily.
- * Assure nothing is broken by running all the test
- * Please ensure that it complies with coding standards.
-
-**Please raise any issues with this project as a GitHub issue.**
+Raising an issue, an idea or pushing some code are warmly welcomed.
+Feel free to [read our contribution tips](CONTRIBUTING.md) to join the bandwagon!
 
 ## Credits
 
  * [Mark McDonnell](http://twitter.com/integralist)
  * [Tom Maslen](http://twitter.com/tmaslen)
- * [Addy Osmani](http://twitter.com/addyosmani) 
+ * [Addy Osmani](http://twitter.com/addyosmani)
 
 ## Background
 
-This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News. 
+This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News.
 
-At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks. 
+At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks.
 
 [Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
 
@@ -114,5 +123,5 @@ For full details of the Grunt task options see the [grunt-responsive-images](htt
 
 ## Licence
 
-Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
-Take a look at the LICENSE file in the code.
+Imager.js is available to everyone under the terms of the Apache 2.0 open source licence.
+Take a look at the [LICENSE file](LICENSE) in the code.
