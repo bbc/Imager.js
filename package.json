@@ -1,30 +1,47 @@
 {
   "name": "Imager.js",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
   "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
   },
+  "scripts": {
+      "test": "grunt test"
+  }
   "repository": {
-    "type": "git",
-    "url": "git://github.com/BBC-News/Imager.js.git"
+      "type": "git",
+      "url": "git://github.com/BBC-News/Imager.js.git"
   },
   "keywords": [
-    "responsive",
-    "srcset",
-    "images",
-    "resize",
-    "polyfill",
-    "shim",
-    "img",
-    "PictureFill"
+      "responsive",
+      "srcset",
+      "images",
+      "resize",
+      "polyfill",
+      "shim",
+      "img",
+      "PictureFill"
   ],
-  "author": "Mark McDonnell, Addy Osmani",
-  "license": "Apache 2.0 open source licence",
-  "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-responsive-images": "0.0.3"
-  }
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-karma": "~0.6.1",
+    "grunt-responsive-images": "0.0.3",
+    "karma": "~0.10.1",
+    "karma-chai-plugins": "~0.1.2",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma-requirejs": "~0.1.0",
+    "karma-script-launcher": "~0.1.0"
+  },
+  "author": "Mark McDonnell, Addy Osmani",
+  "license": "Apache-2.0",
+  "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9"
 }

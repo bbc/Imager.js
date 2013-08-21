@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+    "use strict";
 
     // Project configuration.
     grunt.initConfig({
@@ -30,12 +31,20 @@ module.exports = function (grunt) {
                     dest: '<%= imageDirectory %>Generated/'
                 }]
             }
+        },
+
+        watch: {
+            source: {
+                files: "<%= typescript.src %>",
+                tasks: ['typescript']
+            }
         }
 
     });
 
     // Load NPM Tasks
     grunt.loadNpmTasks('grunt-responsive-images');
+    grunt.loadNpmTasks("grunt-contrib-watch");
 
     // Default Task
     grunt.registerTask('default', ['responsive_images:dev']);
