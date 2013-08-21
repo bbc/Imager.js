@@ -17,6 +17,7 @@ module.exports = function(config) {
     ],
     files: [
       'src/imager.js',
+      'src/replacers/*.js',
       'test/**/*.js'
     ],
     reporters: ['progress'],

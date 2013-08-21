@@ -71,11 +71,10 @@ module.exports = function (grunt) {
 
         watch: {
             tests: {
-                files: "test/**/*.js",
-                tasks: ["jshint", "karma:unit:run"]
+                files: ["src/**/*.js", "test/**/*.js"],
+                tasks: ["karma:unit:run"]
             }
         }
-
     });
 
     // Load NPM Tasks
@@ -83,7 +82,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-contrib-jshint");
-
 
     // Default Task
     grunt.registerTask('default', ['responsive_images:dev']);
