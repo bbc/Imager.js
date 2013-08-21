@@ -33,10 +33,46 @@ module.exports = function (grunt) {
             }
         },
 
+        karma: {
+            options: {
+                configFile: 'karma.conf.js'
+            },
+            unit: {
+                background: true
+            },
+            ci: {
+                singleRun: true,
+                reporters: ['dots'],
+                browsers: ['PhantomJS']
+            }
+        },
+
+        jshint: {
+            options: {
+                jshintrc: ".jshintrc"
+            },
+            gruntfile: {
+                src: 'Gruntfile.js'
+            },
+            core: {
+                src: ['lib/**/*.js']
+            },
+            tests: {
+                src: ['test/**/*.js'],
+                options: {
+                    globals: {
+                        expect: true,
+                        describe: true,
+                        it: true
+                    }
+                }
+            }
+        },
+
         watch: {
-            source: {
-                files: "<%= typescript.src %>",
-                tasks: ['typescript']
+            tests: {
+                files: "test/**/*.js",
+                tasks: ["jshint", "karma:unit:run"]
             }
         }
 
@@ -45,8 +81,12 @@ module.exports = function (grunt) {
     // Load NPM Tasks
     grunt.loadNpmTasks('grunt-responsive-images');
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-karma");
+    grunt.loadNpmTasks("grunt-contrib-jshint");
+
 
     // Default Task
     grunt.registerTask('default', ['responsive_images:dev']);
+    grunt.registerTask('debug', ['karma:unit', 'watch']);
 
 };

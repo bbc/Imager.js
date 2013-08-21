@@ -1,5 +1,5 @@
 {
-  "name": "Imager.js",
+  "name": "imager.js",
   "version": "1.0.0",
   "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
   "private": true,
@@ -32,14 +32,17 @@
     "grunt-responsive-images": "0.0.3",
     "karma": "~0.10.1",
     "karma-chai-plugins": "~0.1.2",
-    "karma-chrome-launcher": "~0.1.0",
     "karma-coffee-preprocessor": "~0.1.0",
     "karma-firefox-launcher": "~0.1.0",
     "karma-html2js-preprocessor": "~0.1.0",
     "karma-jasmine": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
+    "karma-safari-launcher": "~0.1.1",
+    "karma-chrome-launcher": "~0.1.0",
     "karma-requirejs": "~0.1.0",
-    "karma-script-launcher": "~0.1.0"
+    "karma-script-launcher": "~0.1.0",
+    "mocha": "~1.12.0",
+    "karma-mocha": "~0.1.0"
   },
   "author": "Mark McDonnell, Addy Osmani",
   "license": "Apache-2.0",
