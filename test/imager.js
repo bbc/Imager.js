@@ -43,6 +43,27 @@ describe('Imager', function () {
        });
     });
 
+    describe('getReplacer', function(){
+        it('should provide a proper registered replacer for an HTML element', function(){
+            var el, instance;
+
+            instance = Imager.init([]);
+
+            expect(Imager.replacers).to.be.an('object').and.not.to.be.empty;
+
+            el = document.createElement('div');
+            expect(instance.getReplacer(el)).to.be.null;
+
+            el = document.createElement('div');
+            el.dataset.src = 'http://placekitten.com';
+            expect(instance.getReplacer(el)._id).to.equal('container');
+
+            el = document.createElement('img');
+            el.dataset.src = 'http://placekitten.com';
+            expect(instance.getReplacer(el)._id).to.equal('img');
+        });
+    });
+
     describe('replaceUri', function(){
         it('should replace existing pattern replacers', function(){
             var values = {width: 350, pixel_ratio: '2x'};

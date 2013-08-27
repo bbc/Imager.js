@@ -34,19 +34,17 @@ function Imager(collection, options){
 Imager.prototype.process = function processCollection(){
   var i;
   var self = this;
-  var collection_count = this.collection.length;
+  var nodes_count = this.nodes.length;
 
-  for (i = 0; i < collection_count; i++){
+  for (i = 0; i < nodes_count; i++){
     (function(element){
       var replacer = self.getReplacer(element);
 
       //check if we have to replace it or not
-      if (replacer && replacer.hasToReplace(element)){
-        replacer.replaceElement(element);
+      if (replacer && replacer.hasToReplace(element, self.placeholder)){
+        replacer.replace(element, self.placeholder);
       }
-
-      //
-    })(this.collection[i]);
+    })(this.nodes[i]);
   }
 };
 
@@ -79,8 +77,8 @@ Imager.prototype.detect = function replaceElementWith(element, replacer){};
  * @returns {Imager}
  * @constructor
  */
-Imager.init = function ImagerFactory(collection, options){
-  var instance = new Imager(collection, options);
+Imager.init = function ImagerFactory(nodes, options){
+  var instance = new Imager(nodes, options);
   instance.process();
 
   return instance;
