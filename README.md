@@ -39,10 +39,9 @@ Imager.init(images);
 ### Hooking On External Events
 
 ```javascript
-var images = document.querySelectorAll("main .delayed-image-load");
-var manager = Imager.init(images);
+var manager = Imager.init($("main .delayed-image-load"));
 
-window.addEventListener("resize", function(){
+$.on("resize orientationchange", function(){
     manager.process();
 });
 ```
@@ -50,8 +49,8 @@ window.addEventListener("resize", function(){
 ### Multiple Managers
 
 ```javascript
-var contentImageManager = Imager.init($("main .delayed-image-load));
-var sidebarImageManager = Imager.init($("aside .pics));
+var contentImageManager = Imager.init($("main .delayed-image-load"));
+var sidebarImageManager = Imager.init($("aside .pics"));
 
 window.addEventListener("resize", function(){
     //resize only content pictures as the sidebar is fixed size (for example)
