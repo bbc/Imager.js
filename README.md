@@ -32,9 +32,38 @@ Consider the following HTML structure wherever you need a responsive image to be
 You have then to perform the replacement using the following JavaScript code:
 
 ```javascript
-var images = document.querySelector(".delayed-image-load");
+var images = document.querySelectorAll(".delayed-image-load");
 Imager.init(images);
 ```
+
+### Hooking On External Events
+
+```javascript
+var images = document.querySelectorAll("main .delayed-image-load");
+var manager = Imager.init(images);
+
+window.addEventListener("resize", function(){
+    manager.process();
+});
+```
+
+### Multiple Managers
+
+```javascript
+var contentImageManager = Imager.init($("main .delayed-image-load));
+var sidebarImageManager = Imager.init($("aside .pics));
+
+window.addEventListener("resize", function(){
+    //resize only content pictures as the sidebar is fixed size (for example)
+    contentImageManager.process();
+});
+```
+
+### Combining With A Lazy Loader
+
+TBD. But your ideas are welcome!
+
+### Living Code
 
 Browse the [`Demo`](Demo) directory for full example and source files.
 Read the [JavaScript API below](README.md#Javascript-API) to learn more about how to use `Imager.js` API.
@@ -65,15 +94,60 @@ The `data-src` is a composable URL towards a responsive image. You can use sever
 
 The container strategy *inserts a picture inside* a container tag.
 
+```html
+<!-- In a div -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+
+<!-- In a span -->
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></span>
+```
+
 ### Image Strategy
 
 The image strategy *replaces an existing placeholder* tag.
 
+```html
+<!-- In a div -->
+<div class="news-headline">
+    <h2>Are Cats more Evil then Satan?</h2>
+
+    <img class="delayed-image-load" src="my/pics/blank.gif" data-src="http://placehold.it/{width}/picture.jpg" data-width="340">
+
+    <p>…</p>
+</div>
+```
+
+
 ## JavaScript API
+
+### `Imager.init(NodeList collection[, Object options])`
+
+Creates and returns a new Imager instance after `process()` being called on `collection`.
+If you don't know what you do, this is definitely the one you should pick up.
+
+```javascript
+"Example to be written";
+```
 
 ### `new Imager(NodeList collection[, Object options])`
 
-### `Imager.init(NodeList collection[, Object options])`
+Creates a new Imager instances and tracks pictures. At this stage, nothing else is done.
+It is the tailored for people who want to control every single step of `Imager.js`.
+
+
+```javascript
+"Example to be written";
+```
+
+### `process()`
+
+Process every single `collection` elements, eventually replace them by a placeholder and builds the proper URL
+based on the actual viewport size. You should call it every time a container size has eventually changed (like a
+window resize, a device orientation change etc.).
+
+```javascript
+"Example to be written";
+```
 
 ## Contributing
 
