@@ -5,7 +5,8 @@ module.exports = function(config) {
     basePath: '.',
     frameworks: [
       'mocha',
-      'chai'
+      'chai',
+      'sinon-chai'
     ],
     plugins: [
       'karma-phantomjs-launcher',
@@ -13,7 +14,7 @@ module.exports = function(config) {
       'karma-firefox-launcher',
       'karma-safari-launcher',
       'karma-mocha',
-      'karma-chai'
+      'karma-chai-plugins'
     ],
     files: [
       'src/imager.js',
