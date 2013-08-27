@@ -1,13 +1,16 @@
 # Imager.js
 
-Imager.js is an alternative solution to the issue of how to handle responsive image loading.
-This is baked by developers at [BBC News](http://responsivenews.co.uk/) as part of the Responsive News initiative.
+Imager.js is an alternative solution to the issue of how to handle responsive image loading within a responsive code base.
 
-**Warning**: this project is not ready for production and is currently in development.
+This is an open-source software baked by developers at [BBC News](http://responsivenews.co.uk/) as part of the Responsive News initiative.
 
-## What is it?
+## How It Works?
 
-An open-source port of the BBC News technique for handling the loading of images within a responsive code base.
+Imager.js replaces responsive images placeholders and builds URLs to the most efficient size. It follows this workflow:
+
+1. Every potential picture is replaced by a placeholder picture (transparent by default)
+1. The responsive image URL is built based on the placeholder picture size
+1. The responsive image is inserted in lieu of the placeholder
 
 ## Requirements
 
@@ -37,6 +40,34 @@ Browse the [`Demo`](Demo) directory for full example and source files.
 Read the [JavaScript API below](README.md#Javascript-API) to learn more about how to use `Imager.js` API.
 
 ## HTML API
+
+### `data-src` URL Placeholders
+
+The `data-src` is a composable URL towards a responsive image. You can use several keywords to build it you own way:
+
+* `{width}`: the most appropriate guessed value within the `config.availableWidths`
+* `{pixel_ratio}`: the closest pixel density within the `config.availableWidths`
+
+```html
+<!-- Default and minimalistic approach -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+
+<!-- Pixel-density aware approach -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture-{pixel_ratio}.jpg" data-width="340"></div>
+
+<!-- Query String URLs -->
+<div class="delayed-image-load"
+    data-src="http://myserver.com/responsive.php?source=image/picture.jpg&amp;width={width}&amp;pix_ratio={pixel_ratio}"
+    data-width="340"></div>
+```
+
+### Container Strategy
+
+The container strategy *inserts a picture inside* a container tag.
+
+### Image Strategy
+
+The image strategy *replaces an existing placeholder* tag.
 
 ## JavaScript API
 
