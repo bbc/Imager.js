@@ -12,5 +12,6 @@
   "eqnull": true,
   "browser": true,
   "globalstrict": true,
+  "es3": true,
   "globals": {}
 }
