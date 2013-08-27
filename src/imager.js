@@ -18,8 +18,14 @@ ImagerOptions;
  * @constructor
  */
 function Imager(collection, options){
-  this.collection = collection;
-  this.options = options || {};
+  options = options || {};
+
+  this.nodes = collection;
+  this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+
+  this.placeholder = options.placeholder || document.createElement('img');
+  this.placeholder.src = this.placeholder.src || 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
+  this.placeholder.className = options.placeholderClassName || 'responsive-img';
 }
 
 /**
