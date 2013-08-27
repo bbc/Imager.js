@@ -13,14 +13,19 @@ module.exports = function(config) {
       'karma-chrome-launcher',
       'karma-firefox-launcher',
       'karma-safari-launcher',
+      'karma-html2js-preprocessor',
       'karma-mocha',
       'karma-chai-plugins'
     ],
     files: [
       'src/imager.js',
       'src/replacers/*.js',
-      'test/**/*.js'
+      'test/**/*.js',
+      'test/fixtures/*.html'
     ],
+    preprocessors: {
+        '**/*.html': ['html2js']
+    },
     reporters: ['progress'],
     port: 9876,
     colors: true,
