@@ -10,4 +10,4 @@
   replacer.replace = function replaceElement(element){
 
   };
-})(Imager.replacers.div);
+})(Imager.replacers.container);
