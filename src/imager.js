@@ -71,11 +71,39 @@ Imager.prototype.getReplacer = function getReplacer(element){
 
 Imager.prototype.detect = function replaceElementWith(element, replacer){};
 
+/**
+ * Builds a new Imager manager and processes the pictures.
+ *
+ * @param {NodeList|Array.<HTMLElement>} collection
+ * @param {Object=} options
+ * @returns {Imager}
+ * @constructor
+ */
 Imager.init = function ImagerFactory(collection, options){
   var instance = new Imager(collection, options);
   instance.process();
 
   return instance;
+};
+
+/**
+ * Replaces matching patterns in a Uri string.
+ * -> "hey i'm {age} years old" + {age: 23} = "hey i'm 23 years old"
+ *
+ * @param {String} uri
+ * @param {Object} values
+ * @returns {String}
+ */
+Imager.replaceUri = function replaceUri(uri, values){
+    var keys = [];
+
+    for (var key in values){
+        keys.push(key);
+    }
+
+    return uri.replace(new RegExp('{('+keys.join('|')+')}', 'g'), function(m, key){
+        return values[key] || '';
+    });
 };
 
 Imager.replacers = {};

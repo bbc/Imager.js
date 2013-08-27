@@ -5,16 +5,7 @@
 
 describe('Imager', function () {
     function generateNodes(count, url){
-        var nodes = Array.apply(null, Array(count));
-
-        return nodes.map(function(node, i){
-            node = document.createElement('div');
-            node.id = 'container'+i;
-            node.className = 'delayed-image-load';
-            node.dataset.src = url || 'http://placekitten.com/{width}/picture.jpg';
-
-            return node;
-        });
+        return Array.apply(null, Array(count));
     }
 
     describe('constructor', function(){
@@ -50,5 +41,19 @@ describe('Imager', function () {
            expect(instance.placeholder.src).to.equal('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=');
            expect(instance.placeholder.className).to.equal('responsive-img-alt');
        });
+    });
+
+    describe('replaceUri', function(){
+        it('should replace existing pattern replacers', function(){
+            var values = {width: 350, pixel_ratio: '2x'};
+
+            expect(Imager.replaceUri('http://placekitten.com/{width}/picture.jpeg', values)).to.equal('http://placekitten.com/350/picture.jpeg');
+            expect(Imager.replaceUri('http://placekitten.com/width/picture.jpeg', values)).to.equal('http://placekitten.com/width/picture.jpeg');
+            expect(Imager.replaceUri('http://placekitten.com/{width}-{pixel_ratio}/picture.jpeg', values)).to.equal('http://placekitten.com/350-2x/picture.jpeg');
+        });
+
+        it('should not replace an unexisting pattern replacer', function(){
+            expect(Imager.replaceUri('http://placekitten.com/{width}/picture.jpeg', {})).to.equal('http://placekitten.com/{width}/picture.jpeg');
+        });
     });
 });
