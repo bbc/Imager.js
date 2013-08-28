@@ -1,16 +1,25 @@
 "use strict";
 
-var ImagerOptions;
+var ImagerOptions, ImagerStrategyOptions;
 
 /**
  * @typedef {{
  *   nodes: Array.<HTMLElement>|NodeList,
- *   availableWidths: Array.<Number>,
- *   strategy: Function|Object|String,
- *   placeholder: {matchingClassName: String, element: HTMLElement}
+ *   availableWidths: Array.<Number>=,
+ *   strategy: Function|Object|String=,
+ *   placeholder: ImagerStrategyOptions=
  * }}
  */
 ImagerOptions;
+
+/**
+ * @typedef {{
+ *   matchingClassName: String=,
+ *   element: HTMLElement=,
+ *   src: String=
+ * }}
+ */
+ImagerStrategyOptions;
 
 /**
  *
@@ -39,6 +48,8 @@ function Imager(collection, options){
 
 /**
  * Processes any element from the collection, updates the size or eventually transform it as image
+ *
+ * @api
  */
 Imager.prototype.process = function processCollection(){
   var i = this.nodes.length;
@@ -60,6 +71,9 @@ Imager.prototype.process = function processCollection(){
   });
 };
 
+/**
+ * Updates the responsive image source with a better URI
+ */
 Imager.prototype.updateImagesSource = function updateImagesSource(){
     var i = this.nodes.length;
     var self = this;
@@ -69,7 +83,7 @@ Imager.prototype.updateImagesSource = function updateImagesSource(){
             var strategy = self.strategy;
 
             strategy.updatePlaceholderUri(element, Imager.replaceUri(element.getAttribute('data-src'), {
-                'width': self.getBestWidth(element.clientWidth)
+                'width': self.getBestWidth(element.clientWidth, element.getAttribute('data-width'))
             }));
         })(this.nodes[i]);
     }
@@ -81,8 +95,8 @@ Imager.prototype.updateImagesSource = function updateImagesSource(){
  * @param {Integer} image_width
  * @returns {Integer}
  */
-Imager.prototype.getBestWidth = function getBestWidth(image_width){
-    var width = this.availableWidths[0],
+Imager.prototype.getBestWidth = function getBestWidth(image_width, default_width){
+    var width = default_width || this.availableWidths[0],
         i = this.availableWidths.length;
 
     while(i--){
@@ -106,6 +120,8 @@ Imager.prototype.nextTick = function nextTick(callback) {
 /**
  * Builds a new Imager manager and processes the pictures.
  *
+ * @api
+ * @static
  * @param {NodeList|Array.<HTMLElement>} collection
  * @param {Object=} options
  * @returns {Imager}
@@ -122,6 +138,8 @@ Imager.init = function ImagerFactory(nodes, options){
  * Replaces matching patterns in a Uri string.
  * -> "hey i'm {age} years old" + {age: 23} = "hey i'm 23 years old"
  *
+ * @api
+ * @static
  * @param {String} uri
  * @param {Object} values
  * @returns {String}
@@ -138,4 +156,9 @@ Imager.replaceUri = function replaceUri(uri, values){
     });
 };
 
+/**
+ * Holds the various replacement strategies
+ *
+ * @type {{}}
+ */
 Imager.strategies = {};

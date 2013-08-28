@@ -15,9 +15,7 @@ describe('Imager', function () {
            var instance = new Imager(generateNodes(3));
 
            expect(instance.nodes).to.be.an('array').and.to.have.length.of(3);
-
            expect(instance.availableWidths).to.be.an('array').and.to.contain(235);
-
            expect(instance.strategy.constructor).to.have.property('_id');
        });
 
@@ -49,6 +47,13 @@ describe('Imager', function () {
             expect(instance.getBestWidth(410)).to.equal(410);
             expect(instance.getBestWidth(409)).to.equal(410);
             expect(instance.getBestWidth(50)).to.equal(96);
+        });
+
+        it('should use the default max width value if provided', function(){
+            var instance = Imager.init([]);
+
+            expect(instance.getBestWidth(50, 300)).to.equal(96);
+            expect(instance.getBestWidth(800, 300)).to.equal(300);
         });
     });
 
