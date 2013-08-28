@@ -58,12 +58,14 @@ describe('Imager', function () {
                 updateImagesSourceStub = sandbox.stub(instance, 'updateImagesSource');
 
             instance.process(function(){
+                expect(instance._processing).to.be.false;
                 expect(updateImagesSourceStub.called).to.be.true;
                 expect(updateImagesSourceStub.calledAfter(createPlaceholderStub)).to.be.true;
 
                 done();
             });
 
+            expect(instance._processing).to.be.true;
             expect(createPlaceholderStub.called).to.be.true;
             expect(updateImagesSourceStub.called).to.be.false;
         });
@@ -71,20 +73,45 @@ describe('Imager', function () {
         it('should process new elements added to the NodeList collection', function(){
             var instance = new Imager(fixtures),
                 createPlaceholderSpy = sandbox.spy(instance.strategy, 'createPlaceholder'),
-                newElement = document.createElement('span');
+                newElement = document.createElement('span'),
+                clock = sandbox.useFakeTimers();
 
             expect(createPlaceholderSpy.callCount).to.equal(0);
 
             instance.process();
             expect(createPlaceholderSpy.callCount).to.equal(2);
+            clock.tick(instance.replacementDelay);
 
             newElement.className = 'delayed-image-load';
             newElement.dataset.src = 'http://placehold.it/{width}/newpic.jpg';
             fixtures[0].parentNode.appendChild(newElement);
+
             instance.process();
+            clock.tick(instance.replacementDelay);
             expect(createPlaceholderSpy.callCount).to.equal(3);
         });
+
+        it('should be able to be called very frequently and compute once in a while', function(){
+            var instance = new Imager(fixtures),
+                processSpy = sandbox.spy(instance, 'process'),
+                tickSpy = sandbox.spy(instance, 'nextTick'),
+                clock = sandbox.useFakeTimers(),
+                operations_count = 1000;
+
+            while(operations_count--){
+                instance.process();
+            }
+
+            expect(processSpy.callCount).to.equal(1000);
+            expect(tickSpy.callCount).to.equal(1);
+
+            clock.tick(10000);
+
+            expect(processSpy.callCount).to.equal(1000);
+            expect(tickSpy.callCount).to.equal(1);
+        });
     });
+
 
     describe('updateImagesSource', function(){
 

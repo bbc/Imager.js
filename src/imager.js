@@ -6,8 +6,9 @@ var ImagerOptions, ImagerStrategyOptions;
  * @typedef {{
  *   nodes: Array.<HTMLElement>|NodeList,
  *   availableWidths: Array.<Number>=,
- *   strategy: Function|Object|String=,
- *   placeholder: ImagerStrategyOptions=
+ *   placeholder: ImagerStrategyOptions=,
+ *   replacementDelay: Integer=,
+ *   strategy: Function|Object|String=
  * }}
  */
 ImagerOptions;
@@ -33,8 +34,11 @@ function Imager(collection, options){
   options = options || {};
 
   this.nodes = collection;
+  this.replacementDelay = parseInt(options.replacementDelay || 200, 10);
   this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
   this.availableWidths = this.availableWidths.sort(function(a, b){ return b-a; });
+
+  this._processing = false;
 
   switch(typeof options.strategy){
       case 'string':    strategy = Imager.strategies[options.strategy]; break;
@@ -56,7 +60,14 @@ Imager.prototype.process = function processCollection(callback){
       self = this,
       strategy = self.strategy;
 
+  if (self._processing){
+      return;
+  }
+
+  self._processing = true;
+
   while(i--){
+
     (function(element){
       //check if we have to replace it or not
       if (strategy.requiresPlaceholder(element)){
@@ -67,6 +78,7 @@ Imager.prototype.process = function processCollection(callback){
 
   this.nextTick(function(){
       self.updateImagesSource();
+      self._processing = false;
       typeof callback === 'function' && callback();
   });
 };
