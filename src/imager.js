@@ -27,10 +27,17 @@ function Imager(collection, options){
   this.placeholder = options.placeholder || document.createElement('img');
   this.placeholder.src = this.placeholder.src || 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
   this.placeholder.className = options.placeholderClassName || 'responsive-img';
+
+  switch(typeof options.strategy){
+      case 'string':    this.strategy = Imager.strategies[options.strategy]; break;
+      case 'function':
+      case 'object':    this.strategy = options.strategy; break;
+      default:          this.strategy = Imager.strategies.container;
+  }
 }
 
 /**
- * Process any element from the collection, updates the size or eventually transform it as image
+ * Processes any element from the collection, updates the size or eventually transform it as image
  */
 Imager.prototype.process = function processCollection(){
   var i = this.nodes.length;
@@ -38,11 +45,11 @@ Imager.prototype.process = function processCollection(){
 
   while(i--){
     (function(element){
-      var replacer = self.getReplacer(element);
+      var strategy = self.strategy;
 
       //check if we have to replace it or not
-      if (replacer && replacer.hasToReplace(element, self.placeholder)){
-        replacer.replace(element, self.placeholder);
+      if (strategy.requiresPlaceholder(element, self.placeholder)){
+        strategy.createPlaceholder(element, self.placeholder);
       }
     })(this.nodes[i]);
   }
@@ -52,25 +59,22 @@ Imager.prototype.process = function processCollection(){
   });
 };
 
-/**
- * Detects which is the most suitable replacer for an element and returns it.
- *
- * @param {HTMLElement} element
- * @returns {Object} Replacer object
- */
-Imager.prototype.getReplacer = function getReplacer(element){
-  var key;
-  var replacers = Imager.replacers;
+Imager.prototype.updateImagesSource = function updateImagesSource(){
+    var i = this.nodes.length;
+    var self = this;
 
-  for (key in replacers){
-    if (replacers[key].matches(element)){
-      return replacers[key];
+    while(i--){
+        (function(element){
+        })(this.nodes[i]);
     }
-  }
-
-  return null;
 };
 
+/**
+ * Returns the best available width to fit an image in.
+ *
+ * @param {Integer} image_width
+ * @returns {Integer}
+ */
 Imager.prototype.getBestWidth = function getBestWidth(image_width){
     var width = this.availableWidths[0],
         i = this.availableWidths.length;
@@ -84,6 +88,11 @@ Imager.prototype.getBestWidth = function getBestWidth(image_width){
     return width;
 };
 
+/**
+ * Runs code in a non-blocking fashion.
+ *
+ * @param {Function} callback
+ */
 Imager.prototype.nextTick = function nextTick(callback) {
     setTimeout(callback, 0);
 };
@@ -123,4 +132,4 @@ Imager.replaceUri = function replaceUri(uri, values){
     });
 };
 
-Imager.replacers = {};
+Imager.strategies = {};
