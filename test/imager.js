@@ -18,9 +18,7 @@ describe('Imager', function () {
 
            expect(instance.availableWidths).to.be.an('array').and.to.contain(235);
 
-           expect(instance.placeholder).to.be.an.instanceof(HTMLElement);
-           expect(instance.placeholder.src).to.equal('data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7');
-           expect(instance.placeholder.className).to.equal('responsive-img');
+           expect(instance.strategy.constructor).to.have.property('_id');
        });
 
        it('should configure properly its attributes based on an optional config argument', function(){
@@ -29,17 +27,15 @@ describe('Imager', function () {
 
            var instance = new Imager(generateNodes(5), {
                availableWidths: [50, 99, 120, 500],
-               placeholder: placeholder,
-               placeholderClassName: 'responsive-img-alt'
+               placeholder: {
+                   element: placeholder,
+                   matchingClassName: 'responsive-img-alt'
+               }
            });
 
            expect(instance.nodes).to.be.an('array').and.to.have.length.of(5);
-
            expect(instance.availableWidths).to.be.an('array').and.to.contain(99).and.not.to.contain(235);
-
-           expect(instance.placeholder).to.be.an.instanceof(HTMLElement);
-           expect(instance.placeholder.src).to.equal('data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=');
-           expect(instance.placeholder.className).to.equal('responsive-img-alt');
+           expect(instance.strategy.constructor).to.have.property('_id');
        });
     });
 

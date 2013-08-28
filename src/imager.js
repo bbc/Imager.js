@@ -4,9 +4,10 @@ var ImagerOptions;
 
 /**
  * @typedef {{
- *   availableWidth: Array.<Number>,
- *   className: String,
- *   srcPattern: String
+ *   nodes: Array.<HTMLElement>|NodeList,
+ *   availableWidths: Array.<Number>,
+ *   strategy: Function|Object|String,
+ *   placeholder: {matchingClassName: String, element: HTMLElement}
  * }}
  */
 ImagerOptions;
@@ -18,22 +19,22 @@ ImagerOptions;
  * @constructor
  */
 function Imager(collection, options){
+  var strategy;
+
   options = options || {};
 
   this.nodes = collection;
   this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
   this.availableWidths = this.availableWidths.sort(function(a, b){ return b-a; });
 
-  this.placeholder = options.placeholder || document.createElement('img');
-  this.placeholder.src = this.placeholder.src || 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-  this.placeholder.className = options.placeholderClassName || 'responsive-img';
-
   switch(typeof options.strategy){
-      case 'string':    this.strategy = Imager.strategies[options.strategy]; break;
+      case 'string':    strategy = Imager.strategies[options.strategy]; break;
       case 'function':
-      case 'object':    this.strategy = options.strategy; break;
-      default:          this.strategy = Imager.strategies.container;
+      case 'object':    strategy = options.strategy; break;
+      default:          strategy = Imager.strategies.container;
   }
+
+  this.strategy = new strategy(options.placeholder);
 }
 
 /**
@@ -48,8 +49,8 @@ Imager.prototype.process = function processCollection(){
       var strategy = self.strategy;
 
       //check if we have to replace it or not
-      if (strategy.requiresPlaceholder(element, self.placeholder)){
-        strategy.createPlaceholder(element, self.placeholder);
+      if (strategy.requiresPlaceholder(element)){
+        strategy.createPlaceholder(element);
       }
     })(this.nodes[i]);
   }
@@ -65,6 +66,11 @@ Imager.prototype.updateImagesSource = function updateImagesSource(){
 
     while(i--){
         (function(element){
+            var strategy = self.strategy;
+
+            strategy.updatePlaceholderUri(element, Imager.replaceUri(element.getAttribute('data-src'), {
+                'width': self.getBestWidth(element.clientWidth)
+            }));
         })(this.nodes[i]);
     }
 };
