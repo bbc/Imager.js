@@ -58,7 +58,7 @@
         placeholder.setAttribute('data-src', element.getAttribute('data-src'));
         placeholder.setAttribute('data-width', element.getAttribute('data-width'));
 
-        element.parentNode.replaceChild(placeholder, element);
+        return element.parentNode.replaceChild(placeholder, element);
     };
 
     /**

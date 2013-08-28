@@ -14,13 +14,34 @@
         <img src="http://placehold.it/340">
 
         <p>Below are three <code>&lt;div&gt;</code> elements that are enhanced using Imager.js and so they will lazy-load more images (as long as JavaScript is enabled).</p>
-        <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
-        <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
-        <div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>
 
-        <script src="../Imager.js"></script>
+        <div class="strategy-legacy">
+            <h2>BBC Strategy</h2>
+            <div class="delayed-image-load" data-src="http://placehold.it/{width}/000.jpg" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/{width}/111.jpg" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
+        </div>
+
+        <div class="strategy-container">
+            <h2>Enclosing DIV Strategy</h2>
+            <div class="delayed-image-load" data-src="http://placehold.it/{width}/000.jpg" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/{width}/111.jpg" data-width="340"></div>
+            <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
+        </div>
+
+
+        <script src="../src/imager.js"></script>
+        <script src="../src/strategies/legacy.js"></script>
+        <script src="../src/strategies/container.js"></script>
         <script>
-            var imager = new Imager();
+            ['legacy', 'container'].forEach(function(strategy){
+                var elements = document.querySelectorAll('.strategy-'+strategy+' .delayed-image-load'),
+                    imager = Imager.init(elements, { strategy: strategy }),
+                    replace = (function(imgr){ return function(){ imgr.process(); }; })(imager);
+
+                window.addEventListener('resize', replace);
+                window.addEventListener('orientationchange', replace);
+            });
         </script>
     </body>
 </html>
