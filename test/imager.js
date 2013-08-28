@@ -11,7 +11,7 @@ describe('Imager', function () {
         doc.innerHTML = window.__html__['test/fixtures/imager.html'];
 
         sandbox = sinon.sandbox.create();
-        fixtures = doc.querySelectorAll('div.delayed-image-load');
+        fixtures = doc.getElementsByClassName('delayed-image-load');
     });
 
     afterEach(function(){
@@ -66,6 +66,23 @@ describe('Imager', function () {
 
             expect(createPlaceholderStub.called).to.be.true;
             expect(updateImagesSourceStub.called).to.be.false;
+        });
+
+        it('should process new elements added to the NodeList collection', function(){
+            var instance = new Imager(fixtures),
+                createPlaceholderSpy = sandbox.spy(instance.strategy, 'createPlaceholder'),
+                newElement = document.createElement('span');
+
+            expect(createPlaceholderSpy.callCount).to.equal(0);
+
+            instance.process();
+            expect(createPlaceholderSpy.callCount).to.equal(2);
+
+            newElement.className = 'delayed-image-load';
+            newElement.dataset.src = 'http://placehold.it/{width}/newpic.jpg';
+            fixtures[0].parentNode.appendChild(newElement);
+            instance.process();
+            expect(createPlaceholderSpy.callCount).to.equal(3);
         });
     });
 
