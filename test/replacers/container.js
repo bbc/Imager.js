@@ -6,7 +6,7 @@
 describe("Imager Container Replacer", function () {
     var doc, sandbox, instance, fixtures;
 
-    beforeEach(function(){
+    beforeEach(function () {
         doc = document.createElement('div');
         doc.innerHTML = window.__html__['test/fixtures/strategy-container.html'];
 
@@ -16,12 +16,12 @@ describe("Imager Container Replacer", function () {
         instance = new Imager(fixtures);
     });
 
-    afterEach(function(){
+    afterEach(function () {
         sandbox.restore();
     });
 
-    describe('createPlaceholder', function(){
-        it('should create placeholder pictures in the container', function(){
+    describe('createPlaceholder', function () {
+        it('should create placeholder pictures in the container', function () {
             var placeholder;
             var strategySpy = sandbox.spy(instance.strategy, 'createPlaceholder');
 
@@ -38,7 +38,7 @@ describe("Imager Container Replacer", function () {
             expect(strategySpy.callCount).to.equal(2);
         });
 
-        it('should not create two placeholder for the same container', function(){
+        it('should not create two placeholder for the same container', function () {
             var strategySpy = sandbox.spy(instance.strategy, 'createPlaceholder');
 
             instance.process();
