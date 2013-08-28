@@ -43,6 +43,19 @@ describe('Imager', function () {
        });
     });
 
+    describe('getBestWidth', function(){
+        it('should return the closest available width to fit in', function(){
+            var instance = Imager.init([]);
+
+            expect(instance.getBestWidth(1024)).to.equal(736);
+            expect(instance.getBestWidth(800)).to.equal(736);
+            expect(instance.getBestWidth(415)).to.equal(445);
+            expect(instance.getBestWidth(410)).to.equal(410);
+            expect(instance.getBestWidth(409)).to.equal(410);
+            expect(instance.getBestWidth(50)).to.equal(96);
+        });
+    });
+
     describe('getReplacer', function(){
         it('should provide a proper registered replacer for an HTML element', function(){
             var el, instance;

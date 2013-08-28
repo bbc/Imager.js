@@ -22,6 +22,7 @@ function Imager(collection, options){
 
   this.nodes = collection;
   this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+  this.availableWidths = this.availableWidths.sort(function(a, b){ return b-a; });
 
   this.placeholder = options.placeholder || document.createElement('img');
   this.placeholder.src = this.placeholder.src || 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
@@ -32,11 +33,10 @@ function Imager(collection, options){
  * Process any element from the collection, updates the size or eventually transform it as image
  */
 Imager.prototype.process = function processCollection(){
-  var i;
+  var i = this.nodes.length;
   var self = this;
-  var nodes_count = this.nodes.length;
 
-  for (i = 0; i < nodes_count; i++){
+  while(i--){
     (function(element){
       var replacer = self.getReplacer(element);
 
@@ -46,6 +46,10 @@ Imager.prototype.process = function processCollection(){
       }
     })(this.nodes[i]);
   }
+
+  this.nextTick(function(){
+      self.updateImagesSource();
+  });
 };
 
 /**
@@ -67,7 +71,22 @@ Imager.prototype.getReplacer = function getReplacer(element){
   return null;
 };
 
-Imager.prototype.detect = function replaceElementWith(element, replacer){};
+Imager.prototype.getBestWidth = function getBestWidth(image_width){
+    var width = this.availableWidths[0],
+        i = this.availableWidths.length;
+
+    while(i--){
+        if (image_width <= this.availableWidths[i]){
+            return this.availableWidths[i];
+        }
+    }
+
+    return width;
+};
+
+Imager.prototype.nextTick = function nextTick(callback) {
+    setTimeout(callback, 0);
+};
 
 /**
  * Builds a new Imager manager and processes the pictures.
