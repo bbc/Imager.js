@@ -4,6 +4,20 @@
 /* globals describe, it, expect */
 
 describe('Imager', function () {
+    var sandbox, fixtures;
+
+    beforeEach(function(){
+        var doc = document.createElement('div');
+        doc.innerHTML = window.__html__['test/fixtures/imager.html'];
+
+        sandbox = sinon.sandbox.create();
+        fixtures = doc.querySelectorAll('div.delayed-image-load');
+    });
+
+    afterEach(function(){
+        sandbox.restore();
+    });
+
     function generateNodes(count, url){
         return Array.apply(null, Array(count));
     }
@@ -35,6 +49,28 @@ describe('Imager', function () {
            expect(instance.availableWidths).to.be.an('array').and.to.contain(99).and.not.to.contain(235);
            expect(instance.strategy.constructor).to.have.property('_id');
        });
+    });
+
+    describe('process', function(){
+        it('should create placeholders prior to replacing responsive URIs', function(done){
+            var instance = new Imager(fixtures),
+                createPlaceholderStub = sandbox.stub(instance.strategy, 'createPlaceholder'),
+                updateImagesSourceStub = sandbox.stub(instance, 'updateImagesSource');
+
+            instance.process(function(){
+                expect(updateImagesSourceStub.called).to.be.true;
+                expect(updateImagesSourceStub.calledAfter(createPlaceholderStub)).to.be.true;
+
+                done();
+            });
+
+            expect(createPlaceholderStub.called).to.be.true;
+            expect(updateImagesSourceStub.called).to.be.false;
+        });
+    });
+
+    describe('updateImagesSource', function(){
+
     });
 
     describe('getBestWidth', function(){

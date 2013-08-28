@@ -51,14 +51,13 @@ function Imager(collection, options){
  *
  * @api
  */
-Imager.prototype.process = function processCollection(){
-  var i = this.nodes.length;
-  var self = this;
+Imager.prototype.process = function processCollection(callback){
+  var i = this.nodes.length,
+      self = this,
+      strategy = self.strategy;
 
   while(i--){
     (function(element){
-      var strategy = self.strategy;
-
       //check if we have to replace it or not
       if (strategy.requiresPlaceholder(element)){
         strategy.createPlaceholder(element);
@@ -68,6 +67,7 @@ Imager.prototype.process = function processCollection(){
 
   this.nextTick(function(){
       self.updateImagesSource();
+      typeof callback === 'function' && callback();
   });
 };
 
@@ -75,13 +75,12 @@ Imager.prototype.process = function processCollection(){
  * Updates the responsive image source with a better URI
  */
 Imager.prototype.updateImagesSource = function updateImagesSource(){
-    var i = this.nodes.length;
-    var self = this;
+    var i = this.nodes.length,
+        self = this,
+        strategy = self.strategy;
 
     while(i--){
         (function(element){
-            var strategy = self.strategy;
-
             strategy.updatePlaceholderUri(element, Imager.replaceUri(element.getAttribute('data-src'), {
                 'width': self.getBestWidth(element.clientWidth, element.getAttribute('data-width'))
             }));

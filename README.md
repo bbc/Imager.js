@@ -138,7 +138,7 @@ It is the tailored for people who want to control every single step of `Imager.j
 "Example to be written";
 ```
 
-### `process()`
+### `process([Function callback])`
 
 Process every single `collection` elements, eventually replace them by a placeholder and builds the proper URL
 based on the actual viewport size. You should call it every time a container size has eventually changed (like a
