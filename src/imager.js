@@ -125,7 +125,7 @@ Imager.prototype.getBestWidth = function getBestWidth(image_width, default_width
  * @param {Function} callback
  */
 Imager.prototype.nextTick = function nextTick(callback) {
-    setTimeout(callback, 0);
+    setTimeout(callback, this.replacementDelay);
 };
 
 /**
