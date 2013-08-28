@@ -19,7 +19,7 @@ module.exports = function(config) {
     ],
     files: [
       'src/imager.js',
-      'src/replacers/*.js',
+      'src/strategies/*.js',
       'test/**/*.js',
       'test/fixtures/*.html'
     ],
