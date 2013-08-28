@@ -2,7 +2,7 @@
     "use strict";
 
     /**
-     * Create a new Responsive Image Container strategy instance.
+     * Create a new Responsive Image Legacy strategy instance.
      * It implies to work on an HTML structure described in example.
      *
      * @param {ImagerStrategyOptions} options
@@ -25,7 +25,7 @@
      * @type {string}
      * @private
      */
-    ImagerContainerStrategy._id = 'container';
+    ImagerContainerStrategy._id = 'legacy';
 
     /**
      * Iterates on an element content to discover its responsive placeholder.
@@ -36,13 +36,9 @@
      * @returns {boolean}
      */
     ImagerContainerStrategy.prototype.applyOnPlaceholder = function applyOnPlaceholder (element, callback) {
-        var i = element.children.length;
-
-        while (i--) {
-            if (element.children[i].className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
-                typeof callback === 'function' && callback(element.children[i], element);
-                return true;
-            }
+        if (element.className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
+            typeof callback === 'function' && callback(element, element);
+            return true;
         }
 
         return false;
@@ -55,7 +51,14 @@
      * @param {HTMLElement} element
      */
     ImagerContainerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
-        element.appendChild(this.element.cloneNode());
+        var placeholder = this.element.cloneNode();
+
+        placeholder.width = element.getAttribute('data-width');
+        placeholder.className += ' ' + element.className;
+        placeholder.setAttribute('data-src', element.getAttribute('data-src'));
+        placeholder.setAttribute('data-width', element.getAttribute('data-width'));
+
+        element.parentNode.replaceChild(placeholder, element);
     };
 
     /**
