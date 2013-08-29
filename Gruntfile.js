@@ -86,5 +86,6 @@ module.exports = function (grunt) {
     // Default Task
     grunt.registerTask('default', ['responsive_images:dev']);
     grunt.registerTask('debug', ['karma:unit', 'watch']);
+    grunt.registerTask('test', ['jshint', 'karma:ci']);
 
 };
