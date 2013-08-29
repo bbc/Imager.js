@@ -1,0 +1,30 @@
+{
+  "name": "Imager.js",
+  "version": "0.0.1",
+  "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/BBC-News/Imager.js.git"
+  },
+  "keywords": [
+    "responsive",
+    "srcset",
+    "images",
+    "resize",
+    "polyfill",
+    "shim",
+    "img",
+    "PictureFill"
+  ],
+  "author": "Mark McDonnell, Addy Osmani",
+  "license": "Apache 2.0 open source licence",
+  "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-responsive-images": "0.0.3"
+  }
+}
