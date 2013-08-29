@@ -16,3 +16,10 @@ a {
 code {
     color: blue;
 }
+
+.strategy-container .delayed-image-load{
+    margin-bottom: 1.5em;
+    outline: 2px dashed #ccc;
+    width: 50vw;
+    height: 50vw;
+}
