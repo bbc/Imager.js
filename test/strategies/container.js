@@ -1,7 +1,7 @@
 "use strict";
 
-// jshint -W030: true
-/* globals describe, it, expect */
+// jshint -W030: true, es3: false, -W024: true
+/* globals Imager, describe, it, expect, beforeEach, afterEach, sinon */
 
 describe("Imager Container Strategy", function () {
     var doc, sandbox, instance, fixtures, strategy;
@@ -54,8 +54,7 @@ describe("Imager Container Strategy", function () {
 
     describe('updatePlaceholderUri', function(){
         it('should update the `src` attribute of a found placeholder', function(){
-            var container = doc.querySelector('#preloaded-placeholder .delayed-image-load'),
-                placeholder = container.querySelector('.responsive-img')
+            var container = doc.querySelector('#preloaded-placeholder .delayed-image-load');
 
             expect(container.querySelector('.responsive-img').src).to.equal('http://placehold.it/200/picture2.jpg');
 

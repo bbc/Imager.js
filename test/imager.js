@@ -1,7 +1,7 @@
 'use strict';
 
-// jshint -W030: true
-/* globals describe, it, expect */
+// jshint -W030: true, es3: false, -W024: true
+/* globals Imager, describe, it, expect, beforeEach, afterEach, sinon */
 
 describe('Imager', function () {
     var sandbox, doc, instance;
@@ -19,7 +19,7 @@ describe('Imager', function () {
     });
 
     function generateNodes (count, tag) {
-        return Array.apply(null, Array(count)).map(function(item, i){
+        return Array.apply(null, new Array(count)).map(function(item, i){
             var el = document.createElement(tag || 'div');
 
             el.className = 'delayed-image-load';

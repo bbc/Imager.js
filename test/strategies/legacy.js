@@ -1,7 +1,7 @@
 "use strict";
 
-// jshint -W030: true
-/* globals describe, it, expect */
+// jshint -W030: true, es3: false, -W024: true
+/* globals Imager, describe, it, expect, beforeEach, afterEach, sinon */
 
 describe("Imager Legacy Strategy", function () {
     var doc, sandbox, instance, fixtures, strategy;
