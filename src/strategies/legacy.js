@@ -53,12 +53,20 @@
     ImagerContainerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
         var placeholder = this.element.cloneNode();
 
-        placeholder.width = element.getAttribute('data-width');
+        if (element.hasAttribute('data-width')){
+            placeholder.width = element.getAttribute('data-width');
+            placeholder.setAttribute('data-width', element.getAttribute('data-width'));
+        }
+
         placeholder.className += ' ' + element.className;
         placeholder.setAttribute('data-src', element.getAttribute('data-src'));
-        placeholder.setAttribute('data-width', element.getAttribute('data-width'));
 
-        return element.parentNode.replaceChild(placeholder, element);
+        //DocumentFragment and Array elements won't have a parentNode
+        if (element.parentNode){
+            element.parentNode.replaceChild(placeholder, element);
+        }
+
+        return placeholder;
     };
 
     /**

@@ -55,7 +55,17 @@
      * @param {HTMLElement} element
      */
     ImagerContainerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
-        element.appendChild(this.element.cloneNode());
+        var placeholder = this.element.cloneNode();
+
+        if (element.hasAttribute('data-width')){
+            placeholder.width = element.getAttribute('data-width');
+        }
+
+        placeholder.className = this.matchingClassName;
+
+        element.appendChild(placeholder);
+
+        return element;
     };
 
     /**

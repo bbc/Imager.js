@@ -33,7 +33,7 @@ function Imager (collection, options) {
 
     options = options || {};
 
-    this.nodes = collection;
+    this.update(collection);
     this.replacementDelay = parseInt(options.replacementDelay || 200, 10);
     this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
     this.availableWidths = this.availableWidths.sort(function (a, b) {
@@ -74,13 +74,11 @@ Imager.prototype.process = function processCollection (callback) {
     self._processing = true;
 
     while (i--) {
-
-        (function (element) {
-            //check if we have to replace it or not
+        (function (element, index) {
             if (strategy.requiresPlaceholder(element)) {
-                strategy.createPlaceholder(element);
+                self.nodes[index] = strategy.createPlaceholder(element);
             }
-        })(this.nodes[i]);
+        })(this.nodes[i], i);
     }
 
     this.nextTick(function () {
@@ -88,6 +86,16 @@ Imager.prototype.process = function processCollection (callback) {
         self._processing = false;
         typeof callback === 'function' && callback();
     });
+};
+
+/**
+ * Replaces the collection of elements we iterate on.
+ *
+ * @api
+ * @param {NodeList|Array} collection
+ */
+Imager.prototype.update = function updateNodes(collection){
+    this.nodes = Array.prototype.slice.call(collection || []);
 };
 
 /**
@@ -177,6 +185,6 @@ Imager.replaceUri = function replaceUri (uri, values) {
 /**
  * Holds the various replacement strategies
  *
- * @type {{}}
+ * @type {Object}
  */
 Imager.strategies = {};

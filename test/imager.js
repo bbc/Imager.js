@@ -4,46 +4,49 @@
 /* globals describe, it, expect */
 
 describe('Imager', function () {
-    var sandbox, fixtures;
+    var sandbox, doc, instance;
 
     beforeEach(function () {
-        var doc = document.createElement('div');
+        doc = document.createElement('div');
         doc.innerHTML = window.__html__['test/fixtures/imager.html'];
 
+        instance = new Imager(generateNodes(10));
         sandbox = sinon.sandbox.create();
-        fixtures = doc.getElementsByClassName('delayed-image-load');
     });
 
     afterEach(function () {
         sandbox.restore();
     });
 
-    function generateNodes (count, url) {
-        return Array.apply(null, Array(count));
+    function generateNodes (count, tag) {
+        return Array.apply(null, Array(count)).map(function(item, i){
+            var el = document.createElement(tag || 'div');
+
+            el.className = 'delayed-image-load';
+            el.dataset.src = 'http://placehold.it/{width}/newpic'+(i * Math.random())+'.jpg';
+
+            return el;
+        });
     }
 
     describe('constructor', function () {
-        var nodeList = [document.createElement('div'), document.createElement('div'), document.createElement('div')];
-
         it('should compute the proper attributes', function () {
-            var instance = new Imager(generateNodes(3));
-
-            expect(instance.nodes).to.be.an('array').and.to.have.length.of(3);
+            expect(instance.nodes).to.be.an('array').and.to.have.length.of(10);
             expect(instance.availableWidths).to.be.an('array').and.to.contain(235);
             expect(instance.strategy.constructor).to.have.property('_id');
         });
 
         it('should configure properly its attributes based on an optional config argument', function () {
-            var placeholder = document.createElement('img');
-            placeholder.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+            var placeholder = document.createElement('img'),
+                instance = new Imager(generateNodes(5), {
+                    availableWidths: [50, 99, 120, 500],
+                    placeholder: {
+                        element: placeholder,
+                        matchingClassName: 'responsive-img-alt'
+                    }
+                });
 
-            var instance = new Imager(generateNodes(5), {
-                availableWidths: [50, 99, 120, 500],
-                placeholder: {
-                    element: placeholder,
-                    matchingClassName: 'responsive-img-alt'
-                }
-            });
+            placeholder.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
             expect(instance.nodes).to.be.an('array').and.to.have.length.of(5);
             expect(instance.availableWidths).to.be.an('array').and.to.contain(99).and.not.to.contain(235);
@@ -53,8 +56,7 @@ describe('Imager', function () {
 
     describe('process', function () {
         it('should create placeholders prior to replacing responsive URIs', function (done) {
-            var instance = new Imager(fixtures),
-                createPlaceholderStub = sandbox.stub(instance.strategy, 'createPlaceholder'),
+            var createPlaceholderStub = sandbox.stub(instance.strategy, 'createPlaceholder'),
                 updateImagesSourceStub = sandbox.stub(instance, 'updateImagesSource');
 
             instance.process(function () {
@@ -70,30 +72,8 @@ describe('Imager', function () {
             expect(updateImagesSourceStub.called).to.be.false;
         });
 
-        it('should process new elements added to the NodeList collection', function () {
-            var instance = new Imager(fixtures),
-                createPlaceholderSpy = sandbox.spy(instance.strategy, 'createPlaceholder'),
-                newElement = document.createElement('span'),
-                clock = sandbox.useFakeTimers();
-
-            expect(createPlaceholderSpy.callCount).to.equal(0);
-
-            instance.process();
-            expect(createPlaceholderSpy.callCount).to.equal(2);
-            clock.tick(instance.replacementDelay);
-
-            newElement.className = 'delayed-image-load';
-            newElement.dataset.src = 'http://placehold.it/{width}/newpic.jpg';
-            fixtures[0].parentNode.appendChild(newElement);
-
-            instance.process();
-            clock.tick(instance.replacementDelay);
-            expect(createPlaceholderSpy.callCount).to.equal(3);
-        });
-
         it('should be able to be called very frequently and compute once in a while', function () {
-            var instance = new Imager(fixtures),
-                processSpy = sandbox.spy(instance, 'process'),
+            var processSpy = sandbox.spy(instance, 'process'),
                 tickSpy = sandbox.spy(instance, 'nextTick'),
                 clock = sandbox.useFakeTimers(),
                 operations_count = 1000;
@@ -112,6 +92,34 @@ describe('Imager', function () {
         });
     });
 
+    describe('update', function(){
+        it('should replace the actual collection of nodes with a static array', function(){
+            instance.update(undefined);
+            expect(instance.nodes).to.be.empty;
+
+            instance.update(generateNodes(4));
+            expect(instance.nodes).to.have.length.of(4);
+
+            instance.update(doc.getElementsByClassName('delayed-image-load'));
+            expect(instance.nodes).to.have.length.of(3);
+
+            instance.update(doc.querySelectorAll('#container div.delayed-image-load'));
+            expect(instance.nodes).to.have.length.of(3);
+        });
+
+        it('should track new elements from a mutated object (ie: live NodeList)', function(){
+            var liveNodeList = doc.getElementsByClassName('delayed-image-load');
+
+            instance.update(liveNodeList);
+            expect(instance.nodes).to.have.length.of(3);
+
+            liveNodeList[0].parentNode.appendChild(generateNodes(1).pop());
+            expect(instance.nodes).to.have.length.of(3);
+
+            instance.update(liveNodeList);
+            expect(instance.nodes).to.have.length.of(4);
+        });
+    });
 
     describe('updateImagesSource', function () {
 
@@ -119,8 +127,6 @@ describe('Imager', function () {
 
     describe('getBestWidth', function () {
         it('should return the closest available width to fit in', function () {
-            var instance = Imager.init([]);
-
             expect(instance.getBestWidth(1024)).to.equal(736);
             expect(instance.getBestWidth(800)).to.equal(736);
             expect(instance.getBestWidth(415)).to.equal(445);
@@ -130,8 +136,6 @@ describe('Imager', function () {
         });
 
         it('should use the default max width value if provided', function () {
-            var instance = Imager.init([]);
-
             expect(instance.getBestWidth(50, 300)).to.equal(96);
             expect(instance.getBestWidth(800, 300)).to.equal(300);
         });
