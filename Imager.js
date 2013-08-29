@@ -147,8 +147,10 @@
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
-        return src.replace(this.regex, function (match, captured) {
-            return captured + selectedWidth;
+        return src.replace(this.regex, function (match, path, file, extension) {
+            file = file || '';
+            extension = extension !== match ? extension : '';
+            return path + file + selectedWidth + ((extension) ? extension : '');
         });
     };
 
