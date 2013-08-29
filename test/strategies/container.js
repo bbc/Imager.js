@@ -3,7 +3,7 @@
 // jshint -W030: true
 /* globals describe, it, expect */
 
-describe("Imager Container Replacer", function () {
+describe("Imager Container Strategy", function () {
     var doc, sandbox, instance, fixtures, strategy;
 
     beforeEach(function () {
