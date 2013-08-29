@@ -1,3 +1,4 @@
+/* globals Imager */
 (function (strategies) {
     "use strict";
 
@@ -37,7 +38,10 @@
      */
     ImagerContainerStrategy.prototype.applyOnPlaceholder = function applyOnPlaceholder (element, callback) {
         if (element.className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
-            typeof callback === 'function' && callback(element, element);
+            if (typeof callback === 'function'){
+                callback(element, element);
+            }
+
             return true;
         }
 

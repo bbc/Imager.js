@@ -1,3 +1,4 @@
+/* globals Imager */
 (function (strategies) {
     "use strict";
 
@@ -40,7 +41,10 @@
 
         while (i--) {
             if (element.children[i].className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
-                typeof callback === 'function' && callback(element.children[i], element);
+                if (typeof callback === 'function'){
+                    callback(element.children[i], element);
+                }
+
                 return true;
             }
         }

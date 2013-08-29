@@ -1,5 +1,7 @@
 "use strict";
 
+// jshint -W030: true
+
 var ImagerOptions, ImagerStrategyOptions;
 
 /**
@@ -22,6 +24,9 @@ ImagerOptions;
  */
 ImagerStrategyOptions;
 
+
+// jshint -W030: false
+
 /**
  *
  * @param {NodeList|Array.<HTMLElement>} collection
@@ -29,7 +34,7 @@ ImagerStrategyOptions;
  * @constructor
  */
 function Imager (collection, options) {
-    var strategy;
+    var Strategy;
 
     options = options || {};
 
@@ -44,17 +49,17 @@ function Imager (collection, options) {
 
     switch (typeof options.strategy) {
         case 'string':
-            strategy = Imager.strategies[options.strategy];
+            Strategy = Imager.strategies[options.strategy];
             break;
         case 'function':
         case 'object':
-            strategy = options.strategy;
+            Strategy = options.strategy;
             break;
         default:
-            strategy = Imager.strategies.container;
+            Strategy = Imager.strategies.container;
     }
 
-    this.strategy = new strategy(options.placeholder);
+    this.strategy = new Strategy(options.placeholder);
 }
 
 /**
@@ -74,17 +79,17 @@ Imager.prototype.process = function processCollection (callback) {
     self._processing = true;
 
     while (i--) {
-        (function (element, index) {
-            if (strategy.requiresPlaceholder(element)) {
-                self.nodes[index] = strategy.createPlaceholder(element);
-            }
-        })(this.nodes[i], i);
+        if (strategy.requiresPlaceholder(self.nodes[i])) {
+            self.nodes[i] = strategy.createPlaceholder(self.nodes[i]);
+        }
     }
 
     this.nextTick(function () {
         self.updateImagesSource();
         self._processing = false;
-        typeof callback === 'function' && callback.call(self);
+        if (typeof callback === 'function'){
+            callback.call(self);
+        }
     });
 };
 
@@ -107,11 +112,9 @@ Imager.prototype.updateImagesSource = function updateImagesSource () {
         strategy = self.strategy;
 
     while (i--) {
-        (function (element) {
-            strategy.updatePlaceholderUri(element, Imager.replaceUri(element.getAttribute('data-src'), {
-                'width': self.getBestWidth(element.clientWidth, element.getAttribute('data-width'))
-            }));
-        })(this.nodes[i]);
+        strategy.updatePlaceholderUri(this.nodes[i], Imager.replaceUri(this.nodes[i].getAttribute('data-src'), {
+            'width': self.getBestWidth(this.nodes[i].clientWidth, this.nodes[i].getAttribute('data-width'))
+        }));
     }
 };
 
