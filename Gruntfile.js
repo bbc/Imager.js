@@ -19,7 +19,7 @@ module.exports = function (grunt) {
                             width: 640
                         },
                         {
-                            width  : 1024
+                            width: 1024
                         }
                     ]
                 },
