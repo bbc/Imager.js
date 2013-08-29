@@ -20,7 +20,7 @@
   "readmeFilename": "README.md",
   "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9",
   "devDependencies": {
-    "grunt": "*",
+    "grunt": "~0.4.1",
     "grunt-responsive-images": "0.0.3"
   }
 }
