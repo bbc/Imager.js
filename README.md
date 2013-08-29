@@ -40,11 +40,6 @@ If you want to add functionality to this project, pull requests are welcome.
 
 **Please raise any issues with this project as a GitHub issue.**
 
-## Licence
-
-Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
-Take a look at the LICENSE file in the code.
-
 ## Credits
 
  * [Mark McDonnell](http://twitter.com/integralist)
@@ -116,3 +111,8 @@ var imager = new Imager({
 ```
 
 For full details of the Grunt task options see the [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images/) repo on GitHub.
+
+## Licence
+
+Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
+Take a look at the LICENSE file in the code.
