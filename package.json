@@ -17,7 +17,6 @@
   ],
   "author": "Mark McDonnell, Addy Osmani",
   "license": "Apache 2.0 open source licence",
-  "readmeFilename": "README.md",
   "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9",
   "devDependencies": {
     "grunt": "~0.4.1",
