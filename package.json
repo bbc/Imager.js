@@ -17,7 +17,8 @@
     "resize",
     "polyfill",
     "shim",
-    "img"
+    "img",
+    "PictureFill"
   ],
   "author": "Mark McDonnell, Addy Osmani",
   "license": "Apache 2.0 open source licence",
