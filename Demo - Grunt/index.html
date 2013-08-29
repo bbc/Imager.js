@@ -19,6 +19,24 @@
         <script>
             var imager = new Imager({
                 availableWidths: [320, 640, 1024],
+
+                /*
+                    This regex captures 3 pieces of information:
+
+                    1. the path to the image -> Assets/Images/Generated/
+                       ^(Assets\/Images\/Generated\/)
+
+                    2. the start of the file name -> A-, B-, C-
+                       (\w-)
+
+                    3. the file extension -> .jpg
+                       (\.(?:jpg|png|gif))$
+
+                    The only other part of the regex isn't captured and that is the number specified in the file name.
+
+                    One other thing to note is the use of the non-capturing group -> (?: )
+                    This means we can use parenthesis as a way to 'group' a part of the regex without needing to capture it
+                 */
                 regex: /^(Assets\/Images\/Generated\/)(\w-)\d+(\.(?:jpg|png|gif))$/i
             });
         </script>
