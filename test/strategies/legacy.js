@@ -20,6 +20,38 @@ describe("Imager Legacy Strategy", function () {
         sandbox.restore();
     });
 
+    describe('applyOnPlaceholder', function(){
+        it('should detect if the element is a placeholder', function(){
+
+        });
+
+        it('should optionally apply a callback on the found placeholder', function(){
+
+        });
+    });
+
+    describe('requiresPlaceholder', function(){
+        it('should indicate that we should create a placeholder', function(){
+
+        });
+
+        it('should indicate that we should not create a placeholder', function(){
+
+        });
+    });
+
+    describe('updatePlaceholderUri', function(){
+        it('should update the `src` attribute of a found placeholder', function(){
+
+        });
+    });
+
+    describe('Imager.process', function(){
+        it('should replace the div nodes by the newly created img elements', function(){
+
+        });
+    });
+
     describe('createPlaceholder', function () {
         it('should replace container elements by placeholder', function () {
             var placeholder,

@@ -20,6 +20,38 @@ describe("Imager Container Replacer", function () {
         sandbox.restore();
     });
 
+    describe('applyOnPlaceholder', function(){
+        it('should detect an enclosed placeholder', function(){
+
+        });
+
+        it('should optionally apply a callback on the found placeholder', function(){
+
+        });
+    });
+
+    describe('requiresPlaceholder', function(){
+        it('should indicate that we should create a placeholder', function(){
+
+        });
+
+        it('should indicate that we should not create a placeholder', function(){
+
+        });
+    });
+
+    describe('updatePlaceholderUri', function(){
+        it('should update the `src` attribute of a found placeholder', function(){
+
+        });
+    });
+
+    describe('Imager.process', function(){
+        it('should keep intact the original array of nodes', function(){
+
+        });
+    });
+
     describe('createPlaceholder', function () {
         it('should create placeholder pictures in the container', function () {
             var placeholder;
