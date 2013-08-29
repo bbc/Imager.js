@@ -74,7 +74,7 @@ Having reviewed the polyfills for these implementations, the cons outweigh the p
 This demo requires the following commands to be run...
 
 - `npm install` (all dependencies specified in package.json)
-- `brew install ImageMagick`
+- `brew install ImageMagick` (for other installations see [http://www.imagemagick.org/script/binary-releases.php](http://www.imagemagick.org/script/binary-releases.php))
 
 Review the `Gruntfile.js` and update the custom sizes that you want to use (if no sizes are specified in the Gruntfile then 320, 640, 1024 are used)...
 
