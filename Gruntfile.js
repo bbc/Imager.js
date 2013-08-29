@@ -1,3 +1,4 @@
+// jshint es3:false, node:true
 module.exports = function (grunt) {
     "use strict";
 
@@ -55,7 +56,7 @@ module.exports = function (grunt) {
                 src: 'Gruntfile.js'
             },
             core: {
-                src: ['lib/**/*.js']
+                src: ['src/**/*.js']
             },
             tests: {
                 src: ['test/**/*.js'],
