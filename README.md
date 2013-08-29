@@ -89,6 +89,28 @@ The `data-src` is a composable URL towards a responsive image. You can use sever
     data-width="340"></div>
 ```
 
+### BBC Strategy
+
+The BBC strategy *replaces the container by a picture*.
+
+```html
+<!-- In a div -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+
+<!-- In a span -->
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture2.jpg" data-width="340"></span>
+```
+
+It will become:
+
+```html
+<!-- In a div -->
+<img src="http://placehold.it/340/picture.jpg" class="delayed-image-load responsive-img" data-width="340">
+
+<!-- In a span -->
+<img src="http://placehold.it/340/picture2.jpg" class="delayed-image-load responsive-img" data-width="340">
+```
+
 ### Container Strategy
 
 The container strategy *inserts a picture inside* a container tag.
@@ -98,22 +120,21 @@ The container strategy *inserts a picture inside* a container tag.
 <div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
 
 <!-- In a span -->
-<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></span>
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture2.jpg" data-width="340"></span>
 ```
 
-### Image Strategy
-
-The image strategy *replaces an existing placeholder* tag.
+It will become:
 
 ```html
 <!-- In a div -->
-<div class="news-headline">
-    <h2>Are Cats more Evil then Satan?</h2>
-
-    <img class="delayed-image-load" src="my/pics/blank.gif" data-src="http://placehold.it/{width}/picture.jpg" data-width="340">
-
-    <p>…</p>
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340">
+    <img src="http://placehold.it/340/picture.jpg" class="responsive-img">
 </div>
+
+<!-- In a span -->
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture2.jpg" data-width="340">
+    <img src="http://placehold.it/340/picture2.jpg" class="responsive-img">
+</span>
 ```
 
 
@@ -135,7 +156,19 @@ It is the tailored for people who want to control every single step of `Imager.j
 
 
 ```javascript
-"Example to be written";
+// simple call
+var imgr = new Imager(document.querySelectorAll('.delayed-image-load'));
+```
+
+```javascript
+// with jQuery and options
+var img = new Imager($(), {
+    replacementDelay: 250,
+    strategy: 'container',
+    placeholder:{
+        element: $('#blank_pixel').get(0)
+    }
+});
 ```
 
 ### `process([Function callback])`
@@ -145,7 +178,29 @@ based on the actual viewport size. You should call it every time a container siz
 window resize, a device orientation change etc.).
 
 ```javascript
-"Example to be written";
+var imgr = new Imager(document.querySelectorAll('.delayed-image-load'));
+imgr.process();
+```
+
+```javascript
+//with a callback
+var imgr = new Imager(document.querySelectorAll('.delayed-image-load'), { replacementDelay: 666 });
+imgr.process(function onProcessed(){
+    console.log('666ms later', this.nodes);
+});
+```
+
+### `update(NodeList collection)`
+
+Replaces and update the actual pool of elements by new ones. It can be a mix of already processed containers or not. Imager will take
+care of that. As Imager does not deal with *live* `NodeList`, it is a way to handle new elements.
+
+```javascript
+var imgr = Imager.init($('.delayed-image-load'));
+
+$('body').append('<div clas="delayed-image-load" data-src="placekitten.com/{width}"></div>');
+
+img.update($('.delayed-image-load'))
 ```
 
 ## Contributing
