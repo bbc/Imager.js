@@ -75,7 +75,7 @@
      * @returns {boolean}
      */
     ImagerContainerStrategy.prototype.requiresPlaceholder = function requiresPlaceholder (element) {
-        return this.applyOnPlaceholder(element) === false;
+        return element.hasAttribute('data-src') && this.applyOnPlaceholder(element) === false;
     };
 
     /**

@@ -4,7 +4,7 @@
 /* globals describe, it, expect */
 
 describe("Imager Container Replacer", function () {
-    var doc, sandbox, instance, fixtures;
+    var doc, sandbox, instance, fixtures, strategy;
 
     beforeEach(function () {
         doc = document.createElement('div');
@@ -14,6 +14,7 @@ describe("Imager Container Replacer", function () {
         fixtures = doc.querySelectorAll('#container .delayed-image-load');
 
         instance = new Imager(fixtures);
+        strategy = instance.strategy;
     });
 
     afterEach(function () {
@@ -22,33 +23,55 @@ describe("Imager Container Replacer", function () {
 
     describe('applyOnPlaceholder', function(){
         it('should detect an enclosed placeholder', function(){
+            expect(strategy.applyOnPlaceholder(doc.querySelector('.delayed-image-load'))).to.be.false;
+            expect(strategy.applyOnPlaceholder(doc.querySelector('#container'))).to.be.false;
 
+            expect(strategy.applyOnPlaceholder(doc.querySelector('#preloaded-placeholder .delayed-image-load'))).to.be.true;
         });
 
-        it('should optionally apply a callback on the found placeholder', function(){
+        it('should optionally apply a callback on the found placeholder', function(done){
+            var container = doc.querySelector('#preloaded-placeholder .delayed-image-load');
 
+            strategy.applyOnPlaceholder(container, function(placeholder, element){
+                expect(element).not.to.equal(placeholder);
+                expect(element).to.equal(container);
+
+                done();
+            });
         });
     });
 
     describe('requiresPlaceholder', function(){
         it('should indicate that we should create a placeholder', function(){
-
+            expect(strategy.requiresPlaceholder(doc.querySelector('.delayed-image-load'))).to.be.true;
         });
 
         it('should indicate that we should not create a placeholder', function(){
-
+            expect(strategy.requiresPlaceholder(doc.querySelector('#container'))).to.be.false;
+            expect(strategy.requiresPlaceholder(doc.querySelector('#preloaded-placeholder .delayed-image-load'))).to.be.false;
         });
     });
 
     describe('updatePlaceholderUri', function(){
         it('should update the `src` attribute of a found placeholder', function(){
+            var container = doc.querySelector('#preloaded-placeholder .delayed-image-load'),
+                placeholder = container.querySelector('.responsive-img')
 
+            expect(container.querySelector('.responsive-img').src).to.equal('http://placehold.it/200/picture2.jpg');
+
+            strategy.updatePlaceholderUri(container, 'http://example.com/default.jpg');
+
+            expect(container.querySelector('.responsive-img').src).to.equal('http://example.com/default.jpg');
         });
     });
 
     describe('Imager.process', function(){
-        it('should keep intact the original array of nodes', function(){
+        it('should keep intact the original array of nodes', function(done){
+            instance.process(function(){
+                expect(this.nodes).to.deep.equal(Array.prototype.slice.call(fixtures));
 
+                done();
+            });
         });
     });
 

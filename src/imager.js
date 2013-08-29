@@ -84,7 +84,7 @@ Imager.prototype.process = function processCollection (callback) {
     this.nextTick(function () {
         self.updateImagesSource();
         self._processing = false;
-        typeof callback === 'function' && callback();
+        typeof callback === 'function' && callback.call(self);
     });
 };
 
