@@ -148,8 +148,8 @@
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
         return src.replace(this.regex, function (match, path, file, extension) {
-            file = (file) ? file : '';
-            extension = (extension && extension !== match) ? extension : '';
+            file = file || '';
+            extension = extension !== match ? extension : '';
             return path + file + selectedWidth + ((extension) ? extension : '');
         });
     };
