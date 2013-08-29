@@ -65,6 +65,54 @@ Much of this work can be repurposed to work with a more standards-based approach
 
 For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it Imager.js
 
-## Why not srcset/Picturefill polyfills:
+## Why not srcset/Picturefill polyfills
 
 Having reviewed the polyfills for these implementations, the cons outweigh the pros at this point. You either take performance hits or have to deal with 2x image requests, which is counter-intuitive. I'd prefer to just use srcset on its own, but other than WebKit other browsers have yet to implement at this point.
+
+## Grunt Responsive Image Demo
+
+This demo requires the following commands to be run...
+
+- `npm install` (all dependencies specified in package.json)
+- `brew install ImageMagick`
+
+Review the `Gruntfile.js` and update the custom sizes that you want to use (if no sizes are specified in the Gruntfile then 320, 640, 1024 are used)...
+
+```js
+options: {
+    sizes: [
+        {
+            width: 320,
+            height: 240
+        },
+        {
+            name: 'large',
+            width: 640
+        },
+        {
+            name   : 'large',
+            width  : 1024,
+            suffix : '_x2',
+            quality: 0.6
+        }
+    ]
+}
+```
+
+...be aware the names of the files need to change within your HTML...
+
+```html
+<div class="delayed-image-load" data-src="Assets/Images/Generated/A-320.jpg" data-width="1024"></div>
+<div class="delayed-image-load" data-src="Assets/Images/Generated/B-320.jpg" data-width="1024"></div>
+<div class="delayed-image-load" data-src="Assets/Images/Generated/C-320.jpg" data-width="1024"></div>
+```
+
+You can then pass those image sizes through to Imager.js along with a regex for Imager to parse the information...
+
+```js
+var imager = new Imager({
+    availableWidths: [320, 640, 1024]
+});
+```
+
+For full details of the Grunt task options see the [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images/) repo on GitHub.

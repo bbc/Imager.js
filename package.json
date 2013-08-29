@@ -19,7 +19,8 @@
   "license": "Apache 2.0 open source licence",
   "readmeFilename": "README.md",
   "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9",
-  "dependencies": {
+  "devDependencies": {
+    "grunt": "*",
     "grunt-responsive-images": "0.0.3"
   }
 }
