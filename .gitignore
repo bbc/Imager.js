@@ -3,3 +3,7 @@ dist
 .tmp
 .sass-cache
 .DS_Store
+.jpg
+.png
+.gif
+Generated
