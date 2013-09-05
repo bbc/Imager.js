@@ -11,6 +11,7 @@
   "boss": true,
   "eqnull": true,
   "browser": true,
+  "quotmark": "single",
   "globalstrict": true,
   "es3": true,
   "globals": {}

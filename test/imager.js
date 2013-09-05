@@ -19,11 +19,11 @@ describe('Imager', function () {
     });
 
     function generateNodes (count, tag) {
-        return Array.apply(null, new Array(count)).map(function(item, i){
+        return Array.apply(null, new Array(count)).map(function (item, i) {
             var el = document.createElement(tag || 'div');
 
             el.className = 'delayed-image-load';
-            el.dataset.src = 'http://placehold.it/{width}/newpic'+(i * Math.random())+'.jpg';
+            el.dataset.src = 'http://placehold.it/{width}/newpic' + (i * Math.random()) + '.jpg';
 
             return el;
         });
@@ -92,8 +92,8 @@ describe('Imager', function () {
         });
     });
 
-    describe('update', function(){
-        it('should replace the actual collection of nodes with a static array', function(){
+    describe('update', function () {
+        it('should replace the actual collection of nodes with a static array', function () {
             instance.update(undefined);
             expect(instance.nodes).to.be.empty;
 
@@ -107,7 +107,7 @@ describe('Imager', function () {
             expect(instance.nodes).to.have.length.of(3);
         });
 
-        it('should track new elements from a mutated object (ie: live NodeList)', function(){
+        it('should track new elements from a mutated object (ie: live NodeList)', function () {
             var liveNodeList = doc.getElementsByClassName('delayed-image-load');
 
             instance.update(liveNodeList);

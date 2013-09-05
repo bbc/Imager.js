@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // jshint -W030: true
 
@@ -87,7 +87,7 @@ Imager.prototype.process = function processCollection (callback) {
     this.nextTick(function () {
         self.updateImagesSource();
         self._processing = false;
-        if (typeof callback === 'function'){
+        if (typeof callback === 'function') {
             callback.call(self);
         }
     });
@@ -99,7 +99,7 @@ Imager.prototype.process = function processCollection (callback) {
  * @api
  * @param {NodeList|Array} collection
  */
-Imager.prototype.update = function updateNodes(collection){
+Imager.prototype.update = function updateNodes (collection) {
     this.nodes = Array.prototype.slice.call(collection || []);
 };
 
@@ -165,7 +165,7 @@ Imager.init = function ImagerFactory (nodes, options) {
 
 /**
  * Replaces matching patterns in a Uri string.
- * -> "hey i'm {age} years old" + {age: 23} = "hey i'm 23 years old"
+ * -> 'hey i'm {age} years old' + {age: 23} = 'hey i'm 23 years old'
  *
  * @api
  * @static

@@ -1,6 +1,6 @@
 // jshint es3:false, node:true
 module.exports = function (grunt) {
-    "use strict";
+    'use strict';
 
     // Project configuration.
     grunt.initConfig({
@@ -50,7 +50,7 @@ module.exports = function (grunt) {
 
         jshint: {
             options: {
-                jshintrc: ".jshintrc"
+                jshintrc: '.jshintrc'
             },
             gruntfile: {
                 src: 'Gruntfile.js'
@@ -72,17 +72,17 @@ module.exports = function (grunt) {
 
         watch: {
             tests: {
-                files: ["src/**/*.js", "test/**/*.js"],
-                tasks: ["karma:unit:run"]
+                files: ['src/**/*.js', 'test/**/*.js'],
+                tasks: ['karma:unit:run']
             }
         }
     });
 
     // Load NPM Tasks
     grunt.loadNpmTasks('grunt-responsive-images');
-    grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.loadNpmTasks("grunt-karma");
-    grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // Default Task
     grunt.registerTask('default', ['responsive_images:dev']);

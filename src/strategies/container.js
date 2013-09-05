@@ -1,6 +1,6 @@
 /* globals Imager */
 (function (strategies) {
-    "use strict";
+    'use strict';
 
     /**
      * Create a new Responsive Image Container strategy instance.
@@ -41,7 +41,7 @@
 
         while (i--) {
             if (element.children[i].className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
-                if (typeof callback === 'function'){
+                if (typeof callback === 'function') {
                     callback(element.children[i], element);
                 }
 
@@ -61,7 +61,7 @@
     ImagerContainerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
         var placeholder = this.element.cloneNode();
 
-        if (element.hasAttribute('data-width')){
+        if (element.hasAttribute('data-width')) {
             placeholder.width = element.getAttribute('data-width');
         }
 

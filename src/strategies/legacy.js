@@ -1,6 +1,6 @@
 /* globals Imager */
 (function (strategies) {
-    "use strict";
+    'use strict';
 
     /**
      * Create a new Responsive Image Legacy strategy instance.
@@ -38,7 +38,7 @@
      */
     ImagerContainerStrategy.prototype.applyOnPlaceholder = function applyOnPlaceholder (element, callback) {
         if (element.className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
-            if (typeof callback === 'function'){
+            if (typeof callback === 'function') {
                 callback(element, element);
             }
 
@@ -57,7 +57,7 @@
     ImagerContainerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
         var placeholder = this.element.cloneNode();
 
-        if (element.hasAttribute('data-width')){
+        if (element.hasAttribute('data-width')) {
             placeholder.width = element.getAttribute('data-width');
             placeholder.setAttribute('data-width', element.getAttribute('data-width'));
         }
@@ -66,7 +66,7 @@
         placeholder.setAttribute('data-src', element.getAttribute('data-src'));
 
         //DocumentFragment and Array elements won't have a parentNode
-        if (element.parentNode){
+        if (element.parentNode) {
             element.parentNode.replaceChild(placeholder, element);
         }
 
