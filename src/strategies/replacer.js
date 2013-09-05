@@ -11,7 +11,7 @@
      * @example
      * <div data-src="http://example.com/images/picture-{width}.jpg"></div>
      */
-    function ImagerContainerStrategy (options) {
+    function ImagerReplacerStrategy (options) {
         options = options || {};
 
         this.matchingClassName = options.matchingClassName || 'responsive-img';
@@ -26,7 +26,7 @@
      * @type {string}
      * @private
      */
-    ImagerContainerStrategy._id = 'replacer';
+    ImagerReplacerStrategy._id = 'replacer';
 
     /**
      * Iterates on an element content to discover its responsive placeholder.
@@ -36,7 +36,7 @@
      * @param {Function=} callback
      * @returns {boolean}
      */
-    ImagerContainerStrategy.prototype.applyOnPlaceholder = function applyOnPlaceholder (element, callback) {
+    ImagerReplacerStrategy.prototype.applyOnPlaceholder = function applyOnPlaceholder (element, callback) {
         if (element.className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
             if (typeof callback === 'function') {
                 callback(element, element);
@@ -54,7 +54,7 @@
      *
      * @param {HTMLElement} element
      */
-    ImagerContainerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
+    ImagerReplacerStrategy.prototype.createPlaceholder = function createPlaceholder (element) {
         var placeholder = this.element.cloneNode();
 
         if (element.hasAttribute('data-width')) {
@@ -79,7 +79,7 @@
      * @param {HTMLElement} element
      * @returns {boolean}
      */
-    ImagerContainerStrategy.prototype.requiresPlaceholder = function requiresPlaceholder (element) {
+    ImagerReplacerStrategy.prototype.requiresPlaceholder = function requiresPlaceholder (element) {
         return element.hasAttribute('data-src') && this.applyOnPlaceholder(element) === false;
     };
 
@@ -89,12 +89,12 @@
      * @param {HTMLElement} element
      * @param {String} uri
      */
-    ImagerContainerStrategy.prototype.updatePlaceholderUri = function updatePlaceholderUri (element, uri) {
+    ImagerReplacerStrategy.prototype.updatePlaceholderUri = function updatePlaceholderUri (element, uri) {
         this.applyOnPlaceholder(element, function (placeholder) {
             placeholder.src = uri;
         });
     };
 
     // Exporting
-    strategies[ImagerContainerStrategy._id] = ImagerContainerStrategy;
+    strategies[ImagerReplacerStrategy._id] = ImagerReplacerStrategy;
 })(Imager.strategies);

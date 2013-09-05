@@ -56,7 +56,7 @@ function Imager (collection, options) {
             Strategy = options.strategy;
             break;
         default:
-            Strategy = Imager.strategies.replacer;
+            Strategy = Imager.strategies[Imager.DEFAULT_STRATEGY];
     }
 
     this.strategy = new Strategy(options.placeholder);

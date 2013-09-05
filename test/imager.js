@@ -10,7 +10,7 @@ describe('Imager', function () {
         doc = document.createElement('div');
         doc.innerHTML = window.__html__['test/fixtures/imager.html'];
 
-        instance = new Imager(generateNodes(10));
+        instance = new Imager(generateNodes(10), { strategy: 'container' });
         sandbox = sinon.sandbox.create();
     });
 

@@ -13,7 +13,7 @@ describe('Imager Legacy Strategy', function () {
         sandbox = sinon.sandbox.create();
         fixtures = doc.querySelectorAll('#container .delayed-image-load');
 
-        instance = new Imager(fixtures, { strategy: 'replacer' });
+        instance = new Imager(fixtures);
         strategy = instance.strategy;
     });
 
