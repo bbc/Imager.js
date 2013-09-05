@@ -89,9 +89,9 @@ The `data-src` is a composable URL towards a responsive image. You can use sever
     data-width="340"></div>
 ```
 
-### BBC Strategy
+### Replacer Strategy
 
-The BBC strategy *replaces the container by a picture*.
+The Replacer strategy ***replaces** the container by a responsive picture*.
 
 ```html
 <!-- In a div -->
@@ -113,7 +113,7 @@ It will become:
 
 ### Container Strategy
 
-The container strategy *inserts a picture inside* a container tag.
+The container strategy *inserts a responsive picture in a **container** tag*.
 
 ```html
 <!-- In a div -->

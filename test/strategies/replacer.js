@@ -8,12 +8,12 @@ describe('Imager Legacy Strategy', function () {
 
     beforeEach(function () {
         doc = document.createElement('div');
-        doc.innerHTML = window.__html__['test/fixtures/strategy-legacy.html'];
+        doc.innerHTML = window.__html__['test/fixtures/strategy-replacer.html'];
 
         sandbox = sinon.sandbox.create();
         fixtures = doc.querySelectorAll('#container .delayed-image-load');
 
-        instance = new Imager(fixtures, { strategy: 'legacy' });
+        instance = new Imager(fixtures, { strategy: 'replacer' });
         strategy = instance.strategy;
     });
 

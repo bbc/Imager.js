@@ -3,7 +3,7 @@
     'use strict';
 
     /**
-     * Create a new Responsive Image Legacy strategy instance.
+     * Create a new Responsive Image Replacer strategy instance.
      * It implies to work on an HTML structure described in example.
      *
      * @param {ImagerStrategyOptions} options
@@ -26,7 +26,7 @@
      * @type {string}
      * @private
      */
-    ImagerContainerStrategy._id = 'legacy';
+    ImagerContainerStrategy._id = 'replacer';
 
     /**
      * Iterates on an element content to discover its responsive placeholder.

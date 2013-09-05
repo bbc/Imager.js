@@ -56,7 +56,7 @@ function Imager (collection, options) {
             Strategy = options.strategy;
             break;
         default:
-            Strategy = Imager.strategies.container;
+            Strategy = Imager.strategies.replacer;
     }
 
     this.strategy = new Strategy(options.placeholder);
@@ -191,3 +191,10 @@ Imager.replaceUri = function replaceUri (uri, values) {
  * @type {Object}
  */
 Imager.strategies = {};
+
+/**
+ * The default strategy which is going to be used if none of them is provided with `new Imager` or `Imager.init`.
+ *
+ * @type {string}
+ */
+Imager.DEFAULT_STRATEGY = 'replacer';
