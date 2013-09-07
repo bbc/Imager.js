@@ -81,7 +81,7 @@ module.exports = function (grunt) {
             },
             legacy: {
                 src: 'Imager.js',
-                dest: 'imager-legacy.min.js'
+                dest: 'dist/imager-legacy.min.js'
             },
             options: {
                 report: 'gzip'
