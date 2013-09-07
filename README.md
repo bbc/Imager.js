@@ -39,22 +39,22 @@ Imager.init(images);
 ### Hooking On External Events
 
 ```javascript
-var manager = Imager.init($("main .delayed-image-load"));
+var imgr = Imager.init($("main .delayed-image-load"));
 
 $.on("resize orientationchange", function(){
-    manager.process();
+    imgr.process();
 });
 ```
 
 ### Multiple Managers
 
 ```javascript
-var contentImageManager = Imager.init($("main .delayed-image-load"));
-var sidebarImageManager = Imager.init($("aside .pics"));
+var imgrContent = Imager.init($("main .delayed-image-load"));
+var imgrSidebar = Imager.init($("aside .pics"));
 
 window.addEventListener("resize", function(){
     //resize only content pictures as the sidebar is fixed size (for example)
-    contentImageManager.process();
+    imgrContent.process();
 });
 ```
 
@@ -146,7 +146,21 @@ Creates and returns a new Imager instance after `process()` being called on `col
 If you don't know what you do, this is definitely the one you should pick up.
 
 ```javascript
-"Example to be written";
+// default way
+Imager.init(document.querySelectorAll('.delayed-image-load'));
+
+// with custom options
+Imager.init(document.querySelectorAll('.delayed-image-load'), {
+    availableWidths: [100, 250, 500],
+    replacementDelay: 50
+});
+
+// if we'd wanted to resize pictures on click on a button making the window going full screen
+var imgr = Imager.init(document.querySelectorAll('.delayed-image-load'));
+document.getElementById('fullscreen-button').addEventListener('click', function(){
+    document.getElementById('main').requestFullscreen();
+    imgr.process();
+});
 ```
 
 ### `new Imager(NodeList collection[, Object options])`
@@ -162,10 +176,10 @@ var imgr = new Imager(document.querySelectorAll('.delayed-image-load'));
 
 ```javascript
 // with jQuery and options
-var img = new Imager($(), {
+var img = new Imager($('.delayed-image-load'), {
     replacementDelay: 250,
     strategy: 'container',
-    placeholder:{
+    placeholder: {
         element: $('#blank_pixel').get(0)
     }
 });
