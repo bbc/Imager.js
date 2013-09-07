@@ -39,7 +39,8 @@ function Imager (collection, options) {
     options = options || {};
 
     this.update(collection);
-    this.replacementDelay = parseInt(options.replacementDelay || 200, 10);
+    options.strategy = options.strategy || Imager.DEFAULT_STRATEGY;
+    this.replacementDelay = Number(options.replacementDelay || 200);
     this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
     this.availableWidths = this.availableWidths.sort(function (a, b) {
         return b - a;
@@ -47,17 +48,7 @@ function Imager (collection, options) {
 
     this._processing = false;
 
-    switch (typeof options.strategy) {
-        case 'string':
-            Strategy = Imager.strategies[options.strategy];
-            break;
-        case 'function':
-        case 'object':
-            Strategy = options.strategy;
-            break;
-        default:
-            Strategy = Imager.strategies[Imager.DEFAULT_STRATEGY];
-    }
+    Strategy = typeof options.strategy === 'string' ? Imager.strategies[options.strategy] : options.strategy;
 
     this.strategy = new Strategy(options.placeholder);
 }
