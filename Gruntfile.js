@@ -70,6 +70,24 @@ module.exports = function (grunt) {
             }
         },
 
+        uglify: {
+            strategy: {
+                src: ['src/imager.js', 'src/strategies/<%= grunt.task.current.args[0] %>.js'],
+                dest: 'dist/imager-<%= grunt.task.current.args[0] %>.min.js'
+            },
+            'strategy-all': {
+                src: ['src/imager.js', 'src/strategies/*.js'],
+                dest: 'dist/imager-all.min.js'
+            },
+            legacy: {
+                src: 'Imager.js',
+                dest: 'imager-legacy.min.js'
+            },
+            options: {
+                report: 'gzip'
+            }
+        },
+
         watch: {
             tests: {
                 files: ['src/**/*.js', 'test/**/*.js'],
@@ -83,10 +101,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // Default Task
     grunt.registerTask('default', ['responsive_images:dev']);
     grunt.registerTask('debug', ['karma:unit', 'watch']);
+    grunt.registerTask('build', ['uglify:strategy:container', 'uglify:strategy:replacer', 'uglify:strategy-all', 'uglify:legacy']);
     grunt.registerTask('test', ['jshint', 'karma:ci']);
 
 };

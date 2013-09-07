@@ -8,26 +8,26 @@
     "test": "test"
   },
   "scripts": {
-      "test": "grunt test"
+    "test": "grunt test"
   },
   "repository": {
-      "type": "git",
-      "url": "git://github.com/BBC-News/Imager.js.git"
+    "type": "git",
+    "url": "git://github.com/BBC-News/Imager.js.git"
   },
   "keywords": [
-      "responsive",
-      "srcset",
-      "images",
-      "resize",
-      "polyfill",
-      "shim",
-      "img",
-      "PictureFill"
+    "responsive",
+    "srcset",
+    "images",
+    "resize",
+    "polyfill",
+    "shim",
+    "img",
+    "PictureFill"
   ],
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-uglify": "~0.2.4",
     "grunt-karma": "~0.6.1",
     "grunt-responsive-images": "0.0.3",
     "karma": "~0.10.1",
