@@ -16,7 +16,7 @@
 
         this.matchingClassName = options.matchingClassName || 'responsive-img';
         this.element = options.element || document.createElement('img');
-        this.element.src = options.src || 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
+        this.element.src = options.src || 'data:null';
         this.element.className += ' ' + this.matchingClassName;
     }
 
@@ -80,7 +80,7 @@
      * @returns {boolean}
      */
     ImagerReplacerStrategy.prototype.requiresPlaceholder = function requiresPlaceholder (element) {
-        return element.hasAttribute('data-src') && this.applyOnPlaceholder(element) === false;
+        return element.hasAttribute('data-src') && !this.applyOnPlaceholder(element);
     };
 
     /**

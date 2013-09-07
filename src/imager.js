@@ -34,13 +34,11 @@ ImagerStrategyOptions;
  * @constructor
  */
 function Imager (collection, options) {
-    var Strategy;
-
     options = options || {};
 
     this.update(collection);
-    options.strategy = options.strategy || Imager.DEFAULT_STRATEGY;
-    this.replacementDelay = Number(options.replacementDelay || 200);
+    options.strategy = options.strategy || 'replacer';
+    this.replacementDelay = options.replacementDelay || 200;
     this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
     this.availableWidths = this.availableWidths.sort(function (a, b) {
         return b - a;
@@ -48,7 +46,7 @@ function Imager (collection, options) {
 
     this._processing = false;
 
-    Strategy = typeof options.strategy === 'string' ? Imager.strategies[options.strategy] : options.strategy;
+    var Strategy = options.strategy.call ? options.strategy : Imager.strategies[options.strategy];
 
     this.strategy = new Strategy(options.placeholder);
 }
@@ -57,6 +55,7 @@ function Imager (collection, options) {
  * Processes any element from the collection, updates the size or eventually transform it as image
  *
  * @api
+ * @return {Imager}
  */
 Imager.prototype.process = function processCollection (callback) {
     var i = this.nodes.length,
@@ -82,6 +81,8 @@ Imager.prototype.process = function processCollection (callback) {
             callback.call(self);
         }
     });
+
+    return self;
 };
 
 /**
@@ -91,7 +92,7 @@ Imager.prototype.process = function processCollection (callback) {
  * @param {NodeList|Array} collection
  */
 Imager.prototype.update = function updateNodes (collection) {
-    this.nodes = Array.prototype.slice.call(collection || []);
+    this.nodes = [].slice.call(collection || []);
 };
 
 /**
@@ -148,10 +149,7 @@ Imager.prototype.nextTick = function nextTick (callback) {
  * @constructor
  */
 Imager.init = function ImagerFactory (nodes, options) {
-    var instance = new Imager(nodes, options);
-    instance.process();
-
-    return instance;
+    return new Imager(nodes, options).process();
 };
 
 /**
@@ -182,10 +180,3 @@ Imager.replaceUri = function replaceUri (uri, values) {
  * @type {Object}
  */
 Imager.strategies = {};
-
-/**
- * The default strategy which is going to be used if none of them is provided with `new Imager` or `Imager.init`.
- *
- * @type {string}
- */
-Imager.DEFAULT_STRATEGY = 'replacer';
