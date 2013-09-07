@@ -83,7 +83,7 @@ describe('Imager Legacy Strategy', function () {
             instance.process();
 
             expect(instance.nodes[0]).to.be.instanceOf(HTMLElement);
-            expect(instance.nodes[0].src).to.equal('data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7');
+            expect(instance.nodes[0].src).to.equal('data:null');
             expect(instance.nodes[0].classList.contains('responsive-img')).to.be.true;
 
             //we make sure we have two distinct image objects
