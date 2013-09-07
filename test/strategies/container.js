@@ -84,7 +84,7 @@ describe('Imager Container Strategy', function () {
             placeholder = fixtures[0].querySelector('img');
 
             expect(placeholder).to.be.instanceOf(HTMLElement);
-            expect(placeholder.src).to.equal('data:null');
+            expect(placeholder.src).to.equal('data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=');
             expect(placeholder.classList.contains('responsive-img')).to.be.true;
 
             //we make sure we have two distinct image objects

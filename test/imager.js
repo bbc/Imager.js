@@ -10,7 +10,10 @@ describe('Imager', function () {
         doc = document.createElement('div');
         doc.innerHTML = window.__html__['test/fixtures/imager.html'];
 
-        instance = new Imager(generateNodes(10), { strategy: 'container' });
+        instance = new Imager(generateNodes(10), {
+          availableWidths: [320, 480, 666, 768, 1024],
+          strategy: 'container'
+        });
         sandbox = sinon.sandbox.create();
     });
 
@@ -32,7 +35,7 @@ describe('Imager', function () {
     describe('constructor', function () {
         it('should compute the proper attributes', function () {
             expect(instance.nodes).to.be.an('array').and.to.have.length.of(10);
-            expect(instance.availableWidths).to.be.an('array').and.to.contain(235);
+            expect(instance.availableWidths).to.be.an('array').and.to.contain(666);   // because not in the default config
             expect(instance.strategy.constructor).to.have.property('_id');
         });
 
@@ -49,7 +52,7 @@ describe('Imager', function () {
             placeholder.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
 
             expect(instance.nodes).to.be.an('array').and.to.have.length.of(5);
-            expect(instance.availableWidths).to.be.an('array').and.to.contain(99).and.not.to.contain(235);
+            expect(instance.availableWidths).to.be.an('array').and.to.contain(99).and.not.to.contain(666);
             expect(instance.strategy.constructor).to.have.property('_id');
         });
     });
@@ -127,17 +130,17 @@ describe('Imager', function () {
 
     describe('getBestWidth', function () {
         it('should return the closest available width to fit in', function () {
-            expect(instance.getBestWidth(1024)).to.equal(736);
-            expect(instance.getBestWidth(800)).to.equal(736);
-            expect(instance.getBestWidth(415)).to.equal(445);
-            expect(instance.getBestWidth(410)).to.equal(410);
-            expect(instance.getBestWidth(409)).to.equal(410);
-            expect(instance.getBestWidth(50)).to.equal(96);
+            expect(instance.getBestWidth(2000)).to.equal(1024);
+            expect(instance.getBestWidth(481)).to.equal(666);
+            expect(instance.getBestWidth(480)).to.equal(480);
+            expect(instance.getBestWidth(479)).to.equal(480);
+            expect(instance.getBestWidth(409)).to.equal(480);
+            expect(instance.getBestWidth(50)).to.equal(320);
         });
 
         it('should use the default max width value if provided', function () {
-            expect(instance.getBestWidth(50, 300)).to.equal(96);
-            expect(instance.getBestWidth(800, 300)).to.equal(300);
+            expect(instance.getBestWidth(50, 300)).to.equal(320);
+            expect(instance.getBestWidth(2000, 300)).to.equal(300);
         });
     });
 

@@ -39,7 +39,7 @@ function Imager (collection, options) {
     this.update(collection);
     options.strategy = options.strategy || 'replacer';
     this.replacementDelay = options.replacementDelay || 200;
-    this.availableWidths = options.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+    this.availableWidths = options.availableWidths || [320, 480, 768];
     this.availableWidths = this.availableWidths.sort(function (a, b) {
         return b - a;
     });
