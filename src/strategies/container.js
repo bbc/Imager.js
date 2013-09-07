@@ -16,7 +16,7 @@
 
         this.matchingClassName = options.matchingClassName || 'responsive-img';
         this.element = options.element || document.createElement('img');
-        this.element.src = options.src || 'data:null';
+        this.element.src = options.src || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=';
         this.element.className += ' ' + this.matchingClassName;
     }
 
@@ -41,7 +41,7 @@
 
         while (i--) {
             if (element.children[i].className.match(new RegExp('(^| )' + this.matchingClassName + '( |$)'))) {
-                if (typeof callback === 'function') {
+                if (callback) {
                     callback(element.children[i], element);
                 }
 
