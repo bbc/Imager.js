@@ -18,8 +18,7 @@ module.exports = function(config) {
       'karma-chai-plugins'
     ],
     files: [
-      'src/imager.js',
-      'src/strategies/*.js',
+      'dist/imager-all.min.js',
       'test/**/*.js',
       'test/fixtures/*.html'
     ],

@@ -91,7 +91,7 @@ module.exports = function (grunt) {
         watch: {
             tests: {
                 files: ['src/**/*.js', 'test/**/*.js'],
-                tasks: ['karma:unit:run']
+                tasks: ['uglify:strategy-all', 'karma:unit:run']
             }
         }
     });
@@ -107,6 +107,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['responsive_images:dev']);
     grunt.registerTask('debug', ['karma:unit', 'watch']);
     grunt.registerTask('build', ['uglify:strategy:container', 'uglify:strategy:replacer', 'uglify:strategy-all', 'uglify:legacy']);
-    grunt.registerTask('test', ['jshint', 'karma:ci']);
+    grunt.registerTask('test', ['jshint', 'uglify:strategy-all', 'karma:ci']);
 
 };
