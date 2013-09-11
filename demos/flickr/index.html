@@ -10,6 +10,11 @@
         <h1>Flickr Demo</h1>
 
         <p>
+          This demo illustrates an URL replacement with an interpolated width value, a string in the case of Flickr. <br>
+          Resize the window and notice the value changing according to the resolution.
+        </p>
+
+        <p>
           <code>img[src]</code> <span id="img-src-value">?</span>,
           <code>img[width]</code> <span id="img-width-value">?</span>
         </p>
@@ -32,10 +37,10 @@
                     ]
                   }),
                   replace = (function(imgr){ return function(){
-                        imgr.process();
-
-                        document.getElementById('img-src-value').innerHTML = '.../' + imgr.nodes[0].src.split('/').pop();
-                        document.getElementById('img-width-value').innerHTML = imgr.nodes[0].width;
+                        imgr.process(function onDelayedCalculation(){
+                          document.getElementById('img-src-value').innerHTML = '.../' + imgr.nodes[0].src.split('/').pop();
+                          document.getElementById('img-width-value').innerHTML = imgr.nodes[0].width;
+                        });
                       };
                   })(imager);
 
