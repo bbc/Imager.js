@@ -1,0 +1,51 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Flickr Responsive Demo — Imager.js</title>
+        <link rel="stylesheet" href="../strategies/Assets/Styles/base.css">
+    </head>
+    <body>
+        <h1>Flickr Demo</h1>
+
+        <p>
+          This demo illustrates an URL replacement with an interpolated width value, a string in the case of Flickr. <br>
+          Resize the window and notice the value changing according to the resolution.
+        </p>
+
+        <p>
+          <code>img[src]</code> <span id="img-src-value">?</span>,
+          <code>img[width]</code> <span id="img-width-value">?</span>
+        </p>
+
+        <div id="flickr-picture" class="display-src" data-src="//farm4.staticflickr.com/3773/9676470682_3d418eeb40_{width}.jpg" data-width="1000"></div>
+
+        <script src="../../src/imager.js"></script>
+        <script src="../../src/strategies/replacer.js"></script>
+        <script>
+              var imager = Imager.init([document.getElementById('flickr-picture')], {
+                    availableWidths: [
+                      [75, 's_d'],
+                      [150, 'a_d'],
+                      [240, 'm_d'],
+                      [320, 'n_d'],
+                      [500, 'd'],
+                      [640, 'z_d'],
+                      [800, 'c_d'],
+                      [1024, 'b_d']
+                    ]
+                  }),
+                  replace = (function(imgr){ return function(){
+                        imgr.process(function onDelayedCalculation(){
+                          document.getElementById('img-src-value').innerHTML = '.../' + imgr.nodes[0].src.split('/').pop();
+                          document.getElementById('img-width-value').innerHTML = imgr.nodes[0].width;
+                        });
+                      };
+                  })(imager);
+
+              window.addEventListener('resize', replace);
+              window.addEventListener('orientationchange', replace);
+        </script>
+    </body>
+</html>

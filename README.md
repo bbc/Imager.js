@@ -1,15 +1,16 @@
 # Imager.js
 
- * Website: http://responsivenews.co.uk/
- * Source: http://github.com/bbc-news/Imager.js 
- 
-*Note: this project is not ready for production and is currently in development*
- 
-Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.
+Imager.js is an alternative solution to the issue of how to handle responsive image loading within a responsive code base.
 
-## What is it?
+This is an open-source software baked by developers at [BBC News](http://responsivenews.co.uk/) as part of the Responsive News initiative.
 
-An open-source port of the BBC News technique for handling the loading of images within a responsive code base.
+## How It Works?
+
+Imager.js replaces responsive images placeholders and builds URLs to the most efficient size. It follows this workflow:
+
+1. Every potential picture is replaced by a placeholder picture (transparent by default)
+1. The responsive image URL is built based on the placeholder picture size
+1. The responsive image is inserted in lieu of the placeholder
 
 ## Requirements
 
@@ -19,38 +20,242 @@ For the purpose of demonstration we're using the 3rd party service [Placehold.it
 
 ## Using Imager.js
 
-See the `Demo` directory for full example and source files.
+Consider the following HTML structure wherever you need a responsive image to be loaded:
 
-Wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded. 
+```html
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+```
 
-Then within your JavaScript, initialise a new instance of the Imager Enhancer library: `new ImageEnhancer();`
+ * `data-width` is the size of the image placeholder (where the actual image will eventually be loaded)
+ * `data-src` is the initial URL to be loaded
+
+You have then to perform the replacement using the following JavaScript code:
+
+```javascript
+var images = document.querySelectorAll(".delayed-image-load");
+Imager.init(images);
+```
+
+### Hooking On External Events
+
+```javascript
+var imgr = Imager.init($("main .delayed-image-load"));
+
+$.on("resize orientationchange", function(){
+    imgr.process();
+});
+```
+
+### Multiple Managers
+
+```javascript
+var imgrContent = Imager.init($("main .delayed-image-load"));
+var imgrSidebar = Imager.init($("aside .pics"));
+
+window.addEventListener("resize", function(){
+    //resize only content pictures as the sidebar is fixed size (for example)
+    imgrContent.process();
+});
+```
+
+### Interpolated URLs
+
+Some remote services have a folder structure which does not explicitly contains a width value as an integer.
+This is the case of [Flickr](http://www.flickr.com/), which has this interpolation mapping:
+* `b_d` for *1024* width
+* `c_d` for *800* width
+* `d` for *500* width
+* etc.
+
+```html
+<a href="http://www.flickr.com/photos/53752098@N05/4990539658/">
+    <div data-src="http://farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="flickr-responsive">
+</a>
+
+<script>
+Imager.init(document.getElementsByClassName('flickr-responsive'), {
+    availableWidths: [
+        [75, 's_d'], [150, 'a_d'], [240, 'm_d'], [320, 'n_d'],
+        [500, 'd'], [640, 'z_d'], [800, 'c_d'], [1024, 'b_d']
+    ]
+});
+</script>
+```
+
+You can see it live in the [`flickr` demo folder](demos/flickr).
+
+
+### Combining With A Lazy Loader
+
+TBD. But your ideas are welcome!
+
+### Living Code
+
+Browse the [`demos`](demos) folder for full examples and source files.
+Read the [JavaScript API below](README.md#Javascript-API) to learn more about how to use `Imager.js` API.
+
+## HTML API
+
+### `data-src` URL Placeholders
+
+The `data-src` is a composable URL towards a responsive image. You can use several keywords to build it you own way:
+
+* `{width}`: the most appropriate guessed value within the `config.availableWidths`
+
+```html
+<!-- Default and minimalistic approach -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+
+<!-- Query String URLs -->
+<div class="delayed-image-load"
+    data-src="http://myserver.com/responsive.php?source=image/picture.jpg&amp;width={width}&amp;pix_ratio={pixel_ratio}"
+    data-width="340"></div>
+```
+
+### Replacer Strategy
+
+The Replacer strategy ***replaces* the container by a responsive picture**.
+
+```html
+<!-- In a div -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+
+<!-- In a span -->
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture2.jpg" data-width="340"></span>
+```
+
+It will become:
+
+```html
+<!-- In a div -->
+<img src="http://placehold.it/340/picture.jpg" class="delayed-image-load responsive-img" data-width="340">
+
+<!-- In a span -->
+<img src="http://placehold.it/340/picture2.jpg" class="delayed-image-load responsive-img" data-width="340">
+```
+
+### Container Strategy
+
+The container strategy **inserts a responsive picture in a *container* tag**.
+
+```html
+<!-- In a div -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
+
+<!-- In a span -->
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture2.jpg" data-width="340"></span>
+```
+
+It will become:
+
+```html
+<!-- In a div -->
+<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340">
+    <img src="http://placehold.it/340/picture.jpg" class="responsive-img">
+</div>
+
+<!-- In a span -->
+<span class="delayed-image-load" data-src="http://placehold.it/{width}/picture2.jpg" data-width="340">
+    <img src="http://placehold.it/340/picture2.jpg" class="responsive-img">
+</span>
+```
+
+
+## JavaScript API
+
+### `Imager.init(NodeList collection[, Object options])`
+
+Creates and returns a new Imager instance after `process()` being called on `collection`.
+If you don't know what you do, this is definitely the one you should pick up.
+
+```javascript
+// default way
+Imager.init(document.querySelectorAll('.delayed-image-load'));
+
+// with custom options
+Imager.init(document.querySelectorAll('.delayed-image-load'), {
+    availableWidths: [100, 250, 500],
+    replacementDelay: 50
+});
+
+// if we'd wanted to resize pictures on click on a button making the window going full screen
+var imgr = Imager.init(document.querySelectorAll('.delayed-image-load'));
+document.getElementById('fullscreen-button').addEventListener('click', function(){
+    document.getElementById('main').requestFullscreen();
+    imgr.process();
+});
+```
+
+### `new Imager(NodeList collection[, Object options])`
+
+Creates a new Imager instances and tracks pictures. At this stage, nothing else is done.
+It is the tailored for people who want to control every single step of `Imager.js`.
+
+
+```javascript
+// simple call
+var imgr = new Imager(document.querySelectorAll('.delayed-image-load'));
+```
+
+```javascript
+// with jQuery and options
+var img = new Imager($('.delayed-image-load'), {
+    replacementDelay: 250,
+    strategy: 'container',
+    placeholder: {
+        element: $('#blank_pixel').get(0)
+    }
+});
+```
+
+### `process([Function callback])`
+
+Process every single `collection` elements, eventually replace them by a placeholder and builds the proper URL
+based on the actual viewport size. You should call it every time a container size has eventually changed (like a
+window resize, a device orientation change etc.).
+
+```javascript
+var imgr = new Imager(document.querySelectorAll('.delayed-image-load'));
+imgr.process();
+```
+
+```javascript
+//with a callback
+var imgr = new Imager(document.querySelectorAll('.delayed-image-load'), { replacementDelay: 666 });
+imgr.process(function onProcessed(){
+    console.log('666ms later', this.nodes);
+});
+```
+
+### `update(NodeList collection)`
+
+Replaces and update the actual pool of elements by new ones. It can be a mix of already processed containers or not. Imager will take
+care of that. As Imager does not deal with *live* `NodeList`, it is a way to handle new elements.
+
+```javascript
+var imgr = Imager.init($('.delayed-image-load'));
+
+$('body').append('<div clas="delayed-image-load" data-src="placekitten.com/{width}"></div>');
+
+img.update($('.delayed-image-load'))
+```
 
 ## Contributing
 
-If you want to add functionality to this project, pull requests are welcome.
-
- * Create a branch based off master and do all of your changes with in it.
- * Make sure commits are as 'atomic' as possible (this way specific changes can be removed or cherry-picked more easily)
- * If you have to pause to add a 'and' anywhere in the title, it should be two pull requests.
- * Make commits of logical units and describe them properly
- * Check for unnecessary whitespace with git diff --check before committing.
- * If possible, submit tests to your patch / new feature so it can be tested easily.
- * Assure nothing is broken by running all the test
- * Please ensure that it complies with coding standards.
-
-**Please raise any issues with this project as a GitHub issue.**
+Raising an issue, an idea or pushing some code are warmly welcomed.
+Feel free to [read our contribution tips](CONTRIBUTING.md) to join the bandwagon!
 
 ## Credits
 
  * [Mark McDonnell](http://twitter.com/integralist)
  * [Tom Maslen](http://twitter.com/tmaslen)
- * [Addy Osmani](http://twitter.com/addyosmani) 
+ * [Addy Osmani](http://twitter.com/addyosmani)
 
 ## Background
 
-This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News. 
+This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News.
 
-At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks. 
+At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks.
 
 [Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
 
@@ -114,5 +319,5 @@ For full details of the Grunt task options see the [grunt-responsive-images](htt
 
 ## Licence
 
-Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
-Take a look at the LICENSE file in the code.
+Imager.js is available to everyone under the terms of the Apache 2.0 open source licence.
+Take a look at the [LICENSE file](LICENSE) in the code.
