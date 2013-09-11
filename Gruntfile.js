@@ -8,14 +8,14 @@ module.exports = function (grunt) {
         // Store your Package file so you can reference its specific data whenever necessary
         pkg: grunt.file.readJSON('package.json'),
 
-        imageDirectory: 'Demo - Grunt/Assets/Images/',
+        imageDirectory: 'demos/grunt-responsive-images/Assets/Images',
 
         responsive_images: {
             dev: {
                 options: {
                     sizes: [
                         {
-                            width: 320,
+                            width: 320
                         },
                         {
                             width: 640
@@ -29,7 +29,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%= imageDirectory %>',
                     src: ['*.{jpg,gif,png}'],
-                    dest: '<%= imageDirectory %>Generated/'
+                    dest: '<%= imageDirectory %>/Generated'
                 }]
             }
         },
