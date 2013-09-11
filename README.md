@@ -58,13 +58,40 @@ window.addEventListener("resize", function(){
 });
 ```
 
+### Interpolated URLs
+
+Some remote services have a folder structure which does not explicitly contains a width value as an integer.
+This is the case of [Flickr](http://www.flickr.com/), which has this interpolation mapping:
+* `b_d` for *1024* width
+* `c_d` for *800* width
+* `d` for *500* width
+* etc.
+
+```html
+<a href="http://www.flickr.com/photos/53752098@N05/4990539658/">
+    <div data-src="http://farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="flickr-responsive">
+</a>
+
+<script>
+Imager.init(document.getElementsByClassName('flickr-responsive'), {
+    availableWidths: [
+        [75, 's_d'], [150, 'a_d'], [240, 'm_d'], [320, 'n_d'],
+        [500, 'd'], [640, 'z_d'], [800, 'c_d'], [1024, 'b_d']
+    ]
+});
+</script>
+```
+
+You can see it live in the [`flickr` demo folder](demos/flickr).
+
+
 ### Combining With A Lazy Loader
 
 TBD. But your ideas are welcome!
 
 ### Living Code
 
-Browse the [`Demo`](Demo) directory for full example and source files.
+Browse the [`demos`](demos) folder for full examples and source files.
 Read the [JavaScript API below](README.md#Javascript-API) to learn more about how to use `Imager.js` API.
 
 ## HTML API
@@ -74,14 +101,10 @@ Read the [JavaScript API below](README.md#Javascript-API) to learn more about ho
 The `data-src` is a composable URL towards a responsive image. You can use several keywords to build it you own way:
 
 * `{width}`: the most appropriate guessed value within the `config.availableWidths`
-* `{pixel_ratio}`: the closest pixel density within the `config.availableWidths`
 
 ```html
 <!-- Default and minimalistic approach -->
 <div class="delayed-image-load" data-src="http://placehold.it/{width}/picture.jpg" data-width="340"></div>
-
-<!-- Pixel-density aware approach -->
-<div class="delayed-image-load" data-src="http://placehold.it/{width}/picture-{pixel_ratio}.jpg" data-width="340"></div>
 
 <!-- Query String URLs -->
 <div class="delayed-image-load"
