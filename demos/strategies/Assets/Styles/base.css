@@ -23,3 +23,10 @@ code {
     width: 50vw;
     height: 50vw;
 }
+
+.display-src:before {
+  content: "(width: ) (URL: )";
+  display: block;
+  position: absolute;
+  top: 10px;
+}
