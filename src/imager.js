@@ -39,9 +39,8 @@ function Imager (collection, options) {
     this.update(collection);
     options.strategy = options.strategy || 'replacer';
     this.replacementDelay = options.replacementDelay || 200;
-    this.availableWidths = options.availableWidths || [320, 480, 768];
-    this.availableWidths = this.availableWidths.sort(function (a, b) {
-        return b - a;
+    this.availableWidths = (options.availableWidths || [320, 480, 768]).sort(function (a, b) {
+        return (b[0] || b) - (a[0] || a);
     });
 
     this._processing = false;
@@ -115,12 +114,12 @@ Imager.prototype.updateImagesSource = function updateImagesSource () {
  * @returns {Integer}
  */
 Imager.prototype.getBestWidth = function getBestWidth (image_width, default_width) {
-    var width = default_width || this.availableWidths[0],
+    var width = default_width || this.availableWidths[0][1] || this.availableWidths[0],
         i = this.availableWidths.length;
 
     while (i--) {
-        if (image_width <= this.availableWidths[i]) {
-            return this.availableWidths[i];
+        if (image_width <= (this.availableWidths[i][0] || this.availableWidths[i])) {
+            return this.availableWidths[i][1] || this.availableWidths[i];
         }
     }
 
