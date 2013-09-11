@@ -142,6 +142,24 @@ describe('Imager', function () {
             expect(instance.getBestWidth(50, 300)).to.equal(320);
             expect(instance.getBestWidth(2000, 300)).to.equal(300);
         });
+
+        it('should use a size alternative if available', function () {
+            instance = new Imager(generateNodes(10), {availableWidths: [
+              [75, 's_d'],
+              [150, 'a_d'],
+              [240, 'm_d'],
+              [320, 'n_d'],
+              [500, 'd'],
+              [640, 'z_d'],
+              [800, 'c_d'],
+              [1024, 'b_d']
+            ]});
+
+            expect(instance.getBestWidth(50)).to.equal('s_d');
+            expect(instance.getBestWidth(149)).to.equal('a_d');
+            expect(instance.getBestWidth(150)).to.equal('a_d');
+            expect(instance.getBestWidth(151)).to.equal('m_d');
+        });
     });
 
     describe('replaceUri', function () {
