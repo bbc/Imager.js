@@ -46,6 +46,12 @@ If you want to add functionality to this project, pull requests are welcome.
  * [Tom Maslen](http://twitter.com/tmaslen)
  * [Addy Osmani](http://twitter.com/addyosmani) 
 
+## Alternatives
+
+BBC R&D developer [Thomas Parisot](https://github.com/oncletom/Imager.js/) has built an alternative implementation that introduces some features currently not available within Imager.js
+
+We are proactively looking to add improvements to Imager.js (such as proper lazy loading images, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
+
 ## Background
 
 This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News. 
