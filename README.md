@@ -1,10 +1,10 @@
 # Imager.js
 
  * Website: http://responsivenews.co.uk/
- * Source: http://github.com/bbc-news/Imager.js 
- 
+ * Source: http://github.com/bbc-news/Imager.js
+
 *Note: this project is not ready for production and is currently in development*
- 
+
 Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.
 
 ## What is it?
@@ -19,11 +19,14 @@ For the purpose of demonstration we're using the 3rd party service [Placehold.it
 
 ## Using Imager.js
 
-See the `Demo` directory for full example and source files.
+See each of the Demo directories for full examples and source files.
 
-Wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded. 
+In its most basic form, wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded.
 
 Then within your JavaScript, initialise a new instance of the Imager Enhancer library: `new ImageEnhancer();`
+
+There are examples of Imager being used with Grunt as well as a lazy-load
+image version.
 
 ## Contributing
 
@@ -44,19 +47,19 @@ If you want to add functionality to this project, pull requests are welcome.
 
  * [Mark McDonnell](http://twitter.com/integralist)
  * [Tom Maslen](http://twitter.com/tmaslen)
- * [Addy Osmani](http://twitter.com/addyosmani) 
+ * [Addy Osmani](http://twitter.com/addyosmani)
 
 ## Alternatives
 
 BBC R&D developer [Thomas Parisot](https://github.com/oncletom/Imager.js/) has built an alternative implementation that introduces some features currently not available within Imager.js
 
-We are proactively looking to add improvements to Imager.js (such as proper lazy loading images, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
+We are proactively looking to add improvements to Imager.js (such as ~~proper lazy loading images~~, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
 
 ## Background
 
-This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News. 
+This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News.
 
-At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks. 
+At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks.
 
 [Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
 
@@ -120,5 +123,5 @@ For full details of the Grunt task options see the [grunt-responsive-images](htt
 
 ## Licence
 
-Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
+Imager.js is available to everyone under the terms of the Apache 2.0 open source licence.
 Take a look at the LICENSE file in the code.
