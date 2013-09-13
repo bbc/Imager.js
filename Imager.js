@@ -4,10 +4,10 @@
 
     var $, Imager;
 
-    window.requestAnimationFrame = 
-    window.requestAnimationFrame || 
-    window.mozRequestAnimationFrame || 
-    window.webkitRequestAnimationFrame || 
+    window.requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
     function (callback) {
         window.setTimeout(callback, 1000 / 60);
     };
@@ -39,7 +39,7 @@
                 // Class name to give your resizable images.
                 className: '',
 
-                // Regular expression to match against your image endpoint's naming conventions 
+                // Regular expression to match against your image endpoint's naming conventions
                 // e.g. http://yourserver.com/image/horse/400
                 regex: RegExp
             }
@@ -51,6 +51,8 @@
         var self = this;
             opts = opts || {};
 
+        this.imagesOffScreen = [];
+        this.viewportHeight  = document.documentElement.clientHeight;
         this.availableWidths = opts.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
         this.selector        = opts.selector || '.delayed-image-load';
         this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
@@ -60,36 +62,74 @@
         this.gif.className   = this.className.replace(/^[#.]/, '');
         this.divs            = $(this.selector);
         this.cache           = {};
+        this.scrollDelay     = opts.scrollDelay || 250;
+        this.lazyload        = opts.lazyload || false;
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
             self.init();
         });
+
+        if (this.lazyload) {
+            this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
+        }
     };
 
+    Imager.prototype.scrollCheck = function(){
+        if (this.scrolled) {
+            if (!this.imagesOffScreen.length) {
+                window.clearInterval(this.interval);
+            }
+            this.divs = this.imagesOffScreen.slice(0); // copy by value, don't copy by reference
+            this.imagesOffScreen.length = 0;
+            this.changeDivsToEmptyImages();
+            this.scrolled = false;
+        }
+    };
 
-    Imager.prototype.init = function () {
+    Imager.prototype.init = function(){
         var self = this;
 
         this.initialized = true;
+        this.scrolled = false;
         this.checkImagesNeedReplacing();
 
         window.addEventListener('resize', function(){
             self.checkImagesNeedReplacing();
         }, false);
+
+        if (this.lazyload) {
+            window.addEventListener('scroll', function(){
+                this.scrolled = true;
+            }.bind(this), false);
+        }
     };
 
+    Imager.prototype.createGif = function (element) {
+        var gif = this.gif.cloneNode(false);
+            gif.width = element.getAttribute('data-width');
+            gif.setAttribute('data-src', element.getAttribute('data-src'));
 
-    Imager.prototype.changeDivsToEmptyImages = function () {
+        element.parentNode.replaceChild(gif, element);
+    }
+
+    Imager.prototype.changeDivsToEmptyImages = function(){
         var divs = this.divs,
             i = divs.length,
-            gif;
+            element;
 
         while (i--) {
-            gif = this.gif.cloneNode(false);
-            gif.width = divs[i].getAttribute('data-width');
-            gif.setAttribute('data-src', divs[i].getAttribute('data-src'));
-            divs[i].parentNode.replaceChild(gif, divs[i]);
+            element = divs[i];
+
+            if (this.lazyload) {
+                if (this.isThisElementOnScreen(element)) {
+                    this.createGif(element);
+                } else {
+                    this.imagesOffScreen.push(element);
+                }
+            } else {
+                this.createGif(element);
+            }
         }
 
         if (this.initialized) {
@@ -97,17 +137,22 @@
         }
     };
 
+    Imager.prototype.isThisElementOnScreen = function (element) {
+        return (element.offsetTop < (this.viewportHeight + document.body.scrollTop)) ? true : false;
+    };
 
-    Imager.prototype.checkImagesNeedReplacing = function () {
+    Imager.prototype.checkImagesNeedReplacing = function(){
         var self = this,
             images = $(this.className),
-            i = images.length;
+            i = images.length,
+            currentImage;
 
         if (!this.isResizing) {
             this.isResizing = true;
 
             while (i--) {
-                this.replaceImagesBasedOnScreenDimensions(images[i]);
+                currentImage = images[i];
+                this.replaceImagesBasedOnScreenDimensions(currentImage);
             }
 
             this.isResizing = false;
@@ -150,7 +195,7 @@
         return src.replace(this.regex, function (match, path, file, extension) {
             file = file || '';
             extension = extension !== match ? extension : '';
-            return path + file + selectedWidth + ((extension) ? extension : '');
+            return path + file + selectedWidth + extension;
         });
     };
 

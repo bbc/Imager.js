@@ -6,8 +6,13 @@ module.exports = function (grunt) {
         // Store your Package file so you can reference its specific data whenever necessary
         pkg: grunt.file.readJSON('package.json'),
 
-        imageDirectory: 'Demo - Grunt/Assets/Images/',
+        imageDirectory: {
+            default: 'Demo - Grunt/Assets/Images/',
+            lazyload: 'Demo - Lazy Load/Assets/Images/'
+        },
 
+        // grunt responsive_images:dev:default
+        // grunt responsive_images:dev:lazyload
         responsive_images: {
             dev: {
                 options: {
@@ -25,9 +30,9 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= imageDirectory %>',
+                    cwd: '<%= imageDirectory[grunt.task.current.args[0]] %>',
                     src: ['*.{jpg,gif,png}'],
-                    dest: '<%= imageDirectory %>Generated/'
+                    dest: '<%= imageDirectory[grunt.task.current.args[0]] %>Generated/'
                 }]
             }
         }
