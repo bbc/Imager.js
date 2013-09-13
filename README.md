@@ -11,11 +11,20 @@ Imager.js is an alternative solution to the issue of how to handle responsive im
 
 An open-source port of the BBC News technique for handling the loading of images within a responsive code base.
 
+It allows you to…
+
+- Specify placeholder elements that get replaced with appropriate images
+- Lazy load images (no point loading images that are user never sees)
+- Parse your own URL structure using regular expressions
+- Utilise Grunt to generate a group of responsive images based off a folder directory
+
 ## Requirements
 
-You'll need a server-side image processing script which can return optimised images at specific dimensions that match parameters set within a RESTful URL design.
+If you don't have your own RESTful image service (think of [Placehold.it](http://placehold.it/)) then you'll need [Grunt: The JavaScript Task Runner](http://gruntjs.com/) which allows you to specify an image folder and have it generate multiple image sizes for you to use with Imager.js 
 
-For the purpose of demonstration we're using the 3rd party service [Placehold.it](http://placehold.it/).
+For the purpose of one of our demo/examples we've used the 3rd party service [Placehold.it](http://placehold.it/).
+
+But you'll also find Grunt based demos that show the basic functionality as well as how lazy loading works.
 
 ## Using Imager.js
 
@@ -23,7 +32,7 @@ See each of the Demo directories for full examples and source files.
 
 In its most basic form, wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded.
 
-Then within your JavaScript, initialise a new instance of the Imager Enhancer library: `new ImageEnhancer();`
+Then within your JavaScript, initialise a new instance of the Imager library: `new Imager();`
 
 There are examples of Imager being used with Grunt as well as a lazy-load
 image version.
@@ -34,11 +43,12 @@ If you want to add functionality to this project, pull requests are welcome.
 
  * Create a branch based off master and do all of your changes with in it.
  * Make sure commits are as 'atomic' as possible (this way specific changes can be removed or cherry-picked more easily)
+ * Do not make pull requests monolithic in nature this makes reviewing difficult and chances are your pull request will be declined (depending on complexity).
  * If you have to pause to add a 'and' anywhere in the title, it should be two pull requests.
  * Make commits of logical units and describe them properly
  * Check for unnecessary whitespace with git diff --check before committing.
  * If possible, submit tests to your patch / new feature so it can be tested easily.
- * Assure nothing is broken by running all the test
+ * Assure nothing is broken by running all tests
  * Please ensure that it complies with coding standards.
 
 **Please raise any issues with this project as a GitHub issue.**
@@ -53,7 +63,7 @@ If you want to add functionality to this project, pull requests are welcome.
 
 BBC R&D developer [Thomas Parisot](https://github.com/oncletom/Imager.js/) has built an alternative implementation that introduces some features currently not available within Imager.js
 
-We are proactively looking to add improvements to Imager.js (such as ~~proper lazy loading images~~, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
+We are proactively looking to add improvements to Imager.js (such as ~~proper lazy loading images~~ -> we now have lazy loading built in, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
 
 ## Background
 
