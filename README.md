@@ -1,29 +1,41 @@
 # Imager.js
 
  * Website: http://responsivenews.co.uk/
- * Source: http://github.com/bbc-news/Imager.js 
- 
+ * Source: http://github.com/bbc-news/Imager.js
+
 *Note: this project is not ready for production and is currently in development*
- 
+
 Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.
 
 ## What is it?
 
 An open-source port of the BBC News technique for handling the loading of images within a responsive code base.
 
+It allows you to…
+
+- Specify placeholder elements that get replaced with appropriate images
+- Lazy load images (no point loading images that are user never sees)
+- Parse your own URL structure using regular expressions
+- Utilise Grunt to generate a group of responsive images based off a folder directory
+
 ## Requirements
 
-You'll need a server-side image processing script which can return optimised images at specific dimensions that match parameters set within a RESTful URL design.
+If you don't have your own RESTful image service (think of [Placehold.it](http://placehold.it/)) then you'll need [Grunt: The JavaScript Task Runner](http://gruntjs.com/) which allows you to specify an image folder and have it generate multiple image sizes for you to use with Imager.js 
 
-For the purpose of demonstration we're using the 3rd party service [Placehold.it](http://placehold.it/).
+For the purpose of one of our demo/examples we've used the 3rd party service [Placehold.it](http://placehold.it/).
+
+But you'll also find Grunt based demos that show the basic functionality as well as how lazy loading works.
 
 ## Using Imager.js
 
-See the `Demo` directory for full example and source files.
+See each of the Demo directories for full examples and source files.
 
-Wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded. 
+In its most basic form, wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded.
 
-Then within your JavaScript, initialise a new instance of the Imager Enhancer library: `new ImageEnhancer();`
+Then within your JavaScript, initialise a new instance of the Imager library: `new Imager();`
+
+There are examples of Imager being used with Grunt as well as a lazy-load
+image version.
 
 ## Contributing
 
@@ -31,11 +43,12 @@ If you want to add functionality to this project, pull requests are welcome.
 
  * Create a branch based off master and do all of your changes with in it.
  * Make sure commits are as 'atomic' as possible (this way specific changes can be removed or cherry-picked more easily)
+ * Do not make pull requests monolithic in nature this makes reviewing difficult and chances are your pull request will be declined (depending on complexity).
  * If you have to pause to add a 'and' anywhere in the title, it should be two pull requests.
  * Make commits of logical units and describe them properly
  * Check for unnecessary whitespace with git diff --check before committing.
  * If possible, submit tests to your patch / new feature so it can be tested easily.
- * Assure nothing is broken by running all the test
+ * Assure nothing is broken by running all tests
  * Please ensure that it complies with coding standards.
 
 **Please raise any issues with this project as a GitHub issue.**
@@ -44,19 +57,19 @@ If you want to add functionality to this project, pull requests are welcome.
 
  * [Mark McDonnell](http://twitter.com/integralist)
  * [Tom Maslen](http://twitter.com/tmaslen)
- * [Addy Osmani](http://twitter.com/addyosmani) 
+ * [Addy Osmani](http://twitter.com/addyosmani)
 
 ## Alternatives
 
 BBC R&D developer [Thomas Parisot](https://github.com/oncletom/Imager.js/) has built an alternative implementation that introduces some features currently not available within Imager.js
 
-We are proactively looking to add improvements to Imager.js (such as proper lazy loading images, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
+We are proactively looking to add improvements to Imager.js (such as ~~proper lazy loading images~~ -> we now have lazy loading built in, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
 
 ## Background
 
-This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News. 
+This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News.
 
-At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks. 
+At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks.
 
 [Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
 
@@ -120,5 +133,5 @@ For full details of the Grunt task options see the [grunt-responsive-images](htt
 
 ## Licence
 
-Imager.js is available to everyone under the terms of the Apache 2.0 open source licence. 
+Imager.js is available to everyone under the terms of the Apache 2.0 open source licence.
 Take a look at the LICENSE file in the code.
