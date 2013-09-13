@@ -63,13 +63,16 @@
         this.divs            = $(this.selector);
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
+        this.lazyload        = opts.lazyload || false;
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
             self.init();
         });
 
-        this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
+        if (this.lazyload) {
+            this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
+        }
     };
 
     Imager.prototype.scrollCheck = function(){
@@ -95,24 +98,37 @@
             self.checkImagesNeedReplacing();
         }, false);
 
-        window.addEventListener('scroll', function(){
-            this.scrolled = true;
-        }.bind(this), false);
+        if (this.lazyload) {
+            window.addEventListener('scroll', function(){
+                this.scrolled = true;
+            }.bind(this), false);
+        }
     };
+
+    Imager.prototype.createGif = function (element) {
+        var gif = this.gif.cloneNode(false);
+            gif.width = element.getAttribute('data-width');
+            gif.setAttribute('data-src', element.getAttribute('data-src'));
+
+        element.parentNode.replaceChild(gif, element);
+    }
 
     Imager.prototype.changeDivsToEmptyImages = function(){
         var divs = this.divs,
             i = divs.length,
-            gif;
+            element;
 
         while (i--) {
-            if (this.isThisElementOnScreen(divs[i])) {
-                gif = this.gif.cloneNode(false);
-                gif.width = divs[i].getAttribute('data-width');
-                gif.setAttribute('data-src', divs[i].getAttribute('data-src'));
-                divs[i].parentNode.replaceChild(gif, divs[i]);
+            element = divs[i];
+
+            if (this.lazyload) {
+                if (this.isThisElementOnScreen(element)) {
+                    this.createGif(element);
+                } else {
+                    this.imagesOffScreen.push(element);
+                }
             } else {
-                this.imagesOffScreen.push(divs[i]);
+                this.createGif(element);
             }
         }
 
@@ -128,13 +144,15 @@
     Imager.prototype.checkImagesNeedReplacing = function(){
         var self = this,
             images = $(this.className),
-            i = images.length;
+            i = images.length,
+            currentImage;
 
         if (!this.isResizing) {
             this.isResizing = true;
 
             while (i--) {
-                this.replaceImagesBasedOnScreenDimensions(images[i]);
+                currentImage = images[i];
+                this.replaceImagesBasedOnScreenDimensions(currentImage);
             }
 
             this.isResizing = false;
@@ -177,7 +195,7 @@
         return src.replace(this.regex, function (match, path, file, extension) {
             file = file || '';
             extension = extension !== match ? extension : '';
-            return path + file + selectedWidth + ((extension) ? extension : '');
+            return path + file + selectedWidth + extension;
         });
     };
 

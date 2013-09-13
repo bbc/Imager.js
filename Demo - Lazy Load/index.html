@@ -28,6 +28,7 @@
         <script>
             function startImager(){
                 var imager = new Imager({
+                    lazyload: true,
                     scrollDelay: 2000, // We'll set this quite high so we get a chance to see the lazy loading happening
                     availableWidths: [320, 640, 1024],
 
