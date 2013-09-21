@@ -144,7 +144,11 @@
     };
 
     Imager.prototype.isThisElementOnScreen = function (element) {
-        return (element.offsetTop < (this.viewportHeight + document.body.scrollTop)) ? true : false;
+        // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
+        // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
+        var offset = ('pageYOffset' in window) ? window.pageYOffset : document.documentElement.scrollTop
+
+        return (element.offsetTop < (this.viewportHeight + offset)) ? true : false;
     };
 
     Imager.prototype.checkImagesNeedReplacing = function(){
