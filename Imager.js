@@ -42,6 +42,12 @@
                 // Regular expression to match against your image endpoint's naming conventions
                 // e.g. http://yourserver.com/image/horse/400
                 regex: RegExp
+
+                // Toggle the lazy load functionality on or off
+                lazyload: Boolean
+
+                // Used alongside the lazyload feature (helps performance by setting a higher delay)
+                scrollDelay: Number
             }
 
         @param {object} configuration settings
