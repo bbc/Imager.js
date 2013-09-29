@@ -14,7 +14,7 @@ An open-source port of the BBC News technique for handling the loading of images
 It allows you to…
 
 - Specify placeholder elements that get replaced with appropriate images
-- Lazy load images (no point loading images that are user never sees)
+- Lazy load images (no point loading images that a user never sees)
 - Parse your own URL structure using regular expressions
 - Utilise Grunt to generate a group of responsive images based off a folder directory
 
