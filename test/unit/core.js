@@ -50,7 +50,7 @@ describe('Imager.js', function(){
       fixtures = loadFixtures('regular');
       var imgr = new Imager({ selector: 'body > .delayed-image-load' });
 
-      expect(imgr.divs).to.have.length.of(2);
+      expect(imgr.divs).to.have.length.of(0);
       expect(imgr.selector).to.eql('body > .delayed-image-load');
     });
 
@@ -61,8 +61,8 @@ describe('Imager.js', function(){
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
         expect(imgr.scrolled).to.be.false;
-        expect(imgr.cache).to.have.length.of(3);
-        expect(imgr.divs).to.have.length.of(3);
+        expect(imgr.cache).to.be.empty;
+        expect(imgr.divs).to.be.empty;
         expect(imgr.selector).to.eql('#main .delayed-image-load');
 
         done();
@@ -87,6 +87,21 @@ describe('Imager.js', function(){
     it('should target elements contained in a live NodeList collection', function(done){
       fixtures = loadFixtures('regular');
       var imgr = new Imager(fixtures.getElementById('main').getElementsByClassName('delayed-image-load'));
+
+      runAfterAnimationFrame(function(){
+        expect(imgr.initialized).to.be.true;
+        expect(imgr.scrolled).to.be.false;
+        expect(imgr.cache).to.have.length.of(3);
+        expect(imgr.divs).to.have.length.of(3);
+        expect(imgr.selector).to.be.null;
+
+        done();
+      });
+    });
+
+    it('should target elements contained in a third-party library collection', function(done){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager(jQuery('#main .delayed-image-load', fixtures));
 
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
