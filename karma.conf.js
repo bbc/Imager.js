@@ -14,10 +14,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/components-jquery/jquery.min.js',
+      'test/fixtures/*.html',
       'Imager.js',
       'test/unit/**/*.js'
     ],
 
+    preprocessors: {
+      '**/*.html': ['html2js']
+    },
 
     // list of files to exclude
     exclude: [
