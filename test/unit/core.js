@@ -22,6 +22,84 @@ function runAfterAnimationFrame(fn){
 }
 
 describe('Imager.js', function(){
+  describe('constructor', function(){
+    var fixtures;
+
+    afterEach(function(){
+      if(fixtures){
+        document.body.removeChild(fixtures);
+      }
+    });
+
+    it('should initialise without arguments', function(done){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager();
+
+      runAfterAnimationFrame(function(){
+        expect(imgr.initialized).to.be.true;
+        expect(imgr.scrolled).to.be.false;
+        expect(imgr.cache).to.be.empty;
+        expect(imgr.divs).to.be.empty;
+        expect(imgr.selector).to.eql('.delayed-image-load');
+
+        done();
+      });
+    });
+
+    it('should initialise with one argument, the options', function(){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager({ selector: 'body > .delayed-image-load' });
+
+      expect(imgr.divs).to.have.length.of(2);
+      expect(imgr.selector).to.eql('body > .delayed-image-load');
+    });
+
+    it('should target elements with a string as first argument', function(done){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager('#main .delayed-image-load');
+
+      runAfterAnimationFrame(function(){
+        expect(imgr.initialized).to.be.true;
+        expect(imgr.scrolled).to.be.false;
+        expect(imgr.cache).to.have.length.of(3);
+        expect(imgr.divs).to.have.length.of(3);
+        expect(imgr.selector).to.eql('#main .delayed-image-load');
+
+        done();
+      });
+    });
+
+    it('should target elements contained in a static NodeList collection', function(done){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager(fixtures.querySelectorAll('#main .delayed-image-load'));
+
+      runAfterAnimationFrame(function(){
+        expect(imgr.initialized).to.be.true;
+        expect(imgr.scrolled).to.be.false;
+        expect(imgr.cache).to.have.length.of(3);
+        expect(imgr.divs).to.have.length.of(3);
+        expect(imgr.selector).to.be.null;
+
+        done();
+      });
+    });
+
+    it('should target elements contained in a live NodeList collection', function(done){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager(fixtures.getElementById('main').getElementsByClassName('delayed-image-load'));
+
+      runAfterAnimationFrame(function(){
+        expect(imgr.initialized).to.be.true;
+        expect(imgr.scrolled).to.be.false;
+        expect(imgr.cache).to.have.length.of(3);
+        expect(imgr.divs).to.have.length.of(3);
+        expect(imgr.selector).to.be.null;
+
+        done();
+      });
+    });
+  });
+
   describe('handling {width} in data-src', function(){
     var fixtures;
 
