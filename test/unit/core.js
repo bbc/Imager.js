@@ -38,9 +38,8 @@ describe('Imager.js', function(){
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
         expect(imgr.scrolled).to.be.false;
-        expect(imgr.cache).to.be.empty;
-        expect(imgr.divs).to.be.empty;
-        expect(imgr.selector).to.eql('.delayed-image-load');
+        expect(imgr.divs).to.have.length.of(5);
+        expect(imgr.selector).to.eq('.delayed-image-load');
 
         done();
       });
@@ -48,10 +47,10 @@ describe('Imager.js', function(){
 
     it('should initialise with one argument, the options', function(){
       fixtures = loadFixtures('regular');
-      var imgr = new Imager({ selector: 'body > .delayed-image-load' });
+      var imgr = new Imager({ selector: '#main .delayed-image-load' });
 
-      expect(imgr.divs).to.have.length.of(0);
-      expect(imgr.selector).to.eql('body > .delayed-image-load');
+      expect(imgr.divs).to.have.length.of(3);
+      expect(imgr.selector).to.eq('#main .delayed-image-load');
     });
 
     it('should target elements with a string as first argument', function(done){
@@ -61,9 +60,8 @@ describe('Imager.js', function(){
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
         expect(imgr.scrolled).to.be.false;
-        expect(imgr.cache).to.be.empty;
-        expect(imgr.divs).to.be.empty;
-        expect(imgr.selector).to.eql('#main .delayed-image-load');
+        expect(imgr.divs).to.have.length.of(3);
+        expect(imgr.selector).to.eq('#main .delayed-image-load');
 
         done();
       });
@@ -76,7 +74,6 @@ describe('Imager.js', function(){
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
         expect(imgr.scrolled).to.be.false;
-        expect(imgr.cache).to.have.length.of(3);
         expect(imgr.divs).to.have.length.of(3);
         expect(imgr.selector).to.be.null;
 
@@ -91,7 +88,6 @@ describe('Imager.js', function(){
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
         expect(imgr.scrolled).to.be.false;
-        expect(imgr.cache).to.have.length.of(3);
         expect(imgr.divs).to.have.length.of(3);
         expect(imgr.selector).to.be.null;
 
@@ -106,7 +102,6 @@ describe('Imager.js', function(){
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
         expect(imgr.scrolled).to.be.false;
-        expect(imgr.cache).to.have.length.of(3);
         expect(imgr.divs).to.have.length.of(3);
         expect(imgr.selector).to.be.null;
 
