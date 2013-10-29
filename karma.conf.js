@@ -17,7 +17,8 @@ module.exports = function(config) {
       'node_modules/components-jquery/jquery.min.js',
       'test/fixtures/*.html',
       'Imager.js',
-      'test/unit/**/*.js'
+      'test/unit/**/*.js',
+      { 'pattern': 'Demo - Grunt/Assets/Images/**/*.jpg', 'included': false, 'served': true }
     ],
 
     preprocessors: {
