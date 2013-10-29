@@ -7,5 +7,3 @@ notifications:
       - thomas.parisot@bbc.co.uk
     on_failure: change
     on_success: never
-before_script:
-  - npm install -g grunt-cli
