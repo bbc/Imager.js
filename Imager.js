@@ -117,7 +117,7 @@
             gif.setAttribute('data-src', element.getAttribute('data-src'));
 
         element.parentNode.replaceChild(gif, element);
-    }
+    };
 
     Imager.prototype.changeDivsToEmptyImages = function(){
         var divs = this.divs,
@@ -152,8 +152,7 @@
     };
 
     Imager.prototype.checkImagesNeedReplacing = function(){
-        var self = this,
-            images = $(this.className),
+        var images = $(this.className),
             i = images.length,
             currentImage;
 
