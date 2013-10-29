@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "0.10"
+notifications:
+  email:
+    recipients:
+      - thomas.parisot@bbc.co.uk
+    on_failure: change
+    on_success: never
+before_script:
+  - npm install -g grunt-cli
