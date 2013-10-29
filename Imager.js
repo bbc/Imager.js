@@ -71,6 +71,20 @@
         var self = this;
             opts = opts || {};
 
+        if (elements !== undefined){
+          //first argument as string
+          if (typeof elements === 'string'){
+            opts.selector = elements;
+            elements = undefined;
+          }
+
+          //first argument as options
+          else if (!('length' in elements)){
+            opts = elements;
+            elements = undefined;
+          }
+        }
+
         this.imagesOffScreen = [];
         this.viewportHeight  = document.documentElement.clientHeight;
         this.selector        = opts.selector || '.delayed-image-load';
@@ -78,7 +92,6 @@
         this.gif             = document.createElement('img');
         this.gif.src         = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className   = this.className.replace(/^[#.]/, '');
-        this.divs            = $(this.selector);
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
         this.lazyload        = opts.lazyload || false;
@@ -98,6 +111,15 @@
         }
 
         this.availableWidths = this.availableWidths.sort(function(a, b){ return a - b; });
+
+        if (elements){
+          this.divs = elements;
+          this.selector = null;
+        }
+        else{
+          this.divs = $(this.selector);
+        }
+
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
