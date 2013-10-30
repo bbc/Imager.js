@@ -109,6 +109,7 @@
         this.gif.className   = this.className.replace(/^[#.]/, '');
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
+        this.onResize        = opts.onResize || true;
         this.lazyload        = opts.lazyload || false;
         this.devicePixelRatio = Imager.getPixelRatio();
 
@@ -142,7 +143,9 @@
         });
 
         if (this.lazyload) {
-            this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
+            this.interval = window.setInterval(function(){
+              self.scrollCheck();
+            }, self.scrollDelay);
         }
     }
 
@@ -165,9 +168,11 @@
         this.scrolled = false;
         this.checkImagesNeedReplacing();
 
-        window.addEventListener('resize', function(){
+        if (this.onResize){
+          window.addEventListener('resize', function(){
             self.checkImagesNeedReplacing();
-        }, false);
+          }, false);
+        }
 
         if (this.lazyload) {
             window.addEventListener('scroll', function(){
