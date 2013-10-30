@@ -39,10 +39,6 @@
                 // Class name to give your resizable images.
                 className: '',
 
-                // Regular expression to match against your image endpoint's naming conventions
-                // e.g. http://yourserver.com/image/horse/400
-                regex: RegExp
-
                 // Toggle the lazy load functionality on or off
                 lazyload: Boolean
 
@@ -62,7 +58,6 @@
         this.availableWidths = opts.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
         this.selector        = opts.selector || '.delayed-image-load';
         this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
-        this.regex           = opts.regex || /^(.+\/)\d+$/i;
         this.gif             = document.createElement('img');
         this.gif.src         = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className   = this.className.replace(/^[#.]/, '');
@@ -201,11 +196,7 @@
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
-        return src.replace(this.regex, function (match, path, file, extension) {
-            file = file || '';
-            extension = extension !== match ? extension : '';
-            return path + file + selectedWidth + extension;
-        });
+        return src.replace(/{width}/g, selectedWidth);
     };
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
