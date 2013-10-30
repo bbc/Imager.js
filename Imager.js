@@ -228,7 +228,8 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var src = this.determineAppropriateResolution(image),
+        var computedWidth = typeof this.availableWidths === 'function'? this.availableWidths(image) : this.determineAppropriateResolution(image),
+            src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth),
             parent = image.parentNode,
             replacedImage;
 
@@ -245,8 +246,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        var src           = image.getAttribute('data-src'),
-            imagewidth    = image.clientWidth,
+        var imagewidth    = image.clientWidth,
             selectedWidth = this.availableWidths[0],
             i             = this.availableWidths.length;
 
@@ -256,7 +256,7 @@
             }
         }
 
-        return this.changeImageSrcToUseNewImageDimensions(src, selectedWidth);
+        return selectedWidth;
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {

@@ -141,24 +141,35 @@ describe('Imager.js', function(){
       expect(imgr.determineAppropriateResolution(img)).to.eq(320);
     });
 
-    it('can be a function computing a value for you', function(){
+    it('can be a function computing a value for you', function(done){
       // this example will always compute sizes 8 pixels by 8 pixels
-      var imgr = new Imager({
-        availableWidths: function(image){
+      // we need to stub it for now as events are triggered automatically and generates exceptions we can escape
+      var imgr = new Imager();
+
+      setTimeout(function(){
+        imgr.availableWidths = function(image){
           return image.clientWidth - image.clientWidth % 8 + (1 * (image.clientWidth % 8 ? 8 : 0));
-        }
-      });
+        };
 
-      var img = { clientWidth: 320 };   // stubbing the clientWidth read-only value does not work
+        var img = { clientWidth: 320 };
+        var spy = sandbox.spy(imgr, 'availableWidths');
 
-      sandbox.stub(img, 'clientWidth', 7);
-      expect(imgr.determineAppropriateResolution(img)).to.eq(8);
+        // stubbing the clientWidth read-only value does not work
+        img.clientWidth = 7;
+        expect(function(){ imgr.replaceImagesBasedOnScreenDimensions(img); }).to.throw();
+        expect(spy.returned(8)).to.be.true;
 
-      sandbox.stub(img, 'clientWidth', 8);
-      expect(imgr.determineAppropriateResolution(img)).to.eq(8);
+        img.clientWidth = 8;
+        expect(function(){ imgr.replaceImagesBasedOnScreenDimensions(img); }).to.throw();
+        expect(spy.returned(8)).to.be.true;
 
-      sandbox.stub(img, 'clientWidth', 9);
-      expect(imgr.determineAppropriateResolution(img)).to.eq(16);
+        img.clientWidth = 9;
+        expect(function(){ imgr.replaceImagesBasedOnScreenDimensions(img); }).to.throw();
+        expect(spy.returned(16)).to.be.true;
+
+        done();
+      }, 100);
+
     });
   });
 
