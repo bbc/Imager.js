@@ -31,6 +31,10 @@ describe('Imager.js', function(){
       }
     });
 
+    afterEach(function(){
+      document.body.removeChild(fixtures);
+    });
+
     it('should initialise without arguments', function(done){
       fixtures = loadFixtures('regular');
       var imgr = new Imager();
