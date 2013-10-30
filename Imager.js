@@ -113,7 +113,7 @@
         this.availableWidths = this.availableWidths.sort(function(a, b){ return a - b; });
 
         if (elements){
-          this.divs = elements;
+          this.divs = [].slice.call(elements);
           this.selector = null;
         }
         else{
