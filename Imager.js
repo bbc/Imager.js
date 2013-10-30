@@ -82,7 +82,7 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    function Imager(opts) {
+    function Imager(elements, opts) {
         var self = this;
             opts = opts || {};
 
