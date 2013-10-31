@@ -82,7 +82,7 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    function Imager(opts) {
+    function Imager(elements, opts) {
         var self = this;
             opts = opts || {};
 
@@ -111,6 +111,7 @@
         this.scrollDelay     = opts.scrollDelay || 250;
         this.onResize        = opts.onResize || true;
         this.lazyload        = opts.lazyload || false;
+        this.scrolled        = false;
         this.devicePixelRatio = Imager.getPixelRatio();
 
         if (opts.availableWidths === undefined){
@@ -141,12 +142,6 @@
         window.requestAnimationFrame(function(){
             self.init();
         });
-
-        if (this.lazyload) {
-            this.interval = window.setInterval(function(){
-              self.scrollCheck();
-            }, self.scrollDelay);
-        }
     }
 
     Imager.prototype.scrollCheck = function(){
@@ -162,22 +157,16 @@
     };
 
     Imager.prototype.init = function(){
-        var self = this;
-
         this.initialized = true;
-        this.scrolled = false;
+
         this.checkImagesNeedReplacing();
 
-        if (this.onResize){
-          window.addEventListener('resize', function(){
-            self.checkImagesNeedReplacing();
-          }, false);
+        if (this.onResize) {
+            this.registerResizeEvent();
         }
 
         if (this.lazyload) {
-            window.addEventListener('scroll', function(){
-                this.scrolled = true;
-            }.bind(this), false);
+            this.registerScrollEvent();
         }
     };
 
@@ -299,15 +288,37 @@
         }
     };
 
+    Imager.prototype.registerResizeEvent = function (){
+      var self = this;
+
+      window.addEventListener('resize', function(){
+        self.checkImagesNeedReplacing();
+      }, false);
+    };
+
+    Imager.prototype.registerScrollEvent = function (){
+      var self = this;
+
+      this.scrolled = false;
+
+      this.interval = window.setInterval(function(){
+        self.scrollCheck();
+      }, self.scrollDelay);
+
+      window.addEventListener('scroll', function(){
+        self.scrolled = true;
+      }, false);
+    };
+
     if (typeof module === 'object' && typeof module.exports === 'object') {
-        // CommonJS, just export
-        module.exports = exports = Imager;
+      // CommonJS, just export
+      module.exports = exports = Imager;
     } else if (typeof define === 'function' && define.amd) {
-        // AMD support
-        define(function () { return Imager; });
+      // AMD support
+      define(function () { return Imager; });
     } else if (typeof window === 'object') {
-        // If no AMD and we are in the browser, attach to window
-        window.Imager = Imager;
+      // If no AMD and we are in the browser, attach to window
+      window.Imager = Imager;
     }
 
 }(window, document));
