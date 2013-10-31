@@ -41,6 +41,7 @@
     "karma-coffee-preprocessor": "~0.1.0",
     "karma": "~0.10.4",
     "jshint": "~2.3.0",
-    "components-jquery": "git://github.com/components/jquery"
+    "components-jquery": "git://github.com/components/jquery",
+    "karma-sinon": "0.0.1"
   }
 }
