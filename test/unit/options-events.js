@@ -21,7 +21,7 @@ describe('Imager.js Events', function(){
       expect(imgr.lazyload).to.be.false;
     });
 
-    it('should handle onResize only', function(){
+    it('should handle onResize only', function(done){
       var imgr = new Imager({ onResize: true, lazyload: false });
       var resizeSpy = sandbox.spy(imgr, 'registerResizeEvent');
       var scrollSpy = sandbox.spy(imgr, 'registerScrollEvent');
@@ -30,12 +30,14 @@ describe('Imager.js Events', function(){
       expect(scrollSpy.called).to.be.false;
 
       setTimeout(function(){
-        expect(resizeSpy.calledOnce).to.be.true;
-        expect(scrollSpy.called).to.be.false;
+        expect(resizeSpy.callCount).to.eq(1);
+        expect(scrollSpy.callCount).to.eq(0);
+
+        done();
       }, 100);
     });
 
-    it('should handle onScroll only', function(){
+    it('should handle onScroll only', function(done){
       var imgr = new Imager({ onResize: false, lazyload: true });
       var resizeSpy = sandbox.spy(imgr, 'registerResizeEvent');
       var scrollSpy = sandbox.spy(imgr, 'registerScrollEvent');
@@ -44,8 +46,10 @@ describe('Imager.js Events', function(){
       expect(scrollSpy.called).to.be.false;
 
       setTimeout(function(){
-        expect(resizeSpy.called).to.be.false;
-        expect(scrollSpy.calledOnce).to.be.true;
+        expect(resizeSpy.callCount).to.eq(0);
+        expect(scrollSpy.callCount).to.eq(1);
+
+        done();
       }, 100);
     });
 
