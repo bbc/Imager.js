@@ -166,7 +166,8 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var src = this.determineAppropriateResolution(image),
+        var i = this.determineAppropriateResolution(image)
+        var src = i.url,
             parent = image.parentNode,
             replacedImage;
 
@@ -175,9 +176,42 @@
             replacedImage.width = image.getAttribute('width');
         } else {
             replacedImage = image.cloneNode(false);
-            replacedImage.src = src;
+            // replacedImage.src = src;
             this.cache[src] = replacedImage;
         }
+
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', src, true);
+
+xhr.responseType = 'arraybuffer';
+xhr.setRequestHeader('DPR', i.dpr);
+
+xhr.onload = function(e) {
+  if (this.status == 200) {
+    var uInt8Array = new Uint8Array(this.response);
+    var i = uInt8Array.length;
+    var binaryString = new Array(i);
+    while (i--)
+    {
+      binaryString[i] = String.fromCharCode(uInt8Array[i]);
+    }
+    var data = binaryString.join('');
+
+    var base64 = window.btoa(data);
+
+    replacedImage.src="data:image/png;base64,"+base64;
+  }
+};
+
+xhr.send();
+
+/*
+replacedImage.onload = function(e){
+    alert("onload" + e);
+}
+*/
+
 
         parent.replaceChild(replacedImage, image);
     };
@@ -198,9 +232,14 @@
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
-        return src
+        var pxr = this.transforms['pixel_ratio'](Imager.getPixelRatio());
+        src = src
           .replace(/{width}/g, selectedWidth)
-          .replace(/{pixel_ratio}/g, this.transforms['pixel_ratio'](Imager.getPixelRatio()));
+          .replace(/{pixel_ratio}/g, pxr);
+        return {
+            url : src,
+            dpr : Imager.getPixelRatio()
+        };
     };
 
     Imager.getPixelRatio = function getPixelRatio(){
