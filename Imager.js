@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var $, Imager;
+    var $, Imager, defaultWidths;
 
     window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -22,6 +22,9 @@
             return Array.prototype.slice.call(document.querySelectorAll(selector));
         };
     }(window.$));
+
+
+    defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
 
     /*
@@ -55,7 +58,7 @@
 
         this.imagesOffScreen = [];
         this.viewportHeight  = document.documentElement.clientHeight;
-        this.availableWidths = opts.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+        this.availableWidths = (opts.availableWidths || defaultWidths).sort(function(a, b){ return a-b; });
         this.selector        = opts.selector || '.delayed-image-load';
         this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
         this.gif             = document.createElement('img');

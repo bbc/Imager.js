@@ -49,7 +49,7 @@ describe('Imager.js', function(){
 
     it('should replace {width} by the computed width or a fallback', function(done){
       fixtures = loadFixtures('data-src-new');
-      var imgr = new Imager({ availableWidths: [320, 640] });
+      var imgr = new Imager({ availableWidths: [640, 320] });
 
       runAfterAnimationFrame(function(){
         expect(imgr.cache['base/Demo - Grunt/Assets/Images/Generated/C-320.jpg'].getAttribute('data-src')).to.eq('base/Demo - Grunt/Assets/Images/Generated/C-{width}.jpg');
@@ -62,7 +62,7 @@ describe('Imager.js', function(){
 
     it('should interpolate {width} with an alternate string value', function(done){
       fixtures = loadFixtures('data-src-interpolate');
-      var imgr = new Imager({ availableWidths: [{320: 'n_d'}, {640: 'z_d'}, 1024] });
+      var imgr = new Imager({ availableWidths: [1024, {320: 'n_d'}, {640: 'z_d'}] });
 
       runAfterAnimationFrame(function(){
         expect(imgr.cache['//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg'].getAttribute('data-src')).to.eq('//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg');
