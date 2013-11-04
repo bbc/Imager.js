@@ -12,6 +12,21 @@
         window.setTimeout(callback, 1000 / 60);
     };
 
+    function applyEach(collection, callbackEach){
+        var i = 0,
+            length = collection.length,
+            new_collection = [];
+
+        for(; i < length; i++){
+            new_collection[i] = callbackEach(collection[i]);
+        }
+
+        return new_collection;
+    }
+
+    function returnFn(d){
+      return d;
+    }
 
     $ = (function (dollar) {
         if (dollar) {
@@ -19,7 +34,7 @@
         }
 
         return function (selector) {
-            return Array.prototype.slice.call(document.querySelectorAll(selector));
+            return applyEach(document.querySelectorAll(selector), returnFn);
         };
     }(window.$));
 
@@ -113,7 +128,7 @@
         this.availableWidths = this.availableWidths.sort(function(a, b){ return a - b; });
 
         if (elements){
-          this.divs = [].slice.call(elements);
+          this.divs = applyEach(elements, returnFn);
           this.selector = null;
         }
         else{
