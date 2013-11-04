@@ -21,7 +21,7 @@ describe('Imager.js', function(){
         }
     });
 
-    it('should does not use RegExp anymore', function(done){
+    it('should not use RegExp anymore', function(done){
       fixtures = loadFixtures('data-src-old');
       var imgr = new Imager({ availableWidths: [320, 640] });
 
