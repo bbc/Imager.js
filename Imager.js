@@ -66,6 +66,7 @@
         this.scrollDelay     = opts.scrollDelay || 250;
         this.lazyload        = opts.lazyload || false;
         this.transforms      = Imager.transforms;
+        this.device_pixel_ratio = Imager.getPixelRatio();
 
         this.changeDivsToEmptyImages();
 
@@ -200,7 +201,7 @@
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
         return src
           .replace(/{width}/g, selectedWidth)
-          .replace(/{pixel_ratio}/g, this.transforms['pixel_ratio'](Imager.getPixelRatio()));
+          .replace(/{pixel_ratio}/g, this.transforms.pixelRatio(this.device_pixel_ratio));
     };
 
     Imager.getPixelRatio = function getPixelRatio(){
@@ -208,7 +209,7 @@
     };
 
     Imager.transforms = {
-        pixel_ratio: function(value){
+        pixelRatio: function(value){
             return value === 1 ? '' : '-'+value+'x'  ;
         }
     };

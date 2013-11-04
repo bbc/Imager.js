@@ -71,9 +71,9 @@ describe('Imager.js', function(){
     });
 
     it('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function(){
-        expect(Imager.transforms['pixel_ratio'](1)).to.eq('');
-        expect(Imager.transforms['pixel_ratio'](0.5)).to.eq('-0.5x');
-        expect(Imager.transforms['pixel_ratio'](1.5)).to.eq('-1.5x');
+        expect(Imager.transforms.pixelRatio(1)).to.eq('');
+        expect(Imager.transforms.pixelRatio(0.5)).to.eq('-0.5x');
+        expect(Imager.transforms.pixelRatio(1.5)).to.eq('-1.5x');
     });
 
     it('should replace {pixel_ratio} from the `data-src`', function(){
@@ -81,15 +81,15 @@ describe('Imager.js', function(){
             imgr = new Imager();
 
         dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
-        sandbox.stub(window, 'devicePixelRatio', 1);
+        sandbox.stub(imgr, 'device_pixel_ratio', 1);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A-320.jpg');
-        sandbox.stub(window, 'devicePixelRatio', 2);
+        sandbox.stub(imgr, 'device_pixel_ratio', 2);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A-320.jpg');
 
         dataSrc = 'http://example.com/img{pixel_ratio}/A.jpg';
-        sandbox.stub(window, 'devicePixelRatio', 1);
+        sandbox.stub(imgr, 'device_pixel_ratio', 1);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A.jpg');
-        sandbox.stub(window, 'devicePixelRatio', 2);
+        sandbox.stub(imgr, 'device_pixel_ratio', 2);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
     });
   });
