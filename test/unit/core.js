@@ -59,6 +59,19 @@ describe('Imager.js', function(){
         done();
       });
     });
+
+    it('should interpolate {width} with an alternate string value', function(done){
+      fixtures = loadFixtures('data-src-interpolate');
+      var imgr = new Imager({ availableWidths: [{320: 'n_d'}, {640: 'z_d'}, 1024] });
+
+      runAfterAnimationFrame(function(){
+        expect(imgr.cache['//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg'].getAttribute('data-src')).to.eq('//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg');
+        expect(imgr.cache['//farm4.staticflickr.com/3773/9676470682_3d418eeb40_z_d.jpg'].getAttribute('data-src')).to.eq('//farm4.staticflickr.com/3773/9676470682_3d418eeb40_{width}.jpg');
+        expect(imgr.cache['http://www.fillmurray.com/1024/1024'].getAttribute('data-src')).to.eq('http://www.fillmurray.com/{width}/{width}');
+
+        done();
+      });
+    });
   });
 
   describe('handling {pixel_ratio}', function(){
