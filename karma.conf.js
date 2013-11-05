@@ -14,10 +14,19 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/components-jquery/jquery.min.js',
+      'test/fixtures/jquery-noconflict.js',
+      'test/fixtures/*.html',
       'Imager.js',
-      'test/unit/**/*.js'
+      'test/unit/**/*.js',
+      { 'pattern': 'Demo - Grunt/Assets/Images/**/*.jpg', 'included': false, 'served': true },
+      { 'pattern': 'test/fixtures/**/*.jpg', 'included': false, 'served': true },
+      { 'pattern': 'test/fixtures/oldformat/*', 'included': false, 'served': true }
     ],
 
+    preprocessors: {
+      '**/*.html': ['html2js']
+    },
 
     // list of files to exclude
     exclude: [
@@ -55,7 +64,19 @@ module.exports = function(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS'],
+    browsers: ['PhantomJSCustom'],
+
+    customLaunchers: {
+      'PhantomJSCustom': {
+        base: 'PhantomJS',
+        options: {
+          viewportSize:{
+            width: 1024,
+            height: 768
+          }
+        }
+      }
+    },
 
 
     // If browser does not capture in given timeout [ms], kill it
