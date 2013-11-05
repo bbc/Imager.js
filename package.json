@@ -1,8 +1,7 @@
 {
-  "name": "Imager.js",
-  "version": "0.0.1",
+  "name": "imager",
+  "version": "0.1.0",
   "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
-  "private": true,
   "scripts": {
     "test": "jshint Imager.js && karma start --single-run",
     "test-watch": "karma start"
@@ -21,9 +20,7 @@
     "img",
     "PictureFill"
   ],
-  "author": "Mark McDonnell, Addy Osmani",
-  "license": "Apache 2.0 open source licence",
-  "gitHead": "8d192cf0224a705e463b4dca18041168d491a6e9",
+  "license": "Apache-2.0",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-responsive-images": "0.0.3",
