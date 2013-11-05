@@ -31,10 +31,6 @@ describe('Imager.js', function(){
       }
     });
 
-    afterEach(function(){
-      document.body.removeChild(fixtures);
-    });
-
     it('should initialise without arguments', function(done){
       fixtures = loadFixtures('regular');
       var imgr = new Imager();
@@ -73,7 +69,7 @@ describe('Imager.js', function(){
 
     it('should target elements contained in a static NodeList collection', function(done){
       fixtures = loadFixtures('regular');
-      var imgr = new Imager(fixtures.querySelectorAll('#main .delayed-image-load'));
+      var imgr = new Imager(document.querySelectorAll('#main .delayed-image-load'));
 
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
@@ -87,7 +83,7 @@ describe('Imager.js', function(){
 
     it('should target elements contained in a live NodeList collection', function(done){
       fixtures = loadFixtures('regular');
-      var imgr = new Imager(fixtures.getElementById('main').getElementsByClassName('delayed-image-load'));
+      var imgr = new Imager(document.getElementById('main').getElementsByClassName('delayed-image-load'));
 
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
@@ -101,7 +97,7 @@ describe('Imager.js', function(){
 
     it('should target elements contained in a third-party library collection', function(done){
       fixtures = loadFixtures('regular');
-      var imgr = new Imager(jQuery('#main .delayed-image-load', fixtures));
+      var imgr = new Imager(jQuery('#main .delayed-image-load'));
 
       runAfterAnimationFrame(function(){
         expect(imgr.initialized).to.be.true;
