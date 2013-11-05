@@ -24,7 +24,7 @@
         return new_collection;
     }
 
-    function returnFn(d){
+    function returnDirectValue(d){
       return d;
     }
 
@@ -34,7 +34,7 @@
         }
 
         return function (selector) {
-            return applyEach(document.querySelectorAll(selector), returnFn);
+            return applyEach(document.querySelectorAll(selector), returnDirectValue);
         };
     }(window.$));
 
@@ -128,7 +128,7 @@
         this.availableWidths = this.availableWidths.sort(function(a, b){ return a - b; });
 
         if (elements){
-          this.divs = applyEach(elements, returnFn);
+          this.divs = applyEach(elements, returnDirectValue);
           this.selector = null;
         }
         else{
