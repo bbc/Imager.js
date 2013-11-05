@@ -62,7 +62,7 @@ describe('Imager.js', function(){
 
     it('should interpolate {width} with an alternate string value', function(done){
       fixtures = loadFixtures('data-src-interpolate');
-      var imgr = new Imager({ availableWidths: [1024, {320: 'n_d'}, {640: 'z_d'}] });
+      var imgr = new Imager({ availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'} });
 
       runAfterAnimationFrame(function(){
         expect(imgr.cache['//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg'].getAttribute('data-src')).to.eq('//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg');
