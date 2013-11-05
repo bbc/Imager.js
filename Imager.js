@@ -65,6 +65,9 @@
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
         this.lazyload        = opts.lazyload || false;
+        this.transforms      = Imager.transforms;
+        this.devicePixelRatio = Imager.getPixelRatio();
+
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
@@ -196,7 +199,19 @@
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
-        return src.replace(/{width}/g, selectedWidth);
+        return src
+          .replace(/{width}/g, selectedWidth)
+          .replace(/{pixel_ratio}/g, this.transforms.pixelRatio(this.devicePixelRatio));
+    };
+
+    Imager.getPixelRatio = function getPixelRatio(){
+        return window.devicePixelRatio || 1;
+    };
+
+    Imager.transforms = {
+        pixelRatio: function(value){
+            return value === 1 ? '' : '-'+value+'x'  ;
+        }
     };
 
 }(window, document));
