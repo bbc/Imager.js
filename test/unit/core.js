@@ -81,15 +81,15 @@ describe('Imager.js', function(){
             imgr = new Imager();
 
         dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
-        sandbox.stub(imgr, 'device_pixel_ratio', 1);
+        sandbox.stub(imgr, 'devicePixelRatio', 1);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A-320.jpg');
-        sandbox.stub(imgr, 'device_pixel_ratio', 2);
+        sandbox.stub(imgr, 'devicePixelRatio', 2);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A-320.jpg');
 
         dataSrc = 'http://example.com/img{pixel_ratio}/A.jpg';
-        sandbox.stub(imgr, 'device_pixel_ratio', 1);
+        sandbox.stub(imgr, 'devicePixelRatio', 1);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A.jpg');
-        sandbox.stub(imgr, 'device_pixel_ratio', 2);
+        sandbox.stub(imgr, 'devicePixelRatio', 2);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
     });
   });
