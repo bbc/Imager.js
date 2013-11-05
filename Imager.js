@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var $, Imager, defaultWidths, getKeys;
+    var $, Imager, defaultWidths, getKeys, isArray;
 
     window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -35,6 +35,10 @@
         }
 
         return keys;
+    };
+
+    isArray = function isArray(thing){
+      return Object.prototype.toString.call(thing) === '[object Array]';
     };
 
 
@@ -84,7 +88,7 @@
             opts.availableWidths = defaultWidths;
         }
 
-        if ('length' in opts.availableWidths){
+        if (isArray(opts.availableWidths)){
           this.availableWidths = opts.availableWidths;
           this.widthsMap = Imager.createWidthsMap(this.availableWidths);
         }
