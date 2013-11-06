@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var $, Imager;
+    var $, Imager, defaultWidths, getKeys, isArray;
 
     window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -22,6 +22,24 @@
             return Array.prototype.slice.call(document.querySelectorAll(selector));
         };
     }(window.$));
+
+
+    defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+
+    getKeys = typeof Object.keys === 'function' ? Object.keys : function(object){
+        var keys = [],
+            key;
+
+        for (key in object){
+            keys.push(key);
+        }
+
+        return keys;
+    };
+
+    isArray = function isArray(thing){
+      return Object.prototype.toString.call(thing) === '[object Array]';
+    };
 
 
     /*
@@ -55,7 +73,6 @@
 
         this.imagesOffScreen = [];
         this.viewportHeight  = document.documentElement.clientHeight;
-        this.availableWidths = opts.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
         this.selector        = opts.selector || '.delayed-image-load';
         this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
         this.gif             = document.createElement('img');
@@ -65,9 +82,22 @@
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
         this.lazyload        = opts.lazyload || false;
-        this.transforms      = Imager.transforms;
         this.devicePixelRatio = Imager.getPixelRatio();
 
+        if (opts.availableWidths === undefined){
+            opts.availableWidths = defaultWidths;
+        }
+
+        if (isArray(opts.availableWidths)){
+          this.availableWidths = opts.availableWidths;
+          this.widthsMap = Imager.createWidthsMap(this.availableWidths);
+        }
+        else {
+          this.availableWidths = getKeys(opts.availableWidths);
+          this.widthsMap = opts.availableWidths;
+        }
+
+        this.availableWidths = this.availableWidths.sort(function(a, b){ return a - b; });
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
@@ -200,17 +230,30 @@
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
         return src
-          .replace(/{width}/g, selectedWidth)
-          .replace(/{pixel_ratio}/g, this.transforms.pixelRatio(this.devicePixelRatio));
+          .replace(/{width}/g, Imager.transforms.width(selectedWidth, this.widthsMap))
+          .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
     };
 
     Imager.getPixelRatio = function getPixelRatio(){
         return window.devicePixelRatio || 1;
     };
 
+    Imager.createWidthsMap = function createWidthsMap(widths){
+        var map = {},
+            i = widths.length;
+
+        while(i--){
+            map[widths[i]] = null;
+        }
+        return map;
+    };
+
     Imager.transforms = {
         pixelRatio: function(value){
-            return value === 1 ? '' : '-'+value+'x'  ;
+            return value === 1 ? '' : '-'+value+'x';
+        },
+        width: function transformWidth(width, map){
+          return map[width] || width;
         }
     };
 
