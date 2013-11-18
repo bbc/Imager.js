@@ -1,4 +1,4 @@
-(function (window, document) {
+;(function (window, document) {
 
     'use strict';
 
@@ -53,7 +53,7 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    window.Imager = Imager = function (opts) {
+    function Imager(opts) {
         var self = this;
             opts = opts || {};
 
@@ -79,7 +79,7 @@
         if (this.lazyload) {
             this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
         }
-    };
+    }
 
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
@@ -208,5 +208,16 @@
             return path + file + selectedWidth + extension;
         });
     };
+
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        // CommonJS, just export
+        module.exports = exports = Imager;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD support
+        define(function () { return Imager; });
+    } else if (typeof window === 'object') {
+        // If no AMD and we are in the browser, attach to window
+        window.Imager = Imager;
+    }
 
 }(window, document));
