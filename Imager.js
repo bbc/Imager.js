@@ -311,14 +311,14 @@
     };
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
-      // CommonJS, just export
-      module.exports = exports = Imager;
+        // CommonJS, just export
+        module.exports = exports = Imager;
     } else if (typeof define === 'function' && define.amd) {
-      // AMD support
-      define(function () { return Imager; });
+        // AMD support
+        define(function () { return Imager; });
     } else if (typeof window === 'object') {
-      // If no AMD and we are in the browser, attach to window
-      window.Imager = Imager;
+        // If no AMD and we are in the browser, attach to window
+        window.Imager = Imager;
     }
 
 }(window, document));
