@@ -1,4 +1,4 @@
-(function (window, document) {
+;(function (window, document) {
 
     'use strict';
 
@@ -82,7 +82,7 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    window.Imager = Imager = function (elements, opts) {
+    function Imager(opts) {
         var self = this;
             opts = opts || {};
 
@@ -309,5 +309,16 @@
         self.scrolled = true;
       }, false);
     };
+
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        // CommonJS, just export
+        module.exports = exports = Imager;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD support
+        define(function () { return Imager; });
+    } else if (typeof window === 'object') {
+        // If no AMD and we are in the browser, attach to window
+        window.Imager = Imager;
+    }
 
 }(window, document));
