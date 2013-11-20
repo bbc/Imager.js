@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var $, Imager, defaultWidths, getKeys, isArray;
+    var $, defaultWidths, getKeys, isArray;
 
     window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -142,7 +142,7 @@
         window.requestAnimationFrame(function(){
             self.init();
         });
-    };
+    }
 
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
@@ -310,6 +310,7 @@
       }, false);
     };
 
+    /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
         // CommonJS, just export
         module.exports = exports = Imager;
@@ -320,5 +321,6 @@
         // If no AMD and we are in the browser, attach to window
         window.Imager = Imager;
     }
+    /* global -module, -exports, -define */
 
 }(window, document));
