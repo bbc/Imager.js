@@ -81,8 +81,8 @@
         this.divs            = $(this.selector);
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
-        this.onResize        = 'onResize' in opts ? opts.onResize : true;
-        this.lazyload        = 'lazyload' in opts ? opts.lazyload : false;
+        this.onResize        = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+        this.lazyload        = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled        = false;
         this.devicePixelRatio = Imager.getPixelRatio();
 
