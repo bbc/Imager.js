@@ -154,7 +154,7 @@ describe('Imager.js', function(){
         var img = { clientWidth: 320 };
         var spy = sandbox.spy(imgr, 'availableWidths');
 
-        // stubbing the clientWidth read-only value does not work
+        // sinon stub api wasn't working so we're manually stubbing instead
         img.clientWidth = 7;
         expect(function(){ imgr.replaceImagesBasedOnScreenDimensions(img); }).to.throw();
         expect(spy.returned(8)).to.be.true;
