@@ -109,7 +109,9 @@
         this.gif.className   = this.className.replace(/^[#.]/, '');
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
-        this.lazyload        = opts.lazyload || false;
+        this.onResize        = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+        this.lazyload        = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.scrolled        = false;
         this.devicePixelRatio = Imager.getPixelRatio();
 
         if (opts.availableWidths === undefined){
@@ -140,10 +142,6 @@
         window.requestAnimationFrame(function(){
             self.init();
         });
-
-        if (this.lazyload) {
-            this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
-        }
     };
 
     Imager.prototype.scrollCheck = function(){
@@ -159,20 +157,16 @@
     };
 
     Imager.prototype.init = function(){
-        var self = this;
-
         this.initialized = true;
-        this.scrolled = false;
+
         this.checkImagesNeedReplacing();
 
-        window.addEventListener('resize', function(){
-            self.checkImagesNeedReplacing();
-        }, false);
+        if (this.onResize) {
+            this.registerResizeEvent();
+        }
 
         if (this.lazyload) {
-            window.addEventListener('scroll', function(){
-                this.scrolled = true;
-            }.bind(this), false);
+            this.registerScrollEvent();
         }
     };
 
@@ -292,6 +286,28 @@
         width: function transformWidth(width, map){
           return map[width] || width;
         }
+    };
+
+    Imager.prototype.registerResizeEvent = function (){
+      var self = this;
+
+      window.addEventListener('resize', function(){
+        self.checkImagesNeedReplacing();
+      }, false);
+    };
+
+    Imager.prototype.registerScrollEvent = function (){
+      var self = this;
+
+      this.scrolled = false;
+
+      this.interval = window.setInterval(function(){
+        self.scrollCheck();
+      }, self.scrollDelay);
+
+      window.addEventListener('scroll', function(){
+        self.scrolled = true;
+      }, false);
     };
 
 }(window, document));
