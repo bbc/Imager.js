@@ -247,8 +247,8 @@
 
     Imager.prototype.determineAppropriateResolution = function (image) {
         var imagewidth    = image.clientWidth,
-            selectedWidth = this.availableWidths[0],
-            i             = this.availableWidths.length;
+            i             = this.availableWidths.length,
+            selectedWidth = this.availableWidths[i - 1];
 
         while (i--) {
             if (imagewidth <= this.availableWidths[i]) {
