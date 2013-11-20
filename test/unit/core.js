@@ -121,7 +121,7 @@ describe('Imager.js', function(){
       sandbox.restore();
     });
 
-    it('can be an array of widths', function(){
+    it('should select the closest smallest available image width', function(){
       var imgr = new Imager({ availableWidths: [320, 640, 1024] });
       var img = { clientWidth: 320 };   // stubbing the clientWidth read-only value does not work
 
@@ -138,7 +138,7 @@ describe('Imager.js', function(){
       expect(imgr.determineAppropriateResolution(img)).to.eq(640);
 
       sandbox.stub(img, 'clientWidth', 1030);
-      expect(imgr.determineAppropriateResolution(img)).to.eq(320);
+      expect(imgr.determineAppropriateResolution(img)).to.eq(1024);
     });
 
     it('can be a function computing a value for you', function(done){
