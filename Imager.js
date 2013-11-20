@@ -39,10 +39,6 @@
                 // Class name to give your resizable images.
                 className: '',
 
-                // Regular expression to match against your image endpoint's naming conventions
-                // e.g. http://yourserver.com/image/horse/400
-                regex: RegExp
-
                 // Toggle the lazy load functionality on or off
                 lazyload: Boolean
 
@@ -62,7 +58,6 @@
         this.availableWidths = opts.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
         this.selector        = opts.selector || '.delayed-image-load';
         this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
-        this.regex           = opts.regex || /^(.+\/)\d+$/i;
         this.gif             = document.createElement('img');
         this.gif.src         = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className   = this.className.replace(/^[#.]/, '');
@@ -70,6 +65,8 @@
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
         this.lazyload        = opts.lazyload || false;
+        this.transforms      = Imager.transforms;
+
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
@@ -117,7 +114,7 @@
             gif.setAttribute('data-src', element.getAttribute('data-src'));
 
         element.parentNode.replaceChild(gif, element);
-    }
+    };
 
     Imager.prototype.changeDivsToEmptyImages = function(){
         var divs = this.divs,
@@ -152,8 +149,7 @@
     };
 
     Imager.prototype.checkImagesNeedReplacing = function(){
-        var self = this,
-            images = $(this.className),
+        var images = $(this.className),
             i = images.length,
             currentImage;
 
@@ -170,7 +166,8 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var src = this.determineAppropriateResolution(image),
+        var i = this.determineAppropriateResolution(image)
+        var src = i.url,
             parent = image.parentNode,
             replacedImage;
 
@@ -179,9 +176,34 @@
             replacedImage.width = image.getAttribute('width');
         } else {
             replacedImage = image.cloneNode(false);
-            replacedImage.src = src;
             this.cache[src] = replacedImage;
         }
+
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', src, true);
+
+        xhr.responseType = 'arraybuffer';
+        xhr.setRequestHeader('CH-DPR', i.dpr);
+
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            var uInt8Array = new Uint8Array(this.response);
+            var i = uInt8Array.length;
+            var binaryString = new Array(i);
+            while (i--)
+            {
+              binaryString[i] = String.fromCharCode(uInt8Array[i]);
+            }
+            var data = binaryString.join('');
+
+            var base64 = window.btoa(data);
+
+            replacedImage.src="data:image/png;base64,"+base64;
+          }
+        };
+
+        xhr.send();
 
         parent.replaceChild(replacedImage, image);
     };
@@ -202,11 +224,24 @@
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
-        return src.replace(this.regex, function (match, path, file, extension) {
-            file = file || '';
-            extension = extension !== match ? extension : '';
-            return path + file + selectedWidth + extension;
-        });
+        var pxr = this.transforms['pixel_ratio'](Imager.getPixelRatio());
+        src = src
+          .replace(/{width}/g, selectedWidth)
+          .replace(/{pixel_ratio}/g, pxr);
+        return {
+            url : src,
+            dpr : Imager.getPixelRatio()
+        };
+    };
+
+    Imager.getPixelRatio = function getPixelRatio(){
+        return window.devicePixelRatio || 1;
+    };
+
+    Imager.transforms = {
+        pixel_ratio: function(value){
+            return value === 1 ? '' : '-'+value+'x'  ;
+        }
     };
 
     if (typeof module === 'object' && typeof module.exports === 'object') {
