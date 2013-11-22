@@ -1,8 +1,8 @@
-(function (window, document) {
+;(function (window, document) {
 
     'use strict';
 
-    var $, Imager, defaultWidths, getKeys, isArray;
+    var $, defaultWidths, getKeys, isArray;
 
     window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -82,7 +82,7 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    window.Imager = Imager = function (elements, opts) {
+    function Imager(elements, opts) {
         var self = this;
             opts = opts || {};
 
@@ -142,7 +142,7 @@
         window.requestAnimationFrame(function(){
             self.init();
         });
-    };
+    }
 
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
@@ -228,7 +228,8 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var src = this.determineAppropriateResolution(image),
+        var computedWidth = typeof this.availableWidths === 'function'? this.availableWidths(image) : this.determineAppropriateResolution(image),
+            src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth),
             parent = image.parentNode,
             replacedImage;
 
@@ -245,10 +246,9 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        var src           = image.getAttribute('data-src'),
-            imagewidth    = image.clientWidth,
-            selectedWidth = this.availableWidths[0],
-            i             = this.availableWidths.length;
+        var imagewidth    = image.clientWidth,
+            i             = this.availableWidths.length,
+            selectedWidth = this.availableWidths[i - 1];
 
         while (i--) {
             if (imagewidth <= this.availableWidths[i]) {
@@ -256,7 +256,7 @@
             }
         }
 
-        return this.changeImageSrcToUseNewImageDimensions(src, selectedWidth);
+        return selectedWidth;
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
@@ -309,5 +309,18 @@
         self.scrolled = true;
       }, false);
     };
+
+    /* global module, exports: true, define */
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        // CommonJS, just export
+        module.exports = exports = Imager;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD support
+        define(function () { return Imager; });
+    } else if (typeof window === 'object') {
+        // If no AMD and we are in the browser, attach to window
+        window.Imager = Imager;
+    }
+    /* global -module, -exports, -define */
 
 }(window, document));
