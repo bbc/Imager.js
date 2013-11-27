@@ -2,10 +2,9 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray;
+    var defaultWidths, getKeys, isArray, nextTick;
 
-    window.requestAnimationFrame =
-    window.requestAnimationFrame ||
+    nextTick = window.requestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     function (callback) {
@@ -128,7 +127,7 @@
 
         this.changeDivsToEmptyImages();
 
-        window.requestAnimationFrame(function(){
+        nextTick(function(){
             self.init();
         });
     }
