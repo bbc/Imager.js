@@ -172,7 +172,71 @@ This can be especially usefull if you don't want to depend on the image containe
 
 ## JavaScript Options
 
+### `availableWidths`
 
+This option is intended to reflect the available widths of each responsive image. These values will be used as replacements
+for the `{width}` `data-src` placeholders.
+
+As an `Array`: the widths are represented as numeric values.
+
+```js
+new Imager({ availableWidths: [240, 320, 640] });
+```
+
+As an `Object`: the widths associate a string value for their numeric counterpart.
+
+```js
+new Imager({ availableWidths: {240: 'small', 320: 'medium', 640: 'large'} });
+```
+
+As a `Function`: it has to return a value for a provided width argument.
+
+```js
+// will return a double sized image width as a numeric value
+new Imager({ availableWidths: function(image){ return image.clientWidth * 2; } });
+```
+
+### `className`
+
+A `String` which indicates what className value will be added on the newly created responsive images.
+
+```js
+new Imager({ className: 'image-replace' });
+```
+
+**Default value**: `image-replace`
+
+### `scrollDelay`
+
+An `Integer` value in milliseconds when `Imager.js` will check if a scroll has ended. If a scroll has stopped
+after this delay and the `lazyload` option is true, `Imager.js` will update the `src` attribute of the relevant images.
+
+**Default value**: `250`
+
+```js
+new Imager({ scrollDelay: 250 });
+```
+
+### `onResize`
+
+A `Boolean` value. If set to `true`, `Imager.js` will update the `src` attribute of the relevant images.
+
+**Default value**: `true`
+
+```js
+new Imager({ onResize: true });
+```
+
+### `lazyload`
+
+An experimental `Boolean` value. If set to `true`, `Imager.js` will update the `src` attribute only of visible
+and nearly visible images.
+
+**Default value**: `false`
+
+```js
+new Imager({ lazyload: false });
+```
 
 # Grunt Responsive Image Demo
 
