@@ -117,7 +117,7 @@ Here is an example to serve your own images alongside [Flickr images](http://www
 ```html
 <div style="width: 240px">
   <div class="delayed-image-load" data-src="http://placehold.it/{width}">
-  <div class="delayed-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
+  <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
 </div>
 
 <script>
