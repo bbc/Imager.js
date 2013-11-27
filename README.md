@@ -20,9 +20,9 @@ We wanted something **simple**, which **works** and which is **fast** and networ
 
 `Imager.js` follows this workflow:
 
-- lookup for **placeholder elements**
-- replace **placeholders** by images
-- update images `src` attribute with the best quality/size ratio URL
+1. lookup for **placeholder elements**
+1. replace **placeholders** by images
+1. update images `src` attribute with the best quality/size ratio URL
 
 It eventually lazy load images to even fasten the page load time.
 
@@ -53,8 +53,7 @@ It eventually lazy load images to even fasten the page load time.
   <div class="delayed-image-load" data-src="http://placehold.it/{width}">
 </div>
 
-<script src="path/to/Imager.min.js"></script>
-<script> new Imager({ availableWidths: [200, 260, 320, 600]}); </script>
+<script>new Imager({ availableWidths: [200, 260, 320, 600]});</script>
 ```
 
 This will result in that final HTML output:
@@ -64,9 +63,7 @@ This will result in that final HTML output:
   <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
 </div>
 
-<script>
-  new Imager({ availableWidths: [200, 260, 320, 600]});
-</script>
+<script>new Imager({ availableWidths: [200, 260, 320, 600]});</script>
 ```
 
 `260` has been elected as the best available width as it is the closest upper size relative to `240` pixels.
@@ -74,22 +71,72 @@ This will result in that final HTML output:
 ## Pixel Ratio / HiDPI / Retina
 
 
-```js
+```html
+<div style="width: 240px">
+  <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png">
+</div>
 
+<script>new Imager({ availableWidths: [200, 260, 320, 600]});</script>
 ```
+
+The `img[src]` will be computed as following, according to the `window.devicePixelRatio` reported by the device:
+
+- `http://example.com/assets/260/imgr.png` if no pixel ratio is detected, or advertised as `1`
+- `http://example.com/assets/260/imgr-2x.png` if pixel ratio is advertised as `2`
+- `http://example.com/assets/260/imgr-1.3x.png` if pixel ratio is advertised as `1.3`
+
+Head to this [] resource to learn more about the available pixel ratio in the wild.
 
 ## Interpolating `{width}` value
 
+You might want to use a human readable name or integrate with third-party images provider. `Imager.js` has the ability
+to replace `{width}` by a non-numeric value using the `availableWidths` option as an `Object` notation.
 
-```js
+```html
+<div style="width: 240px">
+  <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png">
+</div>
 
+<script>new Imager({ availableWidths: {
+  200: 'square',
+  260: 'small',
+  320: 'medium',
+  600: 'large'
+} });</script>
 ```
 
-## Mixing various image providers
+The `img[src]` will be computed as `http://example.com/assets/imgr-small.png`.
 
+## Mixing various configurations
 
-```js
+You might want to generate HiDPI responsives images. But what if you also include images from another provider which
+serves a totally different set of sizes, without pixel ratio?
 
+Here is an example to serve your own images alongside [Flickr images](http://www.flickr.com/).
+
+```html
+<div style="width: 240px">
+  <div class="delayed-image-load" data-src="http://placehold.it/{width}">
+  <div class="delayed-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
+</div>
+
+<script>
+var imgrPlaceholdit = new Imager('.delayed-image-load', { availableWidths: [200, 260, 320, 600] });
+var imgrFlickr = new Imager('.delayed-flickr-image-load', { availableWidths: {
+  150: 't_d',
+  320: 'n_d',
+  640: 'z_d'
+} });
+</script>
+```
+
+This will result in this HTML output:
+
+```html
+<div style="width: 240px">
+  <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+  <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
+</div>
 ```
 
 
