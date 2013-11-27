@@ -85,7 +85,7 @@ The `img[src]` will be computed as following, according to the `window.devicePix
 - `http://example.com/assets/260/imgr-2x.png` if pixel ratio is advertised as `2`
 - `http://example.com/assets/260/imgr-1.3x.png` if pixel ratio is advertised as `1.3`
 
-Head to this [] resource to learn more about the available pixel ratio in the wild.
+Head to this [device pixel density test](http://bjango.com/articles/min-device-pixel-ratio/) resource to learn more about the available pixel ratio in the wild.
 
 ## Interpolating `{width}` value
 
@@ -105,7 +105,7 @@ to replace `{width}` by a non-numeric value using the `availableWidths` option a
 } });</script>
 ```
 
-The `img[src]` will be computed as `http://example.com/assets/imgr-small.png`.
+The `img[src]` will be computed as `http://example.com/assets/imgr-small.png` instead of `http://example.com/assets/imgr-260.png`.
 
 ## Mixing various configurations
 
@@ -124,18 +124,18 @@ Here is an example to serve your own images alongside [Flickr images](http://www
 var imgrPlaceholdit = new Imager('.delayed-image-load', { availableWidths: [200, 260, 320, 600] });
 var imgrFlickr = new Imager('.delayed-flickr-image-load', { availableWidths: {
   150: 't_d',
-  320: 'n_d',
+  500: 'd',
   640: 'z_d'
 } });
 </script>
 ```
 
-This will result in this HTML output:
+This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
   <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
-  <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
+  <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
 </div>
 ```
 
