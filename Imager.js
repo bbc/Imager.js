@@ -91,11 +91,11 @@
         this.imagesOffScreen = [];
         this.viewportHeight  = document.documentElement.clientHeight;
         this.selector        = opts.selector || '.delayed-image-load';
-        this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
+        this.className       = opts.className || 'image-replace';
         this.gif             = document.createElement('img');
         this.gif.src         = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-        this.gif.className   = this.className.replace(/^[#.]/, '');
-        this.cache           = {};
+        this.gif.className   = this.className;
+        this.gif.alt         = '';
         this.scrollDelay     = opts.scrollDelay || 250;
         this.onResize        = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload        = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
@@ -147,7 +147,7 @@
     Imager.prototype.init = function(){
         this.initialized = true;
 
-        this.checkImagesNeedReplacing();
+        this.checkImagesNeedReplacing(this.divs);
 
         if (this.onResize) {
             this.registerResizeEvent();
@@ -159,11 +159,18 @@
     };
 
     Imager.prototype.createGif = function (element) {
+        //if the element is already a responsive image, we don't replace it again
+        if (element.className.match(new RegExp('(^| )'+ this.className +'( |$)'))){
+          return element;
+        }
+
         var gif = this.gif.cloneNode(false);
-            gif.width = element.getAttribute('data-width');
-            gif.setAttribute('data-src', element.getAttribute('data-src'));
+
+        gif.width = element.getAttribute('data-width');
+        gif.setAttribute('data-src', element.getAttribute('data-src'));
 
         element.parentNode.replaceChild(gif, element);
+        return gif;
     };
 
     Imager.prototype.changeDivsToEmptyImages = function(){
@@ -176,17 +183,17 @@
 
             if (this.lazyload) {
                 if (this.isThisElementOnScreen(element)) {
-                    this.createGif(element);
+                    this.divs[i] = this.createGif(element);
                 } else {
                     this.imagesOffScreen.push(element);
                 }
             } else {
-                this.createGif(element);
+                this.divs[i] = this.createGif(element);
             }
         }
 
         if (this.initialized) {
-            this.checkImagesNeedReplacing();
+            this.checkImagesNeedReplacing(this.divs);
         }
     };
 
@@ -198,17 +205,14 @@
         return (element.offsetTop < (this.viewportHeight + offset)) ? true : false;
     };
 
-    Imager.prototype.checkImagesNeedReplacing = function(){
-        var images = document.querySelectorAll(this.className),
-            i = images.length,
-            currentImage;
+    Imager.prototype.checkImagesNeedReplacing = function(images){
+        var i = images.length;
 
         if (!this.isResizing) {
             this.isResizing = true;
 
             while (i--) {
-                currentImage = images[i];
-                this.replaceImagesBasedOnScreenDimensions(currentImage);
+                this.replaceImagesBasedOnScreenDimensions(images[i]);
             }
 
             this.isResizing = false;
@@ -217,20 +221,9 @@
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth = typeof this.availableWidths === 'function'? this.availableWidths(image) : this.determineAppropriateResolution(image),
-            src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth),
-            parent = image.parentNode,
-            replacedImage;
+            src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
 
-        if (this.cache[src]) {
-            replacedImage = this.cache[src].cloneNode(false);
-            replacedImage.width = image.getAttribute('width');
-        } else {
-            replacedImage = image.cloneNode(false);
-            replacedImage.src = src;
-            this.cache[src] = replacedImage;
-        }
-
-        parent.replaceChild(replacedImage, image);
+        image.src = src;
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
@@ -280,7 +273,7 @@
       var self = this;
 
       window.addEventListener('resize', function(){
-        self.checkImagesNeedReplacing();
+        self.checkImagesNeedReplacing(self.divs);
       }, false);
     };
 
