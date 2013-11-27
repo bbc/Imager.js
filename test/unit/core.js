@@ -187,11 +187,9 @@ describe('Imager.js', function(){
       var imgr = new Imager({ availableWidths: [320, 640] });
 
       runAfterAnimationFrame(function(){
-        Object.keys(imgr.cache).forEach(function(key){
-          var replacement = imgr.cache[key];
-
-          expect(replacement.nodeName).to.eq('IMG');
-          expect(replacement.getAttribute('src')).to.eq(replacement.getAttribute('data-src'));
+        imgr.divs.forEach(function(el){
+          expect(el.nodeName).to.eq('IMG');
+          expect(el.getAttribute('src')).to.eq(el.getAttribute('data-src'));
         });
 
         done();
@@ -203,9 +201,13 @@ describe('Imager.js', function(){
       var imgr = new Imager({ availableWidths: [640, 320] });
 
       runAfterAnimationFrame(function(){
-        expect(imgr.cache['base/Demo - Grunt/Assets/Images/Generated/C-320.jpg'].getAttribute('data-src')).to.eq('base/Demo - Grunt/Assets/Images/Generated/C-{width}.jpg');
-        expect(imgr.cache['base/Demo - Grunt/Assets/Images/Generated/B-640.jpg'].getAttribute('data-src')).to.eq('base/Demo - Grunt/Assets/Images/Generated/B-{width}.jpg');
-        expect(imgr.cache['base/test/fixtures/media-320/fillmurray.jpg'].getAttribute('data-src')).to.eq('base/test/fixtures/media-{width}/fillmurray.jpg');
+        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+
+        expect(src).to.eql([
+          'base/Demo - Grunt/Assets/Images/Generated/C-320.jpg',
+          'base/Demo - Grunt/Assets/Images/Generated/B-640.jpg',
+          'base/test/fixtures/media-320/fillmurray.jpg'
+        ]);
 
         done();
       });
@@ -216,9 +218,13 @@ describe('Imager.js', function(){
       var imgr = new Imager({ availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'} });
 
       runAfterAnimationFrame(function(){
-        expect(imgr.cache['//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg'].getAttribute('data-src')).to.eq('//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg');
-        expect(imgr.cache['//farm4.staticflickr.com/3773/9676470682_3d418eeb40_z_d.jpg'].getAttribute('data-src')).to.eq('//farm4.staticflickr.com/3773/9676470682_3d418eeb40_{width}.jpg');
-        expect(imgr.cache['http://www.fillmurray.com/1024/1024'].getAttribute('data-src')).to.eq('http://www.fillmurray.com/{width}/{width}');
+        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+
+        expect(src).to.eql([
+          '//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg',
+          '//farm4.staticflickr.com/3773/9676470682_3d418eeb40_z_d.jpg',
+          'http://www.fillmurray.com/1024/1024'
+        ]);
 
         done();
       });
