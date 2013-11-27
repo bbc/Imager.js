@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var $, defaultWidths, getKeys, isArray;
+    var defaultWidths, getKeys, isArray;
 
     window.requestAnimationFrame =
     window.requestAnimationFrame ||
@@ -27,17 +27,6 @@
     function returnDirectValue(d){
       return d;
     }
-
-    $ = (function (dollar) {
-        if (dollar) {
-            return dollar;
-        }
-
-        return function (selector) {
-            return applyEach(document.querySelectorAll(selector), returnDirectValue);
-        };
-    }(window.$));
-
 
     defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
@@ -134,7 +123,7 @@
           this.selector = null;
         }
         else{
-          this.divs = $(this.selector);
+          this.divs = applyEach(document.querySelectorAll(this.selector), returnDirectValue);
         }
 
         this.changeDivsToEmptyImages();
@@ -211,7 +200,7 @@
     };
 
     Imager.prototype.checkImagesNeedReplacing = function(){
-        var images = $(this.className),
+        var images = document.querySelectorAll(this.className),
             i = images.length,
             currentImage;
 
