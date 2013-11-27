@@ -150,12 +150,14 @@ This options are relevant to any element targeted by `Imager.js`.
 
 Available placeholders are:
 
-- `{width}`
-- `{pixel_ratio}`
+- `{width}`: best available image width numeric value
+- `{pixel_ratio}`: device pixel ratio (either *blank* or `-1.3x`, `-2x`, `-3x` etc.)
 
 ### `data-width`
 
-`data-width` is the size of the image placeholder (where the actual image will eventually be loaded)
+`data-width` is the enforced size of the image placeholder; where the actual image will eventually be loaded.
+
+This can be especially usefull if you don't want to depend on the image container width.
 
 
 ## JavaScript API
