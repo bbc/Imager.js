@@ -70,6 +70,7 @@
         this.cache           = {};
         this.scrollDelay     = opts.scrollDelay || 250;
         this.lazyload        = opts.lazyload || false;
+        this.domain          = opts.domain || '';
         this.changeDivsToEmptyImages();
 
         window.requestAnimationFrame(function(){
@@ -202,10 +203,11 @@
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
+        var self = this;
         return src.replace(this.regex, function (match, path, file, extension) {
             file = file || '';
             extension = extension !== match ? extension : '';
-            return path + file + selectedWidth + extension;
+            return self.domain + path + file + selectedWidth + extension;
         });
     };
 
