@@ -144,7 +144,7 @@ This will result in the following HTML output:
 
 ## HTML Options
 
-This options are relevant to any element targeted by `Imager.js`.
+The *HTML API* helps you control how `Imager.js` works from the *content point of view*.
 
 ### `data-src`
 
@@ -182,7 +182,31 @@ This can be especially usefull if you don't want to depend on the image containe
 
 ## JavaScript API
 
+The *JavaScript API* helps you instantiate and control how `Imager.js` works from a *business logic point of view*.
+
 ### `new Imager([selector|elements, [options]])`
+
+Calling the constructor will initialise the responsive images for the provided `elements` or the HTML elements concerned by the `selector`.
+
+The `options` bit is an object documented below, in the [JavaScript Options section](#javascript-options).
+
+```js
+new Imager('.responsive-image-placeholder');
+```
+
+The constructor can be saved in a variable for later use.
+
+```js
+var imgr = new Imager('.responsive-image-placeholder', { onResize: false });
+
+$(window).on('resize scroll.debounced', $.proxy(imgr.checkImagesNeedReplacing, imgr));
+```
+
+For legacy reason, the first argument is optional and defaulted to `.delayed-image-load`, like:
+
+```js
+new Imager();
+```
 
 ### `Imager.checkImagesNeedReplacing()`
 
