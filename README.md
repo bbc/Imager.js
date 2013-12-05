@@ -210,9 +210,42 @@ new Imager();
 
 ### `Imager.checkImagesNeedReplacing()`
 
+Updates concerned `img[src]` attribute if their container width has changed, and if it matches a different `availableWidths` value.
+
+It is relevant to use this method if an unwatched event occured and impacts responsive image widths.
+
+```js
+var imgr = new Imager();
+
+$(document).on('customEvent', $.proxy(imgr.checkImagesNeedReplacing, imgr));
+```
+
 ### `Imager.registerResizeEvent()`
 
+Registers a `window.onresize` handler which will update relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
+when the window size changes.
+
+This covers window resising, device orientation change and entering full screen mode.
+
+```js
+var imgr = new Imager();
+
+$(document).on('load.lowPriority', $.proxy(imgr.registerResizeEvent, imgr));
+```
+
 ### `Imager.registerScrollEvent()`
+
+Registers a `window.onscroll` handler which will update relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
+when the content is scrolled.
+
+A default 250ms [debounce](http://benalman.com/projects/jquery-throttle-debounce-plugin/) is performed to avoid
+trashing the rendering performance. You can alter this value by setting the `scrollDelay` option.
+
+```js
+var imgr = new Imager();
+
+$(document).on('load.lowPriority', $.proxy(imgr.registerScrollEvent, imgr));
+```
 
 ## JavaScript Options
 
@@ -260,6 +293,9 @@ after this delay and the `lazyload` option is true, `Imager.js` will update the 
 ```js
 new Imager({ scrollDelay: 250 });
 ```
+
+**Notice**: set the `scrollDelay` value to `0` at your own risks; unless you know what you do it is going to make
+the user experience totally janky! (and very odd as you use `Imager.js` to improve user experience)
 
 ### `onResize`
 
