@@ -153,12 +153,32 @@ Available placeholders are:
 - `{width}`: best available image width numeric value
 - `{pixel_ratio}`: device pixel ratio (either *blank* or `-1.3x`, `-2x`, `-3x` etc.)
 
+
+```html
+<div data-src="http://placehold.it/{width}"></div>
+
+<!-- becomes, for example -->
+
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+```
+
 ### `data-width`
 
 `data-width` is the enforced size of the image placeholder; where the actual image will eventually be loaded.
 
 This can be especially usefull if you don't want to depend on the image container width.
 
+```html
+<div style="width:600px">
+  <div data-src="http://placehold.it/{width}" data-width="300"></div>
+</div>
+
+<!-- becomes, for example -->
+
+<div style="width:600px">
+  <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" class="image-replace">
+</div>
+```
 
 ## JavaScript API
 
