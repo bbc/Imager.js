@@ -3,31 +3,31 @@
 > Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at [BBC News](http://responsivenews.co.uk/).
 
 
-# Why `Imager.js`?
+## Why?
 
-Many responsive images solutions are in the wild: `srcset`, `src-n`, `PictureFill` and so on. They are either
+There are many responsive image solutions in the wild: `srcset`, `src-n`, `PictureFill` and so on. They are either
 **verbose** or **hard to debug** (and to maintain/integrate). Some of them don't deal well with *pixel density*
-and suffers of a **double asset payload**.
+and suffer from **double asset payload** (meaning you end up downloading assets unnecessarily).
 
-We wanted something **simple**, which **works** and which is **fast** and network friendly.
+We wanted something **simple**, which **works** and which is **fast** as well as network friendly (only download what you need, when you need it).
 
-`Imager.js` implements the  [BBC Responsive News technique](http://responsivenews.co.uk/post/50092458307/images):
+Imager implements the  [BBC Responsive News technique](http://responsivenews.co.uk/post/50092458307/images) which incorporates:
 
 - loading any image once
 - loading the most suitable sized image
 
-# How `Imager.js` works?
+## How does it works?
 
-`Imager.js` follows this workflow:
+Imager runs through the following workflow:
 
-1. lookup for **placeholder elements**
-1. replace **placeholders** by images
-1. update images `src` attribute with the best quality/size ratio URL
+1. lookup **placeholder elements**
+2. replace **placeholders** with transparent images
+3. update `src` attribute for each image and assign the best quality/size ratio URL
 
-It eventually lazy load images to even fasten the page load time.
+Finally, it will lazy load images to speed up page load time even further.
 
 
-# Install
+## Install
 
 <table>
   <thead>
@@ -41,73 +41,82 @@ It eventually lazy load images to even fasten the page load time.
     <tr>
       <td><code>npm install --save imager</code></td>
       <td><code>bower install --save imager</code></td>
-      <td><a href="https://github.com/BBC-News/Imager.js/archive/master.zip">download zipfile</a></td>
+      <td><a href="https://github.com/BBC-News/Imager.js/archive/master.zip">download zip file</a></td>
     </tr>
   </tbody>
 </table>
 
-# Using
+## Using
 
 ```html
 <div style="width: 240px">
-  <div class="delayed-image-load" data-src="http://placehold.it/{width}">
+    <div class="delayed-image-load" data-src="http://placehold.it/{width}">
 </div>
 
-<script>new Imager({ availableWidths: [200, 260, 320, 600]});</script>
+<script>
+    new Imager({ availableWidths: [200, 260, 320, 600] });
+</script>
 ```
 
-This will result in that final HTML output:
+This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
-  <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
 </div>
 
-<script>new Imager({ availableWidths: [200, 260, 320, 600]});</script>
+<script>
+    new Imager({ availableWidths: [200, 260, 320, 600] });
+</script>
 ```
 
-`260` has been elected as the best available width as it is the closest upper size relative to `240` pixels.
+`260` has been elected as the best available width (as it is the closest upper size relative to `240` pixels).
 
-## Pixel Ratio / HiDPI / Retina
+### Pixel Ratio / HiDPI / Retina
 
 
 ```html
 <div style="width: 240px">
-  <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png">
+    <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png">
 </div>
 
-<script>new Imager({ availableWidths: [200, 260, 320, 600]});</script>
+<script>
+    new Imager({ availableWidths: [200, 260, 320, 600] });
+</script>
 ```
 
-The `img[src]` will be computed as following, according to the `window.devicePixelRatio` reported by the device:
+The `img[src]` will be computed as following (according to the reported `window.devicePixelRatio` value by the device):
 
 - `http://example.com/assets/260/imgr.png` if no pixel ratio is detected, or advertised as `1`
 - `http://example.com/assets/260/imgr-2x.png` if pixel ratio is advertised as `2`
 - `http://example.com/assets/260/imgr-1.3x.png` if pixel ratio is advertised as `1.3`
 
-Head to this [device pixel density test](http://bjango.com/articles/min-device-pixel-ratio/) resource to learn more about the available pixel ratio in the wild.
+Head to this [device pixel density test](http://bjango.com/articles/min-device-pixel-ratio/) resource to learn more about the available pixel ratio for your device.
 
-## Interpolating `{width}` value
+### Interpolating `{width}` value
 
-You might want to use a human readable name or integrate with third-party images provider. `Imager.js` has the ability
-to replace `{width}` by a non-numeric value using the `availableWidths` option as an `Object` notation.
+Imager has the ability to replace `{width}` with a non-numeric value if you provide the `availableWidths` option/value in the `Object` type. This feature allows you to use a human readable name or integrate with third-party images provider. 
 
 ```html
 <div style="width: 240px">
-  <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png">
+    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png">
 </div>
 
-<script>new Imager({ availableWidths: {
-  200: 'square',
-  260: 'small',
-  320: 'medium',
-  600: 'large'
-} });</script>
+<script>
+    new Imager({ 
+        availableWidths: {
+            200: 'square',
+            260: 'small',
+            320: 'medium',
+            600: 'large'
+        }
+    });
+</script>
 ```
 
 The `img[src]` will be computed as `http://example.com/assets/imgr-small.png` instead of `http://example.com/assets/imgr-260.png`.
 
-## Mixing various configurations
+### Mixing various configurations
 
 You might want to generate HiDPI responsives images. But what if you also include images from another provider which
 serves a totally different set of sizes, without pixel ratio?
@@ -116,17 +125,22 @@ Here is an example to serve your own images alongside [Flickr images](http://www
 
 ```html
 <div style="width: 240px">
-  <div class="delayed-image-load" data-src="http://placehold.it/{width}">
-  <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
+    <div class="delayed-image-load"        data-src="http://placehold.it/{width}">
+    <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
 </div>
 
 <script>
-var imgrPlaceholdit = new Imager('.delayed-image-load', { availableWidths: [200, 260, 320, 600] });
-var imgrFlickr = new Imager('.delayed-flickr-image-load', { availableWidths: {
-  150: 't_d',
-  500: 'd',
-  640: 'z_d'
-} });
+    var imgrPlaceholder = new Imager('.delayed-image-load', {
+        availableWidths: [200, 260, 320, 600]
+    });
+
+    var imgrFlickr = new Imager('.delayed-flickr-image-load', { 
+        availableWidths: {
+            150: 't_d',
+            500: 'd',
+            640: 'z_d'
+        }
+    });
 </script>
 ```
 
@@ -134,31 +148,36 @@ This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
-  <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
-  <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+    <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
 </div>
 ```
 
+---
 
 # Documentation
 
 ## HTML Options
 
-The *HTML API* helps you control how `Imager.js` works from the *content point of view*.
+The *HTML API* helps you control how Imager works from the *content point of view*.
 
 ### `data-src`
 
 Available placeholders are:
 
-- `{width}`: best available image width numeric value
+- `{width}`: best available image width (numeric value)
 - `{pixel_ratio}`: device pixel ratio (either *blank* or `-1.3x`, `-2x`, `-3x` etc.)
 
 
+So the following HTML...
+
 ```html
 <div data-src="http://placehold.it/{width}"></div>
+```
 
-<!-- becomes, for example -->
+...is converted to...
 
+```html
 <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
 ```
 
@@ -166,27 +185,30 @@ Available placeholders are:
 
 `data-width` is the enforced size of the image placeholder; where the actual image will eventually be loaded.
 
-This can be especially usefull if you don't want to depend on the image container width.
+This can be especially useful if you don't want to depend on the image container width.
+
+So the following HTML...
 
 ```html
 <div style="width:600px">
-  <div data-src="http://placehold.it/{width}" data-width="300"></div>
+    <div data-src="http://placehold.it/{width}" data-width="300"></div>
 </div>
 
-<!-- becomes, for example -->
+...is converted to...
 
+```html
 <div style="width:600px">
-  <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" class="image-replace">
+    <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" class="image-replace">
 </div>
 ```
 
 ## JavaScript API
 
-The *JavaScript API* helps you instantiate and control how `Imager.js` works from a *business logic point of view*.
+The *JavaScript API* helps you instantiate and control how Imager works from a *business logic point of view*.
 
 ### `new Imager([selector|elements, [options]])`
 
-Calling the constructor will initialise the responsive images for the provided `elements` or the HTML elements concerned by the `selector`.
+Calling the constructor will initialise responsive images for the provided `elements` or the HTML elements concerned by the `selector`.
 
 The `options` bit is an object documented below, in the [JavaScript Options section](#javascript-options).
 
@@ -194,15 +216,16 @@ The `options` bit is an object documented below, in the [JavaScript Options sect
 new Imager('.responsive-image-placeholder');
 ```
 
-The constructor can be saved in a variable for later use.
+The constructor can be saved in a variable for later use...
 
 ```js
 var imgr = new Imager('.responsive-image-placeholder', { onResize: false });
 
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
 $(window).on('resize scroll.debounced', $.proxy(imgr.checkImagesNeedReplacing, imgr));
 ```
 
-For legacy reason, the first argument is optional and defaulted to `.delayed-image-load`, like:
+For legacy reasons the first argument is optional and defaulted to `.delayed-image-load`:
 
 ```js
 new Imager();
@@ -210,19 +233,20 @@ new Imager();
 
 ### `Imager.checkImagesNeedReplacing()`
 
-Updates concerned `img[src]` attribute if their container width has changed, and if it matches a different `availableWidths` value.
+Updates the `img[src]` attribute if the container width has changed, and if it matches a different `availableWidths` value.
 
 It is relevant to use this method if an unwatched event occured and impacts responsive image widths.
 
 ```js
 var imgr = new Imager();
 
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
 $(document).on('customEvent', $.proxy(imgr.checkImagesNeedReplacing, imgr));
 ```
 
 ### `Imager.registerResizeEvent()`
 
-Registers a `window.onresize` handler which will update relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
+Registers a `window.onresize` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
 when the window size changes.
 
 This covers window resising, device orientation change and entering full screen mode.
@@ -230,12 +254,13 @@ This covers window resising, device orientation change and entering full screen 
 ```js
 var imgr = new Imager();
 
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
 $(document).on('load.lowPriority', $.proxy(imgr.registerResizeEvent, imgr));
 ```
 
 ### `Imager.registerScrollEvent()`
 
-Registers a `window.onscroll` handler which will update relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
+Registers a `window.onscroll` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
 when the content is scrolled.
 
 A default 250ms [debounce](http://benalman.com/projects/jquery-throttle-debounce-plugin/) is performed to avoid
@@ -244,6 +269,7 @@ trashing the rendering performance. You can alter this value by setting the `scr
 ```js
 var imgr = new Imager();
 
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
 $(document).on('load.lowPriority', $.proxy(imgr.registerScrollEvent, imgr));
 ```
 
@@ -252,30 +278,44 @@ $(document).on('load.lowPriority', $.proxy(imgr.registerScrollEvent, imgr));
 ### `availableWidths`
 
 This option is intended to reflect the available widths of each responsive image. These values will be used as replacements
-for the `{width}` `data-src` placeholders.
+for the `{width}` and `data-src` placeholders.
 
-As an `Array`: the widths are represented as numeric values.
+The following examples demonstrate the results of passing through different object types for the `availableWidths` option...
 
-```js
-new Imager({ availableWidths: [240, 320, 640] });
-```
-
-As an `Object`: the widths associate a string value for their numeric counterpart.
+`Array`: the widths are represented as numeric values
 
 ```js
-new Imager({ availableWidths: {240: 'small', 320: 'medium', 640: 'large'} });
+new Imager({
+    availableWidths: [240, 320, 640]
+});
 ```
 
-As a `Function`: it has to return a value for a provided width argument.
+`Object`: the widths associate a string value for their numeric counterpart
+
+```js
+new Imager({
+    availableWidths: {
+        240: 'small',
+        320: 'medium',
+        640: 'large'
+    }
+});
+```
+
+`Function`: must return a value for the provided width argument
 
 ```js
 // will return a double sized image width as a numeric value
-new Imager({ availableWidths: function(image){ return image.clientWidth * 2; } });
+new Imager({
+    availableWidths: function (image) {
+        return image.clientWidth * 2;
+    }
+});
 ```
 
 ### `className`
 
-A `String` which indicates what className value will be added on the newly created responsive images.
+A String which indicates what the `className` value will be added on the newly created responsive image.
 
 ```js
 new Imager({ className: 'image-replace' });
@@ -285,8 +325,7 @@ new Imager({ className: 'image-replace' });
 
 ### `scrollDelay`
 
-An `Integer` value in milliseconds when `Imager.js` will check if a scroll has ended. If a scroll has stopped
-after this delay and the `lazyload` option is true, `Imager.js` will update the `src` attribute of the relevant images.
+An Integer value (in milliseconds) to indicate when Imager will check if a scroll has ended. If a scroll has stopped after this delay and the `lazyload` option is `true`, Imager will update the `src` attribute of the relevant images.
 
 **Default value**: `250`
 
@@ -294,12 +333,11 @@ after this delay and the `lazyload` option is true, `Imager.js` will update the 
 new Imager({ scrollDelay: 250 });
 ```
 
-**Notice**: set the `scrollDelay` value to `0` at your own risks; unless you know what you do it is going to make
-the user experience totally janky! (and very odd as you use `Imager.js` to improve user experience)
+**Notice**: set the `scrollDelay` value to `0` at your own risk; unless you know what you're doing, setting the value to zero will make the user experience totally janky! (and that would be an odd thing to do as you have chosen to use Imager to improve the user experience)
 
 ### `onResize`
 
-A `Boolean` value. If set to `true`, `Imager.js` will update the `src` attribute of the relevant images.
+A Boolean value. If set to `true`, Imager will update the `src` attribute of the relevant images.
 
 **Default value**: `true`
 
@@ -309,13 +347,12 @@ new Imager({ onResize: true });
 
 ### `lazyload`
 
-An experimental `Boolean` value. If set to `true`, `Imager.js` will update the `src` attribute only of visible
-and nearly visible images.
+An *experimental* Boolean value. If set to `true`, Imager will update the `src` attribute only of visible (and nearly visible) images.
 
 **Default value**: `false`
 
 ```js
-new Imager({ lazyload: false });
+new Imager({ lazyload: true });
 ```
 
 # Grunt Responsive Image Demo
@@ -378,13 +415,14 @@ The goal of this project is to automate the process with the help of the [Grunt]
 
 Much of this work can be repurposed to work with a more standards-based approach once support improves in modern browsers.
 
-For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it Imager.js
+For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it **Imager.js**
 
 
 # Credits
 
 - [Mark McDonnell](http://twitter.com/integralist)
 - [Tom Maslen](http://twitter.com/tmaslen)
+- [Thomas Parisot](https://twitter.com/oncletom)
 - [Addy Osmani](http://twitter.com/addyosmani)
 
 
