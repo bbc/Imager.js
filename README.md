@@ -16,7 +16,7 @@ Imager implements the  [BBC Responsive News technique](http://responsivenews.co.
 - loading any image once
 - loading the most suitable sized image
 
-## How does it works?
+## How does it work?
 
 Imager runs through the following workflow:
 
