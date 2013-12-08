@@ -1,73 +1,361 @@
-# Imager.js
+# Imager.js [![Build Status](https://secure.travis-ci.org/BBC-News/Imager.js.png?branch=master)](http://travis-ci.org/BBC-News/Imager.js)
 
- * Website: http://responsivenews.co.uk/
- * Source: http://github.com/bbc-news/Imager.js
+> Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at [BBC News](http://responsivenews.co.uk/).
 
-*Note: this project is not ready for production and is currently in development*
 
-Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.
+## Why?
 
-## What is it?
+There are many responsive image solutions in the wild: `srcset`, `src-n`, `PictureFill` and so on. They are either
+**verbose** or **hard to debug** (and to maintain/integrate). Some of them don't deal well with *pixel density*
+and suffer from **double asset payload** (meaning you end up downloading assets unnecessarily).
 
-An open-source port of the BBC News technique for handling the loading of images within a responsive code base.
+We wanted something **simple**, which **works** and which is **fast** as well as network friendly (only download what you need, when you need it).
 
-It allows you to…
+Imager implements the  [BBC Responsive News technique](http://responsivenews.co.uk/post/50092458307/images) which incorporates:
 
-- Specify placeholder elements that get replaced with appropriate images
-- Lazy load images (no point loading images that a user never sees)
-- Parse your own URL structure using regular expressions
-- Utilise Grunt to generate a group of responsive images based off a folder directory
+- loading any image once
+- loading the most suitable sized image
 
-## Requirements
+## How does it work?
 
-If you don't have your own RESTful image service (think of [Placehold.it](http://placehold.it/)) then you'll need [Grunt: The JavaScript Task Runner](http://gruntjs.com/) which allows you to specify an image folder and have it generate multiple image sizes for you to use with Imager.js 
+Imager runs through the following workflow:
 
-For the purpose of one of our demo/examples we've used the 3rd party service [Placehold.it](http://placehold.it/).
+1. lookup **placeholder elements**
+2. replace **placeholders** with transparent images
+3. update `src` attribute for each image and assign the best quality/size ratio URL
 
-But you'll also find Grunt based demos that show the basic functionality as well as how lazy loading works.
+Finally, it will lazy load images to speed up page load time even further.
 
-## Using Imager.js
 
-See each of the Demo directories for full examples and source files.
+## Install
 
-In its most basic form, wherever you need an image to appear add: `<div class="delayed-image-load" data-src="http://placehold.it/340" data-width="340"></div>` - where the `data-width` is the size of the image placeholder (where the actual image will eventually be loaded) and the `data-src` is the initial URL to be loaded.
+<table>
+  <thead>
+    <tr>
+      <th>npm</th>
+      <th>bower</th>
+      <th>old school</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>npm install --save imager</code></td>
+      <td><code>bower install --save imager</code></td>
+      <td><a href="https://github.com/BBC-News/Imager.js/archive/master.zip">download zip file</a></td>
+    </tr>
+  </tbody>
+</table>
 
-Then within your JavaScript, initialise a new instance of the Imager library: `new Imager();`
+## Using
 
-There are examples of Imager being used with Grunt as well as a lazy-load
-image version.
+```html
+<div style="width: 240px">
+    <div class="delayed-image-load" data-src="http://placehold.it/{width}">
+</div>
 
-## Credits
+<script>
+    new Imager({ availableWidths: [200, 260, 320, 600] });
+</script>
+```
 
- * [Mark McDonnell](http://twitter.com/integralist)
- * [Tom Maslen](http://twitter.com/tmaslen)
- * [Addy Osmani](http://twitter.com/addyosmani)
+This will result in the following HTML output:
 
-## Alternatives
+```html
+<div style="width: 240px">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+</div>
 
-BBC R&D developer [Thomas Parisot](https://github.com/oncletom/Imager.js/) has built an alternative implementation that introduces some features currently not available within Imager.js
+<script>
+    new Imager({ availableWidths: [200, 260, 320, 600] });
+</script>
+```
 
-We are proactively looking to add improvements to Imager.js (such as ~~proper lazy loading images~~ -> we now have lazy loading built in, specifying pixel density images among other additions) but do feel free to explore Thomas' version (remember to check specifically his branches `feature-separation` and `flickr-demo`)
+`260` has been elected as the best available width (as it is the closest upper size relative to `240` pixels).
 
-## Background
+### Pixel Ratio / HiDPI / Retina
 
-This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News.
 
-At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks.
+```html
+<div style="width: 240px">
+    <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png">
+</div>
 
-[Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
+<script>
+    new Imager({ availableWidths: [200, 260, 320, 600] });
+</script>
+```
 
-The goal of this project is to automate the process with the help of the [Grunt](http://gruntjs.com/) JavaScript task runner (potentially via `grunt-responsive-images` for image generation based on a source directory).
+The `img[src]` will be computed as following (according to the reported `window.devicePixelRatio` value by the device):
 
-Much of this work can be repurposed to work with a more standards-based approach once support improves in modern browsers.
+- `http://example.com/assets/260/imgr.png` if no pixel ratio is detected, or advertised as `1`
+- `http://example.com/assets/260/imgr-2x.png` if pixel ratio is advertised as `2`
+- `http://example.com/assets/260/imgr-1.3x.png` if pixel ratio is advertised as `1.3`
 
-For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it Imager.js
+Head to this [device pixel density test](http://bjango.com/articles/min-device-pixel-ratio/) resource to learn more about the available pixel ratio for your device.
 
-## Why not srcset/Picturefill polyfills
+### Interpolating `{width}` value
 
-Having reviewed the polyfills for these implementations, the cons outweigh the pros at this point. You either take performance hits or have to deal with 2x image requests, which is counter-intuitive. I'd prefer to just use srcset on its own, but other than WebKit other browsers have yet to implement at this point.
+Imager has the ability to replace `{width}` with a non-numeric value if you provide the `availableWidths` option/value in the `Object` type. This feature allows you to use a human readable name or integrate with third-party images provider. 
 
-## Grunt Responsive Image Demo
+```html
+<div style="width: 240px">
+    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png">
+</div>
+
+<script>
+    new Imager({ 
+        availableWidths: {
+            200: 'square',
+            260: 'small',
+            320: 'medium',
+            600: 'large'
+        }
+    });
+</script>
+```
+
+The `img[src]` will be computed as `http://example.com/assets/imgr-small.png` instead of `http://example.com/assets/imgr-260.png`.
+
+### Mixing various configurations
+
+You might want to generate HiDPI responsives images. But what if you also include images from another provider which
+serves a totally different set of sizes, without pixel ratio?
+
+Here is an example to serve your own images alongside [Flickr images](http://www.flickr.com/).
+
+```html
+<div style="width: 240px">
+    <div class="delayed-image-load"        data-src="http://placehold.it/{width}">
+    <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
+</div>
+
+<script>
+    var imgrPlaceholder = new Imager('.delayed-image-load', {
+        availableWidths: [200, 260, 320, 600]
+    });
+
+    var imgrFlickr = new Imager('.delayed-flickr-image-load', { 
+        availableWidths: {
+            150: 't_d',
+            500: 'd',
+            640: 'z_d'
+        }
+    });
+</script>
+```
+
+This will result in the following HTML output:
+
+```html
+<div style="width: 240px">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+    <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
+</div>
+```
+
+---
+
+# Documentation
+
+## HTML Options
+
+The *HTML API* helps you control how Imager works from the *content point of view*.
+
+### `data-src`
+
+Available placeholders are:
+
+- `{width}`: best available image width (numeric value)
+- `{pixel_ratio}`: device pixel ratio (either *blank* or `-1.3x`, `-2x`, `-3x` etc.)
+
+
+So the following HTML...
+
+```html
+<div data-src="http://placehold.it/{width}"></div>
+```
+
+...is converted to...
+
+```html
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+```
+
+### `data-width`
+
+`data-width` is the enforced size of the image placeholder; where the actual image will eventually be loaded.
+
+This can be especially useful if you don't want to depend on the image container width.
+
+So the following HTML...
+
+```html
+<div style="width:600px">
+    <div data-src="http://placehold.it/{width}" data-width="300"></div>
+</div>
+
+...is converted to...
+
+```html
+<div style="width:600px">
+    <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" class="image-replace">
+</div>
+```
+
+## JavaScript API
+
+The *JavaScript API* helps you instantiate and control how Imager works from a *business logic point of view*.
+
+### `new Imager([selector|elements, [options]])`
+
+Calling the constructor will initialise responsive images for the provided `elements` or the HTML elements concerned by the `selector`.
+
+The `options` bit is an object documented below, in the [JavaScript Options section](#javascript-options).
+
+```js
+new Imager('.responsive-image-placeholder');
+```
+
+The constructor can be saved in a variable for later use...
+
+```js
+var imgr = new Imager('.responsive-image-placeholder', { onResize: false });
+
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
+$(window).on('resize scroll.debounced', $.proxy(imgr.checkImagesNeedReplacing, imgr));
+```
+
+For legacy reasons the first argument is optional and defaulted to `.delayed-image-load`:
+
+```js
+new Imager();
+```
+
+### `Imager.checkImagesNeedReplacing()`
+
+Updates the `img[src]` attribute if the container width has changed, and if it matches a different `availableWidths` value.
+
+It is relevant to use this method if an unwatched event occured and impacts responsive image widths.
+
+```js
+var imgr = new Imager();
+
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
+$(document).on('customEvent', $.proxy(imgr.checkImagesNeedReplacing, imgr));
+```
+
+### `Imager.registerResizeEvent()`
+
+Registers a `window.onresize` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
+when the window size changes.
+
+This covers window resising, device orientation change and entering full screen mode.
+
+```js
+var imgr = new Imager();
+
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
+$(document).on('load', $.proxy(imgr.registerResizeEvent, imgr));
+```
+
+### `Imager.registerScrollEvent()`
+
+Registers a `window.onscroll` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
+when the content is scrolled.
+
+A default 250ms [debounce](http://benalman.com/projects/jquery-throttle-debounce-plugin/) is performed to avoid
+trashing the rendering performance. You can alter this value by setting the `scrollDelay` option.
+
+```js
+var imgr = new Imager();
+
+// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
+$(document).on('load', $.proxy(imgr.registerScrollEvent, imgr));
+```
+
+## JavaScript Options
+
+### `availableWidths`
+
+This option is intended to reflect the available widths of each responsive image. These values will be used as replacements
+for the `{width}` and `data-src` placeholders.
+
+The following examples demonstrate the results of passing through different object types for the `availableWidths` option...
+
+`Array`: the widths are represented as numeric values
+
+```js
+new Imager({
+    availableWidths: [240, 320, 640]
+});
+```
+
+`Object`: the widths associate a string value for their numeric counterpart
+
+```js
+new Imager({
+    availableWidths: {
+        240: 'small',
+        320: 'medium',
+        640: 'large'
+    }
+});
+```
+
+`Function`: must return a value for the provided width argument
+
+```js
+// will return a double sized image width as a numeric value
+new Imager({
+    availableWidths: function (image) {
+        return image.clientWidth * 2;
+    }
+});
+```
+
+### `className`
+
+A String which indicates what the `className` value will be added on the newly created responsive image.
+
+```js
+new Imager({ className: 'image-replace' });
+```
+
+**Default value**: `image-replace`
+
+### `scrollDelay`
+
+An Integer value (in milliseconds) to indicate when Imager will check if a scroll has ended. If a scroll has stopped after this delay and the `lazyload` option is `true`, Imager will update the `src` attribute of the relevant images.
+
+**Default value**: `250`
+
+```js
+new Imager({ scrollDelay: 250 });
+```
+
+**Notice**: set the `scrollDelay` value to `0` at your own risk; unless you know what you're doing, setting the value to zero will make the user experience totally janky! (and that would be an odd thing to do as you have chosen to use Imager to improve the user experience)
+
+### `onResize`
+
+A Boolean value. If set to `true`, Imager will update the `src` attribute of the relevant images.
+
+**Default value**: `true`
+
+```js
+new Imager({ onResize: true });
+```
+
+### `lazyload`
+
+An *experimental* Boolean value. If set to `true`, Imager will update the `src` attribute only of visible (and nearly visible) images.
+
+**Default value**: `false`
+
+```js
+new Imager({ lazyload: true });
+```
+
+# Grunt Responsive Image Demo
 
 This demo requires the following commands to be run...
 
@@ -115,7 +403,35 @@ var imager = new Imager({
 
 For full details of the Grunt task options see the [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images/) repo on GitHub.
 
-## Licence
+# Background
 
-Imager.js is available to everyone under the terms of the Apache 2.0 open source licence.
-Take a look at the LICENSE file in the code.
+This is an experiment in offering developers an interim solution to responsive images based on the [ImageEnhancer](https://gist.github.com/Integralist/6157139) concept researched and developed by the team at BBC News.
+
+At present, support for `srcset` and `PictureFill` are not widespread and the polyfills for these solutions also come with a number of drawbacks.
+
+[Mark McDonnell (@integralist)](http://twitter.com/Integralist) documented the process and rewrote the original code so it could be evolved and improved with the help of the open-source community.
+
+The goal of this project is to automate the process with the help of the [Grunt](http://gruntjs.com/) JavaScript task runner (potentially via `grunt-responsive-images` for image generation based on a source directory).
+
+Much of this work can be repurposed to work with a more standards-based approach once support improves in modern browsers.
+
+For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it **Imager.js**
+
+
+# Credits
+
+- [Mark McDonnell](http://twitter.com/integralist)
+- [Tom Maslen](http://twitter.com/tmaslen)
+- [Thomas Parisot](https://twitter.com/oncletom)
+- [Addy Osmani](http://twitter.com/addyosmani)
+
+
+# Licence
+
+> Copyright 2013 British Broadcasting Corporation
+>
+> Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+>
+> http://www.apache.org/licenses/LICENSE-2.0
+>
+> Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

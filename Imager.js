@@ -2,26 +2,47 @@
 
     'use strict';
 
-    var $, Imager;
+    var defaultWidths, getKeys, isArray, nextTick;
 
-    window.requestAnimationFrame =
-    window.requestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
+    nextTick = window.requestAnimationFrame ||
+               window.mozRequestAnimationFrame ||
+               window.webkitRequestAnimationFrame ||
+               function (callback) {
+                   window.setTimeout(callback, 1000 / 60);
+               };
 
+    function applyEach (collection, callbackEach) {
+        var i = 0,
+            length = collection.length,
+            new_collection = [];
 
-    $ = (function (dollar) {
-        if (dollar) {
-            return dollar;
+        for (; i < length; i++) {
+            new_collection[i] = callbackEach(collection[i]);
         }
 
-        return function (selector) {
-            return Array.prototype.slice.call(document.querySelectorAll(selector));
-        };
-    }(window.$));
+        return new_collection;
+    }
+
+    function returnDirectValue (value) {
+      return value;
+    }
+
+    defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+
+    getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
+        var keys = [],
+            key;
+
+        for (key in object) {
+            keys.push(key);
+        }
+
+        return keys;
+    };
+
+    isArray = function isArray (object) {
+        return Object.prototype.toString.call(object) === '[object Array]';
+    };
 
 
     /*
@@ -31,20 +52,19 @@
 
             {
                 // Available widths for your images
-                availableWidths: [Number]
+                availableWidths: [Number],
 
                 // Selector to be used to locate your div placeholders
                 selector: '',
 
-                // Class name to give your resizable images.
+                // Class name to give your resizable images
                 className: '',
 
-                // Regular expression to match against your image endpoint's naming conventions
-                // e.g. http://yourserver.com/image/horse/400
-                regex: RegExp
+                // If set to true, Imager will update the src attribute of the relevant images
+                onResize: Boolean,
 
                 // Toggle the lazy load functionality on or off
-                lazyload: Boolean
+                lazyload: Boolean,
 
                 // Used alongside the lazyload feature (helps performance by setting a higher delay)
                 scrollDelay: Number
@@ -53,32 +73,70 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    function Imager(opts) {
-        var self = this;
-            opts = opts || {};
+    function Imager (elements, opts) {
+        var self = this,
+            doc  = document;
 
-        this.imagesOffScreen = [];
-        this.viewportHeight  = document.documentElement.clientHeight;
-        this.availableWidths = opts.availableWidths || [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
-        this.selector        = opts.selector || '.delayed-image-load';
-        this.className       = '.' + (opts.className || 'image-replace').replace(/^\.+/, '.');
-        this.regex           = opts.regex || /^(.+\/)\d+$/i;
-        this.gif             = document.createElement('img');
-        this.gif.src         = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-        this.gif.className   = this.className.replace(/^[#.]/, '');
-        this.divs            = $(this.selector);
-        this.cache           = {};
-        this.scrollDelay     = opts.scrollDelay || 250;
-        this.lazyload        = opts.lazyload || false;
-        this.changeDivsToEmptyImages();
+        opts = opts || {};
 
-        window.requestAnimationFrame(function(){
-            self.init();
+        if (elements !== undefined) {
+            // selector
+            if (typeof elements === 'string') {
+                opts.selector = elements;
+                elements = undefined;
+            }
+
+            // config object
+            else if (!elements.hasOwnProperty('length')) {
+                opts = elements;
+                elements = undefined;
+            }
+        }
+
+        this.imagesOffScreen  = [];
+        this.viewportHeight   = doc.documentElement.clientHeight;
+        this.selector         = opts.selector || '.delayed-image-load';
+        this.className        = opts.className || 'image-replace';
+        this.gif              = doc.createElement('img');
+        this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
+        this.gif.className    = this.className;
+        this.gif.alt          = '';
+        this.scrollDelay      = opts.scrollDelay || 250;
+        this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+        this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.scrolled         = false;
+        this.devicePixelRatio = Imager.getPixelRatio();
+
+        if (opts.availableWidths === undefined) {
+            opts.availableWidths = defaultWidths;
+        }
+
+        if (isArray(opts.availableWidths)) {
+            this.availableWidths = opts.availableWidths;
+            this.widthsMap = Imager.createWidthsMap(this.availableWidths);
+        }
+        else {
+            this.availableWidths = getKeys(opts.availableWidths);
+            this.widthsMap = opts.availableWidths;
+        }
+
+        this.availableWidths = this.availableWidths.sort(function (a, b) {
+            return a - b;
         });
 
-        if (this.lazyload) {
-            this.interval = window.setInterval(this.scrollCheck.bind(this), this.scrollDelay);
+        if (elements) {
+            this.divs = applyEach(elements, returnDirectValue);
+            this.selector = null;
         }
+        else {
+            this.divs = applyEach(doc.querySelectorAll(this.selector), returnDirectValue);
+        }
+
+        this.changeDivsToEmptyImages();
+
+        nextTick(function(){
+            self.init();
+        });
     }
 
     Imager.prototype.scrollCheck = function(){
@@ -86,6 +144,7 @@
             if (!this.imagesOffScreen.length) {
                 window.clearInterval(this.interval);
             }
+
             this.divs = this.imagesOffScreen.slice(0); // copy by value, don't copy by reference
             this.imagesOffScreen.length = 0;
             this.changeDivsToEmptyImages();
@@ -94,34 +153,37 @@
     };
 
     Imager.prototype.init = function(){
-        var self = this;
-
         this.initialized = true;
-        this.scrolled = false;
-        this.checkImagesNeedReplacing();
+        this.checkImagesNeedReplacing(this.divs);
 
-        window.addEventListener('resize', function(){
-            self.checkImagesNeedReplacing();
-        }, false);
+        if (this.onResize) {
+            this.registerResizeEvent();
+        }
 
         if (this.lazyload) {
-            window.addEventListener('scroll', function(){
-                this.scrolled = true;
-            }.bind(this), false);
+            this.registerScrollEvent();
         }
     };
 
     Imager.prototype.createGif = function (element) {
+        // if the element is already a responsive image then we don't replace it again
+        if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
+            return element;
+        }
+
         var gif = this.gif.cloneNode(false);
-            gif.width = element.getAttribute('data-width');
-            gif.setAttribute('data-src', element.getAttribute('data-src'));
+
+        gif.width = element.getAttribute('data-width');
+        gif.setAttribute('data-src', element.getAttribute('data-src'));
 
         element.parentNode.replaceChild(gif, element);
-    }
+
+        return gif;
+    };
 
     Imager.prototype.changeDivsToEmptyImages = function(){
         var divs = this.divs,
-            i = divs.length,
+            i    = divs.length,
             element;
 
         while (i--) {
@@ -129,40 +191,36 @@
 
             if (this.lazyload) {
                 if (this.isThisElementOnScreen(element)) {
-                    this.createGif(element);
+                    this.divs[i] = this.createGif(element);
                 } else {
                     this.imagesOffScreen.push(element);
                 }
             } else {
-                this.createGif(element);
+                this.divs[i] = this.createGif(element);
             }
         }
 
         if (this.initialized) {
-            this.checkImagesNeedReplacing();
+            this.checkImagesNeedReplacing(this.divs);
         }
     };
 
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-        var offset = ('pageYOffset' in window) ? window.pageYOffset : document.documentElement.scrollTop;
+        var offset = (window.hasOwnProperty('pageYOffset')) ? window.pageYOffset : document.documentElement.scrollTop;
 
         return (element.offsetTop < (this.viewportHeight + offset)) ? true : false;
     };
 
-    Imager.prototype.checkImagesNeedReplacing = function(){
-        var self = this,
-            images = $(this.className),
-            i = images.length,
-            currentImage;
+    Imager.prototype.checkImagesNeedReplacing = function (images) {
+        var i = images.length;
 
         if (!this.isResizing) {
             this.isResizing = true;
 
             while (i--) {
-                currentImage = images[i];
-                this.replaceImagesBasedOnScreenDimensions(currentImage);
+                this.replaceImagesBasedOnScreenDimensions(images[i]);
             }
 
             this.isResizing = false;
@@ -170,27 +228,20 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var src = this.determineAppropriateResolution(image),
-            parent = image.parentNode,
-            replacedImage;
+        var computedWidth, src;
 
-        if (this.cache[src]) {
-            replacedImage = this.cache[src].cloneNode(false);
-            replacedImage.width = image.getAttribute('width');
-        } else {
-            replacedImage = image.cloneNode(false);
-            replacedImage.src = src;
-            this.cache[src] = replacedImage;
-        }
+        computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
+                                                                   : this.determineAppropriateResolution(image);
 
-        parent.replaceChild(replacedImage, image);
+        src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+
+        image.src = src;
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        var src           = image.getAttribute('data-src'),
-            imagewidth    = image.clientWidth,
-            selectedWidth = this.availableWidths[0],
-            i             = this.availableWidths.length;
+        var imagewidth    = image.clientWidth,
+            i             = this.availableWidths.length,
+            selectedWidth = this.availableWidths[i - 1];
 
         while (i--) {
             if (imagewidth <= this.availableWidths[i]) {
@@ -198,17 +249,62 @@
             }
         }
 
-        return this.changeImageSrcToUseNewImageDimensions(src, selectedWidth);
+        return selectedWidth;
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
-        return src.replace(this.regex, function (match, path, file, extension) {
-            file = file || '';
-            extension = extension !== match ? extension : '';
-            return path + file + selectedWidth + extension;
-        });
+        return src
+            .replace(/{width}/g, Imager.transforms.width(selectedWidth, this.widthsMap))
+            .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
     };
 
+    Imager.getPixelRatio = function getPixelRatio(){
+        return window.devicePixelRatio || 1;
+    };
+
+    Imager.createWidthsMap = function createWidthsMap (widths) {
+        var map = {},
+            i   = widths.length;
+
+        while (i--) {
+            map[widths[i]] = null;
+        }
+
+        return map;
+    };
+
+    Imager.transforms = {
+        pixelRatio: function (value) {
+            return value === 1 ? '' : '-' + value + 'x';
+        },
+        width: function (width, map) {
+            return map[width] || width;
+        }
+    };
+
+    Imager.prototype.registerResizeEvent = function(){
+        var self = this;
+
+        window.addEventListener('resize', function(){
+            self.checkImagesNeedReplacing(self.divs);
+        }, false);
+    };
+
+    Imager.prototype.registerScrollEvent = function (){
+        var self = this;
+
+        this.scrolled = false;
+
+        this.interval = window.setInterval(function(){
+            self.scrollCheck();
+        }, self.scrollDelay);
+
+        window.addEventListener('scroll', function(){
+            self.scrolled = true;
+        }, false);
+    };
+
+    /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
         // CommonJS, just export
         module.exports = exports = Imager;
@@ -219,5 +315,6 @@
         // If no AMD and we are in the browser, attach to window
         window.Imager = Imager;
     }
+    /* global -module, -exports, -define */
 
 }(window, document));
