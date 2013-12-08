@@ -52,16 +52,19 @@
 
             {
                 // Available widths for your images
-                availableWidths: [Number]
+                availableWidths: [Number],
 
                 // Selector to be used to locate your div placeholders
                 selector: '',
 
-                // Class name to give your resizable images.
+                // Class name to give your resizable images
                 className: '',
 
+                // If set to true, Imager will update the src attribute of the relevant images
+                onResize: Boolean,
+
                 // Toggle the lazy load functionality on or off
-                lazyload: Boolean
+                lazyload: Boolean,
 
                 // Used alongside the lazyload feature (helps performance by setting a higher delay)
                 scrollDelay: Number
