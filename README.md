@@ -193,6 +193,7 @@ So the following HTML...
 <div style="width:600px">
     <div data-src="http://placehold.it/{width}" data-width="300"></div>
 </div>
+```
 
 ...is converted to...
 
