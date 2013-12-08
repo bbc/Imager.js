@@ -255,7 +255,7 @@ This covers window resising, device orientation change and entering full screen 
 var imgr = new Imager();
 
 // Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
-$(document).on('load.lowPriority', $.proxy(imgr.registerResizeEvent, imgr));
+$(document).on('load', $.proxy(imgr.registerResizeEvent, imgr));
 ```
 
 ### `Imager.registerScrollEvent()`
@@ -270,7 +270,7 @@ trashing the rendering performance. You can alter this value by setting the `scr
 var imgr = new Imager();
 
 // Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
-$(document).on('load.lowPriority', $.proxy(imgr.registerScrollEvent, imgr));
+$(document).on('load', $.proxy(imgr.registerScrollEvent, imgr));
 ```
 
 ## JavaScript Options
