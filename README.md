@@ -118,7 +118,7 @@ The `img[src]` will be computed as `http://example.com/assets/imgr-small.png` in
 
 ### Mixing various configurations
 
-You might want to generate HiDPI responsives images. But what if you also include images from another provider which
+You might want to generate HiDPI responsive images. But what if you also include images from another provider which
 serves a totally different set of sizes, without pixel ratio?
 
 Here is an example to serve your own images alongside [Flickr images](http://www.flickr.com/).
@@ -236,7 +236,7 @@ new Imager();
 
 Updates the `img[src]` attribute if the container width has changed, and if it matches a different `availableWidths` value.
 
-It is relevant to use this method if an unwatched event occured and impacts responsive image widths.
+It is relevant to use this method if an unwatched event occurred and impacts responsive image widths.
 
 ```js
 var imgr = new Imager();
@@ -250,7 +250,7 @@ $(document).on('customEvent', $.proxy(imgr.checkImagesNeedReplacing, imgr));
 Registers a `window.onresize` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
 when the window size changes.
 
-This covers window resising, device orientation change and entering full screen mode.
+This covers window resizing, device orientation change and entering full screen mode.
 
 ```js
 var imgr = new Imager();
