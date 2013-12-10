@@ -50,7 +50,7 @@ Finally, it will lazy load images to speed up page load time even further.
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load" data-src="http://placehold.it/{width}">
+    <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
 </div>
 
 <script>
@@ -77,7 +77,7 @@ This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png">
+    <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png"></div>
 </div>
 
 <script>
@@ -99,7 +99,7 @@ Imager has the ability to replace `{width}` with a non-numeric value if you prov
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png">
+    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png"></div>
 </div>
 
 <script>
@@ -125,8 +125,8 @@ Here is an example to serve your own images alongside [Flickr images](http://www
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load"        data-src="http://placehold.it/{width}">
-    <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg">
+    <div class="delayed-image-load"        data-src="http://placehold.it/{width}"></div>
+    <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg"></div>
 </div>
 
 <script>
