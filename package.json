@@ -1,5 +1,5 @@
 {
-  "name": "imager",
+  "name": "imager.js",
   "version": "0.1.0",
   "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
   "main": "Imager.js",

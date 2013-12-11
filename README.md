@@ -39,8 +39,8 @@ Finally, it will lazy load images to speed up page load time even further.
   </thead>
   <tbody>
     <tr>
-      <td><code>npm install --save imager</code></td>
-      <td><code>bower install --save imager</code></td>
+      <td><code>npm install --save imager.js</code></td>
+      <td><code>bower install --save imager.js</code></td>
       <td><a href="https://github.com/BBC-News/Imager.js/archive/master.zip">download zip file</a></td>
     </tr>
   </tbody>
@@ -95,7 +95,7 @@ Head to this [device pixel density test](http://bjango.com/articles/min-device-p
 
 ### Interpolating `{width}` value
 
-Imager has the ability to replace `{width}` with a non-numeric value if you provide the `availableWidths` option/value in the `Object` type. This feature allows you to use a human readable name or integrate with third-party images provider. 
+Imager has the ability to replace `{width}` with a non-numeric value if you provide the `availableWidths` option/value in the `Object` type. This feature allows you to use a human readable name or integrate with third-party images provider.
 
 ```html
 <div style="width: 240px">
@@ -103,7 +103,7 @@ Imager has the ability to replace `{width}` with a non-numeric value if you prov
 </div>
 
 <script>
-    new Imager({ 
+    new Imager({
         availableWidths: {
             200: 'square',
             260: 'small',
@@ -134,7 +134,7 @@ Here is an example to serve your own images alongside [Flickr images](http://www
         availableWidths: [200, 260, 320, 600]
     });
 
-    var imgrFlickr = new Imager('.delayed-flickr-image-load', { 
+    var imgrFlickr = new Imager('.delayed-flickr-image-load', {
         availableWidths: {
             150: 't_d',
             500: 'd',
