@@ -39,8 +39,8 @@ Finally, it will lazy load images to speed up page load time even further.
   </thead>
   <tbody>
     <tr>
-      <td><code>npm install --save imager-js</code></td>
-      <td><code>bower install --save imager-js</code></td>
+      <td><code>npm install --save imager.js</code></td>
+      <td><code>bower install --save imager.js</code></td>
       <td><a href="https://github.com/BBC-News/Imager.js/archive/master.zip">download zip file</a></td>
     </tr>
   </tbody>
