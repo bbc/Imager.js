@@ -203,6 +203,10 @@ So the following HTML...
 </div>
 ```
 
+### `data-alt`
+
+`data-alt` is the alternative text for the image and should provide equivalent content for those who cannot process images or who have image loading disabled. It is converted to the alt attribute of the img element.
+
 ## JavaScript API
 
 The *JavaScript API* helps you instantiate and control how Imager works from a *business logic point of view*.
