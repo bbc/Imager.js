@@ -66,8 +66,11 @@
                 // Toggle the lazy load functionality on or off
                 lazyload: Boolean,
 
-                // Used alongside the lazyload feature (helps performance by setting a higher delay)
-                scrollDelay: Number
+                // Used alongside the lazy load feature (helps performance by setting a higher delay)
+                scrollDelay: Number,
+
+                // If set to true, Imager will load from top to bottom
+                loadFromTop: Boolean
             }
 
         @param {object} configuration settings
@@ -97,6 +100,7 @@
         this.viewportHeight   = doc.documentElement.clientHeight;
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
+        this.loadFromTop      = opts.loadFromTop || false;
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className    = this.className;
@@ -175,6 +179,7 @@
 
         gif.width = element.getAttribute('data-width');
         gif.setAttribute('data-src', element.getAttribute('data-src'));
+        gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
         element.parentNode.replaceChild(gif, element);
 
@@ -214,13 +219,17 @@
     };
 
     Imager.prototype.checkImagesNeedReplacing = function (images) {
-        var i = images.length;
-
         if (!this.isResizing) {
             this.isResizing = true;
 
-            while (i--) {
-                this.replaceImagesBasedOnScreenDimensions(images[i]);
+            if (!this.loadFromTop) {
+                for (var i = images.length - 1; i >= 0; i--) {
+                    this.replaceImagesBasedOnScreenDimensions(images[i]);
+                }
+            } else {
+                for (var i = 0; i < images.length; i++) {
+                    this.replaceImagesBasedOnScreenDimensions(images[i]);
+                }
             }
 
             this.isResizing = false;
