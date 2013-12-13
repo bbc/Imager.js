@@ -175,7 +175,7 @@
 
         gif.width = element.getAttribute('data-width');
         gif.setAttribute('data-src', element.getAttribute('data-src'));
-        gif.setAttribute('alt', element.getAttribute('data-alt') !== null ? element.getAttribute('data-alt') : '');
+        gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
         element.parentNode.replaceChild(gif, element);
 

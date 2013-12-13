@@ -231,6 +231,36 @@ describe('Imager.js', function(){
     });
   });
 
+  describe('handling data-alt', function(){
+    var fixtures;
+
+    afterEach(function(){
+        if(fixtures){
+          document.body.removeChild(fixtures);
+        }
+    });
+
+    it('should replace data-alt with alt', function(done){
+      fixtures = loadFixtures('data-alt');
+
+      var before = [];
+      var originElements = document.getElementsByClassName('delayed-image-load');
+      for (var i = 0; i < originElements.length; i++) {
+        before[i] = originElements[i].getAttribute('data-alt') || '';
+      }
+
+      var imgr = new Imager();
+
+      runAfterAnimationFrame(function(){
+        for (var i = 0; i < imgr.divs.length; i++) {
+          expect(imgr.divs[i].getAttribute('alt')).to.eq(before[i]);
+        }
+
+        done();
+      });
+    });
+  });
+
   describe('handling {pixel_ratio}', function(){
     var sandbox;
 
