@@ -272,5 +272,37 @@ describe('Imager.js', function(){
         sandbox.stub(imgr, 'devicePixelRatio', 2);
         expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
     });
+
+    it('should handle availablePixelRatios', function(){
+        var dataSrc,
+            imgr = new Imager({
+                availablePixelRatios: [1.3, 2]
+            });
+
+        dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
+        sandbox.stub(imgr, 'devicePixelRatio', 1);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A-320.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 1.3);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-1.3x/A-320.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 1.5);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A-320.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 2);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A-320.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 3);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A-320.jpg');
+
+        dataSrc = 'http://example.com/img{pixel_ratio}/A.jpg';
+        sandbox.stub(imgr, 'devicePixelRatio', 1);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 1.3);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-1.3x/A.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 1.5);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 2);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
+        sandbox.stub(imgr, 'devicePixelRatio', 3);
+        expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
+    });
+
   });
 });
