@@ -209,8 +209,16 @@
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
         var offset = (window.hasOwnProperty('pageYOffset')) ? window.pageYOffset : document.documentElement.scrollTop;
+        var elementOffsetTop = 0;
 
-        return (element.offsetTop < (this.viewportHeight + offset)) ? true : false;
+        if (element.offsetParent) {
+            do {
+                elementOffsetTop += element.offsetTop;
+            }
+            while (element = element.offsetParent);
+        }
+
+        return (elementOffsetTop < (this.viewportHeight + offset)) ? true : false;
     };
 
     Imager.prototype.checkImagesNeedReplacing = function (images) {
