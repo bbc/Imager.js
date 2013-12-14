@@ -301,13 +301,13 @@
     };
 
     Imager.transforms = {
-        pixelRatio: function (value, ratios) {
+        pixelRatio: function (devicePixelRatio, availablePixelRatios) {
 
-            var suffix = ratios
-                ? getClosestValues(ratios, value).slice(-1)[0]
-                : value;
+            var suffix = availablePixelRatios ?
+                getClosestValues(availablePixelRatios, devicePixelRatio).slice(-1)[0] :
+                devicePixelRatio;
 
-            return suffix === 1 ? '' : '-' + suffix + 'x';
+            return (suffix === 1 || devicePixelRatio === 1) ? '' : '-' + suffix + 'x';
         },
         width: function (width, map) {
             return map[width] || width;
