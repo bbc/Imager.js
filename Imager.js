@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray, nextTick;
+    var defaultWidths, getKeys, isArray, nextTick, getClosestValues;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -44,6 +44,26 @@
         return Object.prototype.toString.call(object) === '[object Array]';
     };
 
+    /*
+    Assumes a is a sorted array.
+    - If x is in the array, returns: [x]
+    - If x is not in the array, and within bounds,
+      returns the closest lower and upper values: [lower, upper]
+    - If x is not in the array, and outside bounds,
+      returns the single closest value: [closest]
+    */
+    getClosestValues = function(a, x) {
+        var lo, hi;
+        var values = [];
+        for (var i = a.length; i--;) {
+            if (a[i] == x) return [a[i]];
+            if (a[i] <= x && (lo === undefined || lo < a[i])) lo = a[i];
+            if (a[i] >= x && (hi === undefined || hi > a[i])) hi = a[i];
+        };
+        lo && values.push(lo);
+        hi && values.push(hi);
+        return values;
+    }
 
     /*
         Construct a new Imager instance, passing an optional configuration object.
@@ -53,6 +73,9 @@
             {
                 // Available widths for your images
                 availableWidths: [Number],
+
+                // Available pixel ratios
+                availablePixelRatios: [Number],
 
                 // Selector to be used to locate your div placeholders
                 selector: '',
@@ -123,6 +146,10 @@
         this.availableWidths = this.availableWidths.sort(function (a, b) {
             return a - b;
         });
+
+        if (opts.availablePixelRatios) {
+            this.availablePixelRatios = opts.availablePixelRatios.sort();
+        }
 
         if (elements) {
             this.divs = applyEach(elements, returnDirectValue);
@@ -255,7 +282,7 @@
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
         return src
             .replace(/{width}/g, Imager.transforms.width(selectedWidth, this.widthsMap))
-            .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
+            .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio, this.availablePixelRatios));
     };
 
     Imager.getPixelRatio = function getPixelRatio(){
@@ -274,8 +301,13 @@
     };
 
     Imager.transforms = {
-        pixelRatio: function (value) {
-            return value === 1 ? '' : '-' + value + 'x';
+        pixelRatio: function (value, ratios) {
+
+            var suffix = ratios
+                ? getClosestValues(ratios, value).slice(-1)[0]
+                : value;
+
+            return suffix === 1 ? '' : '-' + suffix + 'x';
         },
         width: function (width, map) {
             return map[width] || width;
