@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Tue Oct 29 2013 11:45:20 GMT+0000 (GMT)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
@@ -20,6 +20,7 @@ module.exports = function(config) {
       'Imager.js',
       'test/*.js',
       'test/unit/**/*.js',
+      { 'pattern': 'Demo - Grunt/Assets/Images/**/*.jpg', 'included': false, 'served': true },
       { 'pattern': 'test/fixtures/**/*.jpg', 'included': false, 'served': true },
       { 'pattern': 'test/fixtures/oldformat/*', 'included': false, 'served': true }
     ],
@@ -66,15 +67,47 @@ module.exports = function(config) {
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: ['PhantomJSCustom'],
 
+    sauceLabs: {
+      username: process.env.SAUCE_USERNAME,
+      accessKey: process.env.SAUCE_ACCESS_KEY,
+      build: process.env.TRAVIS_JOB_NUMBER || 'local tunnel',
+      testName: 'Imager.js',
+      startConnect: true
+    },
+
     customLaunchers: {
       'PhantomJSCustom': {
         base: 'PhantomJS',
         options: {
-          viewportSize:{
+          viewportSize: {
             width: 1024,
             height: 768
           }
         }
+      },
+      SauceIE8: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows XP',
+        version: 8
+      },
+      SauceFirefox: {
+        base: 'SauceLabs',
+        browserName: 'firefox',
+        platform: 'Windows XP',
+        version: 20
+      },
+      SauceAndroid: {
+        base: 'SauceLabs',
+        browserName: 'android',
+        platform: 'Linux',
+        version: '4.0'
+      },
+      SauceiOS: {
+        base: 'SauceLabs',
+        browserName: 'iphone',
+        platform: 'OS X 10.6',
+        version: 4
       }
     },
 
