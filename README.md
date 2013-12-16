@@ -172,13 +172,13 @@ Available placeholders are:
 So the following HTML...
 
 ```html
-<div data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
+<div data-src="http://placehold.it/{width}"></div>
 ```
 
 ...is converted to...
 
 ```html
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
 ```
 
 ### `data-width`
@@ -205,7 +205,19 @@ So the following HTML...
 
 ### `data-alt`
 
-`data-alt` is the alternative text for the image and should provide equivalent content for those who cannot process images or who have image loading disabled. It is converted to the alt attribute of the img element.
+`data-alt` is the alternative text for the image and should provide equivalent content for those who cannot process images or who have image loading disabled. It is converted to the `alt` attribute of the `img element.
+
+So the following HTML...
+
+```html
+<div data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
+```
+
+...is converted to...
+
+```html
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
+```
 
 ## JavaScript API
 
