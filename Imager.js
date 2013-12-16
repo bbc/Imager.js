@@ -210,14 +210,14 @@
     };
 
     Imager.prototype.checkImagesNeedReplacing = function (images) {
-        var i = images.length;
+        var self = this;
 
         if (!this.isResizing) {
             this.isResizing = true;
 
-            while (i--) {
-                this.replaceImagesBasedOnScreenDimensions(images[i]);
-            }
+            applyEach(images, function(image){
+                self.replaceImagesBasedOnScreenDimensions(image);
+            });
 
             this.isResizing = false;
         }
