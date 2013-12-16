@@ -17,7 +17,7 @@
             new_collection = [];
 
         for (; i < length; i++) {
-            new_collection[i] = callbackEach(collection[i]);
+            new_collection[i] = callbackEach(collection[i], i);
         }
 
         return new_collection;
@@ -182,23 +182,19 @@
     };
 
     Imager.prototype.changeDivsToEmptyImages = function(){
-        var divs = this.divs,
-            i    = divs.length,
-            element;
+        var self = this;
 
-        while (i--) {
-            element = divs[i];
-
-            if (this.lazyload) {
-                if (this.isThisElementOnScreen(element)) {
-                    this.divs[i] = this.createGif(element);
+        applyEach(this.divs, function(element, i){
+            if (self.lazyload) {
+                if (self.isThisElementOnScreen(element)) {
+                    self.divs[i] = self.createGif(element);
                 } else {
-                    this.imagesOffScreen.push(element);
+                    self.imagesOffScreen.push(element);
                 }
             } else {
-                this.divs[i] = this.createGif(element);
+                self.divs[i] = self.createGif(element);
             }
-        }
+        });
 
         if (this.initialized) {
             this.checkImagesNeedReplacing(this.divs);
