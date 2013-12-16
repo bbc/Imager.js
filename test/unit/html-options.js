@@ -19,8 +19,8 @@ describe('Imager.js HTML data-* API', function(){
 
       runAfterAnimationFrame(function(){
         imgr.divs.forEach(function(el){
-          expect(el.nodeName).to.eq('IMG');
-          expect(el.getAttribute('src')).to.eq(el.getAttribute('data-src'));
+	  expect(el).to.have.property('nodeName', 'IMG');
+	  expect(el).to.have.property('src').to.have.string(el.getAttribute('data-src'));
         });
 
         done();

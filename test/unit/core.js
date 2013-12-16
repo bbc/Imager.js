@@ -17,8 +17,8 @@ describe('Imager.js', function () {
             var imgr = new Imager();
 
             runAfterAnimationFrame(function () {
-                expect(imgr.initialized).to.be.true;
-                expect(imgr.scrolled).to.be.false;
+                expect(imgr.initialized).to.eq(true);
+                expect(imgr.scrolled).to.eq(false);
                 expect(imgr.divs).to.have.length.of(5);
                 expect(imgr.selector).to.eq('.delayed-image-load');
 
@@ -39,8 +39,8 @@ describe('Imager.js', function () {
             var imgr = new Imager('#main .delayed-image-load');
 
             runAfterAnimationFrame(function () {
-                expect(imgr.initialized).to.be.true;
-                expect(imgr.scrolled).to.be.false;
+                expect(imgr.initialized).to.eq(true);
+                expect(imgr.scrolled).to.eq(false);
                 expect(imgr.divs).to.have.length.of(3);
                 expect(imgr.selector).to.eq('#main .delayed-image-load');
 
@@ -53,10 +53,10 @@ describe('Imager.js', function () {
             var imgr = new Imager(document.querySelectorAll('#main .delayed-image-load'));
 
             runAfterAnimationFrame(function () {
-                expect(imgr.initialized).to.be.true;
-                expect(imgr.scrolled).to.be.false;
+                expect(imgr.initialized).to.eq(true);
+                expect(imgr.scrolled).to.eq(false);
                 expect(imgr.divs).to.have.length.of(3);
-                expect(imgr.selector).to.be.null;
+                expect(imgr.selector).to.eq(null);
 
                 done();
             });
@@ -67,10 +67,10 @@ describe('Imager.js', function () {
             var imgr = new Imager(document.getElementById('main').getElementsByClassName('delayed-image-load'));
 
             runAfterAnimationFrame(function () {
-                expect(imgr.initialized).to.be.true;
-                expect(imgr.scrolled).to.be.false;
+                expect(imgr.initialized).to.eq(true);
+                expect(imgr.scrolled).to.eq(false);
                 expect(imgr.divs).to.have.length.of(3);
-                expect(imgr.selector).to.be.null;
+                expect(imgr.selector).to.eq(null);
 
                 done();
             });
@@ -81,10 +81,10 @@ describe('Imager.js', function () {
             var imgr = new Imager(jQuery('#main .delayed-image-load'));
 
             runAfterAnimationFrame(function () {
-                expect(imgr.initialized).to.be.true;
-                expect(imgr.scrolled).to.be.false;
+                expect(imgr.initialized).to.eq(true);
+                expect(imgr.scrolled).to.eq(false);
                 expect(imgr.divs).to.have.length.of(3);
-                expect(imgr.selector).to.be.null;
+                expect(imgr.selector).to.eq(null);
 
                 done();
             });
@@ -140,19 +140,19 @@ describe('Imager.js', function () {
                 expect(function () {
                     imgr.replaceImagesBasedOnScreenDimensions(img);
                 }).to.throw();
-                expect(spy.returned(8)).to.be.true;
+                expect(spy.returned(8)).to.eq(true);
 
                 img.clientWidth = 8;
                 expect(function () {
                     imgr.replaceImagesBasedOnScreenDimensions(img);
                 }).to.throw();
-                expect(spy.returned(8)).to.be.true;
+                expect(spy.returned(8)).to.eq(true);
 
                 img.clientWidth = 9;
                 expect(function () {
                     imgr.replaceImagesBasedOnScreenDimensions(img);
                 }).to.throw();
-                expect(spy.returned(16)).to.be.true;
+                expect(spy.returned(16)).to.eq(true);
 
                 done();
             }, 100);
