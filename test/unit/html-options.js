@@ -35,8 +35,8 @@ describe('Imager.js HTML data-* API', function(){
         var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
-          'base/Demo - Grunt/Assets/Images/Generated/C-320.jpg',
-          'base/Demo - Grunt/Assets/Images/Generated/B-640.jpg',
+          'base/test/fixtures/media/C-320.jpg',
+          'base/test/fixtures/media/B-640.jpg',
           'base/test/fixtures/media-320/fillmurray.jpg'
         ]);
 

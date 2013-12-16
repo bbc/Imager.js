@@ -20,7 +20,6 @@ module.exports = function(config) {
       'Imager.js',
       'test/*.js',
       'test/unit/**/*.js',
-      { 'pattern': 'Demo - Grunt/Assets/Images/**/*.jpg', 'included': false, 'served': true },
       { 'pattern': 'test/fixtures/**/*.jpg', 'included': false, 'served': true },
       { 'pattern': 'test/fixtures/oldformat/*', 'included': false, 'served': true }
     ],
