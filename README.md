@@ -50,7 +50,7 @@ Finally, it will lazy load images to speed up page load time even further.
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+    <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
 </div>
 
 <script>
@@ -62,7 +62,7 @@ This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
-    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
 </div>
 
 <script>
@@ -77,7 +77,7 @@ This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png"></div>
+    <div class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png" data-alt="alternative text"></div>
 </div>
 
 <script>
@@ -99,7 +99,7 @@ Imager has the ability to replace `{width}` with a non-numeric value if you prov
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png"></div>
+    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png" data-alt="alternative text"></div>
 </div>
 
 <script>
@@ -125,8 +125,8 @@ Here is an example to serve your own images alongside [Flickr images](http://www
 
 ```html
 <div style="width: 240px">
-    <div class="delayed-image-load"        data-src="http://placehold.it/{width}"></div>
-    <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg"></div>
+    <div class="delayed-image-load"        data-src="http://placehold.it/{width}" data-alt="alternative text 1"></div>
+    <div class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" data-alt="alternative text 2"></div>
 </div>
 
 <script>
@@ -148,8 +148,8 @@ This will result in the following HTML output:
 
 ```html
 <div style="width: 240px">
-    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
-    <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" class="image-replace">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text 1" class="image-replace">
+    <img src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_d.jpg" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" alt="alternative text 2" class="image-replace">
 </div>
 ```
 
@@ -172,13 +172,13 @@ Available placeholders are:
 So the following HTML...
 
 ```html
-<div data-src="http://placehold.it/{width}"></div>
+<div data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
 ```
 
 ...is converted to...
 
 ```html
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
 ```
 
 ### `data-width`
@@ -191,7 +191,7 @@ So the following HTML...
 
 ```html
 <div style="width:600px">
-    <div data-src="http://placehold.it/{width}" data-width="300"></div>
+    <div data-src="http://placehold.it/{width}" data-width="300" data-alt="alternative text"></div>
 </div>
 ```
 
@@ -199,9 +199,13 @@ So the following HTML...
 
 ```html
 <div style="width:600px">
-    <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" class="image-replace">
+    <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" alt="alternative text" class="image-replace">
 </div>
 ```
+
+### `data-alt`
+
+`data-alt` is the alternative text for the image and should provide equivalent content for those who cannot process images or who have image loading disabled. It is converted to the `alt` attribute of the `img` element.
 
 ## JavaScript API
 
@@ -389,9 +393,9 @@ options: {
 ...be aware the names of the files need to change within your HTML...
 
 ```html
-<div class="delayed-image-load" data-src="Assets/Images/Generated/A-320.jpg" data-width="1024"></div>
-<div class="delayed-image-load" data-src="Assets/Images/Generated/B-320.jpg" data-width="1024"></div>
-<div class="delayed-image-load" data-src="Assets/Images/Generated/C-320.jpg" data-width="1024"></div>
+<div class="delayed-image-load" data-src="Assets/Images/Generated/A-320.jpg" data-width="1024" alt="alternative text A"></div>
+<div class="delayed-image-load" data-src="Assets/Images/Generated/B-320.jpg" data-width="1024" alt="alternative text B"></div>
+<div class="delayed-image-load" data-src="Assets/Images/Generated/C-320.jpg" data-width="1024" alt="alternative text C"></div>
 ```
 
 You can then pass those image sizes through to Imager.js along with a regex for Imager to parse the information...
