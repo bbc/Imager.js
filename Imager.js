@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray, nextTick;
+    var defaultWidths, getKeys, isArray, nextTick, addEvent;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -26,6 +26,8 @@
     function returnDirectValue (value) {
       return value;
     }
+
+    addEvent = window.attachEvent || window.addEventListener;
 
     defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
@@ -326,7 +328,7 @@
     Imager.prototype.registerResizeEvent = function(){
         var self = this;
 
-        window.addEventListener('resize', function(){
+	addEvent('resize', function(){
             self.checkImagesNeedReplacing(self.divs);
         }, false);
     };
@@ -340,7 +342,7 @@
             self.scrollCheck();
         }, self.scrollDelay);
 
-        window.addEventListener('scroll', function(){
+	addEvent('scroll', function(){
             self.scrolled = true;
         }, false);
     };
