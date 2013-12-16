@@ -17,8 +17,8 @@ describe('Imager.js Events', function(){
     it('should register the relevant events by default', function(){
       var imgr = new Imager();
 
-      expect(imgr.onResize).to.be.true;
-      expect(imgr.lazyload).to.be.false;
+      expect(imgr.onResize).to.eq(true);
+      expect(imgr.lazyload).to.eq(false);
     });
 
     it('should handle onResize only', function(done){
@@ -26,8 +26,8 @@ describe('Imager.js Events', function(){
       var resizeSpy = sandbox.spy(imgr, 'registerResizeEvent');
       var scrollSpy = sandbox.spy(imgr, 'registerScrollEvent');
 
-      expect(resizeSpy.called).to.be.false;
-      expect(scrollSpy.called).to.be.false;
+      expect(resizeSpy.called).to.eq(false);
+      expect(scrollSpy.called).to.eq(false);
 
       setTimeout(function(){
         expect(resizeSpy.callCount).to.eq(1);
@@ -42,8 +42,8 @@ describe('Imager.js Events', function(){
       var resizeSpy = sandbox.spy(imgr, 'registerResizeEvent');
       var scrollSpy = sandbox.spy(imgr, 'registerScrollEvent');
 
-      expect(resizeSpy.called).to.be.false;
-      expect(scrollSpy.called).to.be.false;
+      expect(resizeSpy.called).to.eq(false);
+      expect(scrollSpy.called).to.eq(false);
 
       setTimeout(function(){
         expect(resizeSpy.callCount).to.eq(0);
