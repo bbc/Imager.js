@@ -89,7 +89,7 @@ describe('Imager.js HTML data-* API', function(){
 
     it('should replace {pixel_ratio} from the `data-src`', function(){
       var dataSrc,
-        imgr = new Imager();
+          imgr = new Imager();
 
       dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
       sandbox.stub(imgr, 'devicePixelRatio', 1);
@@ -114,21 +114,27 @@ describe('Imager.js HTML data-* API', function(){
       }
     });
 
-    it('should replace data-alt with alt', function(done){
-      fixtures = loadFixtures('data-alt');
+    it('should generate an empty alt attribute for the responsive image', function(done){
+        fixtures = loadFixtures('regular');
+        var imgr = new Imager('#main .delayed-image-load');
 
-      var before = [];
-      var originElements = document.getElementsByClassName('delayed-image-load');
-      for (var i = 0; i < originElements.length; i++) {
-        before[i] = originElements[i].getAttribute('data-alt') || '';
-      }
+        expect(imgr.gif.alt).to.eql('');
 
-      var imgr = new Imager();
+        runAfterAnimationFrame(function(){
+            expect(imgr.divs[0]).to.have.property('alt', imgr.gif.alt);
+
+            done();
+        });
+    });
+
+    it('should generate an alt attribute with the same value as the placeholder data-alt attribute', function(done){
+      fixtures = loadFixtures('regular');
+      var imgr = new Imager('#main .delayed-image-load');
+
+      expect(imgr.gif.alt).to.eql('');
 
       runAfterAnimationFrame(function(){
-        for (var i = 0; i < imgr.divs.length; i++) {
-          expect(imgr.divs[i].getAttribute('alt')).to.eq(before[i]);
-        }
+        expect(imgr.divs[1]).to.have.property('alt', 'Responsive Image alternative');
 
         done();
       });
