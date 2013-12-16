@@ -18,6 +18,7 @@ module.exports = function(config) {
       'test/fixtures/jquery-noconflict.js',
       'test/fixtures/*.html',
       'Imager.js',
+      'test/*.js',
       'test/unit/**/*.js',
       { 'pattern': 'Demo - Grunt/Assets/Images/**/*.jpg', 'included': false, 'served': true },
       { 'pattern': 'test/fixtures/**/*.jpg', 'included': false, 'served': true },
