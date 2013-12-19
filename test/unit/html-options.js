@@ -35,8 +35,8 @@ describe('Imager.js HTML data-* API', function(){
         var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
-          'base/Demo - Grunt/Assets/Images/Generated/C-320.jpg',
-          'base/Demo - Grunt/Assets/Images/Generated/B-640.jpg',
+          'base/test/fixtures/media/C-320.jpg',
+          'base/test/fixtures/media/B-640.jpg',
           'base/test/fixtures/media-320/fillmurray.jpg'
         ]);
 
@@ -52,9 +52,9 @@ describe('Imager.js HTML data-* API', function(){
         var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
-          '//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_n_d.jpg',
-          '//farm4.staticflickr.com/3773/9676470682_3d418eeb40_z_d.jpg',
-          'http://www.fillmurray.com/1024/1024'
+          'base/test/fixtures/interpolated/B-n_d.jpg',
+          'base/test/fixtures/interpolated/B-z_d.jpg',
+          'base/test/fixtures/1024/1024.jpg'
         ]);
 
         done();
