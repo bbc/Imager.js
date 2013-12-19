@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-responsive-images": "0.0.3",
+    "grunt-responsive-images": "~0.0.7",
     "karma-chai": "0.0.2",
     "karma-mocha": "~0.1.0",
     "chai": "~1.8.1",
