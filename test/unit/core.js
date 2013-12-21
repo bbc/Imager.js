@@ -160,4 +160,31 @@ describe('Imager.js', function () {
         });
     });
 
+    describe('devicePixelRatio', function(){
+        var sandbox, imgrOptions = { availablePixelRatios: [1, 1.3, 2] };
+
+        beforeEach(function () {
+            sandbox = sinon.sandbox.create();
+        });
+
+        afterEach(function () {
+            sandbox.restore();
+        });
+
+        it('should pick a value of 1 if the device pixel ratio is lower than 1', function(){
+            sandbox.stub(Imager, 'getPixelRatio', function(){ return 0.8 });
+            expect(new Imager(imgrOptions)).to.have.property('devicePixelRatio', 1);
+        });
+
+        it('should pick a value of 1.3 if the device pixel ratio is equal to 1.3', function(){
+            sandbox.stub(Imager, 'getPixelRatio', function(){ return 1.3 });
+            expect(new Imager(imgrOptions)).to.have.property('devicePixelRatio', 1.3);
+        });
+
+        it('should pick the biggest ratio if the device pixel ratio is greater than the biggest available one', function(){
+            sandbox.stub(Imager, 'getPixelRatio', function(){ return 3 });
+            expect(new Imager(imgrOptions)).to.have.property('devicePixelRatio', 2);
+        });
+    });
+
 });
