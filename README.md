@@ -74,6 +74,8 @@ This will result in the following HTML output:
 
 ### Pixel Ratio / HiDPI / Retina
 
+Let's say we have generated 4 sizes of images (`200`, `260`, `320` and `600`)
+in 3 different pixel ratio flavours (`1`, `1.3` and `2`):
 
 ```html
 <div style="width: 240px">
@@ -81,14 +83,14 @@ This will result in the following HTML output:
 </div>
 
 <script>
-    new Imager({ availableWidths: [200, 260, 320, 600] });
+    new Imager({ availableWidths: [200, 260, 320, 600], availablePixelRatios: [1, 1.3, 2] });
 </script>
 ```
 
 The `img[src]` will be computed as following (according to the reported `window.devicePixelRatio` value by the device):
 
 - `http://example.com/assets/260/imgr.png` if no pixel ratio is detected, or advertised as `1`
-- `http://example.com/assets/260/imgr-2x.png` if pixel ratio is advertised as `2`
+- `http://example.com/assets/260/imgr-2x.png` if pixel ratio is advertised as `2` (or any value greater than 2)
 - `http://example.com/assets/260/imgr-1.3x.png` if pixel ratio is advertised as `1.3`
 
 Head to this [device pixel density test](http://bjango.com/articles/min-device-pixel-ratio/) resource to learn more about the available pixel ratio for your device.
@@ -295,7 +297,7 @@ $(document).on('load', $.proxy(imgr.registerScrollEvent, imgr));
 ### `availableWidths`
 
 This option is intended to reflect the available widths of each responsive image. These values will be used as replacements
-for the `{width}` and `data-src` placeholders.
+for the `{width}` variable in `data-src` placeholders.
 
 The following examples demonstrate the results of passing through different object types for the `availableWidths` option...
 
@@ -329,6 +331,18 @@ new Imager({
     }
 });
 ```
+
+### `availablePixelRatios`
+
+An Array which indicates what are the available pixel ratios available for your responsive images.
+
+These values will be used as replacements for the `{pixel_ratio}` variable in `data-src` placeholders.
+
+```js
+new Imager({ availablePixelRatios: [1, 2] });
+```
+
+**Default value**: `[1, 2]`
 
 ### `className`
 
