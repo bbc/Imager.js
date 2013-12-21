@@ -105,7 +105,8 @@
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled         = false;
-        this.devicePixelRatio = Imager.getPixelRatio();
+        this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
+        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
 
         if (opts.availableWidths === undefined) {
             opts.availableWidths = defaultWidths;
