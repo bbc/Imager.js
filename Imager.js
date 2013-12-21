@@ -106,7 +106,7 @@
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
-        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
+        this.refreshPixelRatio();
 
         if (opts.availableWidths === undefined) {
             opts.availableWidths = defaultWidths;
@@ -220,6 +220,7 @@
 
         if (!this.isResizing) {
             this.isResizing = true;
+            this.refreshPixelRatio();
 
             while (i--) {
                 this.replaceImagesBasedOnScreenDimensions(images[i]);
@@ -242,6 +243,19 @@
 
     Imager.prototype.determineAppropriateResolution = function (image) {
         return Imager.getClosestValue(image.clientWidth, this.availableWidths);
+    };
+
+    /**
+     * Updates the device pixel ratio value used by Imager
+     *
+     * It is performed before each replacement loop, in case a user zoomed in/out
+     * and thus updated the `window.devicePixelRatio` value.
+     *
+     * @api
+     * @since 1.0.1
+     */
+    Imager.prototype.refreshPixelRatio = function refreshPixelRatio(){
+        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
