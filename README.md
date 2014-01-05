@@ -97,7 +97,28 @@ Head to this [device pixel density test](http://bjango.com/articles/min-device-p
 
 ### Interpolating `{width}` value
 
-Imager has the ability to replace `{width}` with a non-numeric value if you provide the `availableWidths` option/value in the `Object` type. This feature allows you to use a human readable name or integrate with third-party images provider.
+Imager has the ability to replace `{width}` with a non-numeric value if you
+provide the `widthInterpolator` option, which is a function that returns the
+string to be injected into the image URL for a given width. This feature allows you to use a human readable name or integrate with third-party image providers.
+
+```html
+<div style="width: 240px">
+    <div class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png" data-alt="alternative text"></div>
+</div>
+
+<script>
+    new Imager({
+        availableWidths: [200, 260, 320, 600],
+        widthInterpolator: function(width) {
+          return width + 'x' + (width/2);
+        }
+    });
+</script>
+```
+
+The `img[src]` will be computed as `http://example.com/assets/imgr-260x130.png` instead of `http://example.com/assets/imgr-260.png`.
+
+Alternatively you can define `availableWidths` as an `Object` where the key is the width, and the value is the string to be injected into the image URL.
 
 ```html
 <div style="width: 240px">

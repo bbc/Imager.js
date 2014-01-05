@@ -62,6 +62,30 @@ describe('Imager.js HTML data-* API', function(){
         done();
       });
     });
+
+    it('should interpolate {width} based on an interpolation function', function(done){
+      fixtures = loadFixtures('data-src-interpolate');
+      var imgr = new Imager({
+        availableWidths: [320, 640, 1024],
+        widthInterpolator: function(w) {
+          if (w == 320) { return 'n_d'; }
+          if (w == 640) { return 'z_d'; }
+          return '';
+        }
+      });
+
+      runAfterAnimationFrame(function(){
+        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+
+        expect(src).to.eql([
+          'base/test/fixtures/interpolated/B-n_d.jpg',
+          'base/test/fixtures/interpolated/B-z_d.jpg',
+          'base/test/fixtures/1024/1024.jpg'
+        ]);
+
+        done();
+      });
+    });
   });
 
   describe('Imager.getPixelRatio', function(){
