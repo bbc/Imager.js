@@ -105,7 +105,8 @@
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled         = false;
-        this.devicePixelRatio = Imager.getPixelRatio();
+        this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
+        this.refreshPixelRatio();
 
         if (opts.availableWidths === undefined) {
             opts.availableWidths = defaultWidths;
@@ -223,6 +224,7 @@
 
         if (!this.isResizing) {
             this.isResizing = true;
+            this.refreshPixelRatio();
 
             applyEach(images, function(image){
                 self.replaceImagesBasedOnScreenDimensions(image);
@@ -244,17 +246,20 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        var imagewidth    = image.clientWidth,
-            i             = this.availableWidths.length,
-            selectedWidth = this.availableWidths[i - 1];
+        return Imager.getClosestValue(image.clientWidth, this.availableWidths);
+    };
 
-        while (i--) {
-            if (imagewidth <= this.availableWidths[i]) {
-                selectedWidth = this.availableWidths[i];
-            }
-        }
-
-        return selectedWidth;
+    /**
+     * Updates the device pixel ratio value used by Imager
+     *
+     * It is performed before each replacement loop, in case a user zoomed in/out
+     * and thus updated the `window.devicePixelRatio` value.
+     *
+     * @api
+     * @since 1.0.1
+     */
+    Imager.prototype.refreshPixelRatio = function refreshPixelRatio(){
+        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
@@ -285,6 +290,37 @@
         width: function (width, map) {
             return map[width] || width;
         }
+    };
+
+    /**
+     * Returns the closest upper value.
+     *
+     * ```js
+     * var candidates = [1, 1.5, 2];
+     *
+     * Imager.getClosestValue(0.8, candidates); // -> 1
+     * Imager.getClosestValue(1, candidates); // -> 1
+     * Imager.getClosestValue(1.3, candidates); // -> 1.5
+     * Imager.getClosestValue(3, candidates); // -> 2
+     * ```
+     *
+     * @api
+     * @since 1.0.1
+     * @param {Number} baseValue
+     * @param {Array.<Number>} candidates
+     * @returns {Number}
+     */
+    Imager.getClosestValue = function getClosestValue(baseValue, candidates){
+        var i             = candidates.length,
+            selectedWidth = candidates[i - 1];
+
+        while (i--) {
+            if (baseValue <= candidates[i]) {
+                selectedWidth = candidates[i];
+            }
+        }
+
+        return selectedWidth;
     };
 
     Imager.prototype.registerResizeEvent = function(){
