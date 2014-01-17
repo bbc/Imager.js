@@ -27,7 +27,18 @@
       return value;
     }
 
-    addEvent = window.attachEvent || window.addEventListener;
+    addEvent = (function(){
+        if (document.addEventListener){
+            return function addStandartEventLister(el, eventName, fn){
+                return el.addEventListener(eventName, fn, false);
+            };
+        }
+        else {
+            return function addIEEventListener(el, eventName, fn){
+                return el.attachEvent('on'+eventName, fn);
+            }
+        }
+    })();
 
     defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
@@ -328,7 +339,7 @@
     Imager.prototype.registerResizeEvent = function(){
         var self = this;
 
-	addEvent('resize', function(){
+	      addEvent(window, 'resize', function(){
             self.checkImagesNeedReplacing(self.divs);
         }, false);
     };
@@ -342,15 +353,15 @@
             self.scrollCheck();
         }, self.scrollDelay);
 
-	addEvent('scroll', function(){
+	      addEvent(window, 'scroll', function(){
             self.scrolled = true;
         }, false);
     };
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
-      return ((testCase === true)
-        ? function(){ return window.pageYOffset; }
-        : function(){ return document.documentElement.scrollTop; });
+        return ((testCase === true)
+            ? function(){ return window.pageYOffset; }
+            : function(){ return document.documentElement.scrollTop; });
     };
 
     // This form is used because it seems impossible to stub `window.pageYOffset`
