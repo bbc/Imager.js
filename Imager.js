@@ -208,7 +208,7 @@
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-        var offset = (window.hasOwnProperty('pageYOffset')) ? window.pageYOffset : document.documentElement.scrollTop;
+        var offset = Imager.getPageOffset();
         var elementOffsetTop = 0;
 
         if (element.offsetParent) {
@@ -346,6 +346,15 @@
             self.scrolled = true;
         }, false);
     };
+
+    Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
+      return ((testCase === true)
+        ? function(){ return window.pageYOffset; }
+        : function(){ return document.documentElement.scrollTop; });
+    };
+
+    // This form is used because it seems impossible to stub `window.pageYOffset`
+    Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
