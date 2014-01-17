@@ -187,4 +187,29 @@ describe('Imager.js', function () {
         });
     });
 
+  describe('getPageOffsetGenerator', function(){
+    var sandbox;
+
+    beforeEach(function(){
+      sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(function(){
+      sandbox.restore();
+    });
+
+    it('should use `window.pageYOffset` if the property is available', function(){
+      var pageYOffsetIsAvailable = true;
+      var generator = Imager.getPageOffsetGenerator(pageYOffsetIsAvailable);
+
+      expect(generator.toString()).to.have.string('window.pageYOffset');
+    });
+
+    it('should rather use `document.documentElement.scrollTop` if `window.pageYOffset` is not available', function(){
+      var pageYOffsetIsAvailable = false;
+      var generator = Imager.getPageOffsetGenerator(pageYOffsetIsAvailable);
+
+      expect(generator.toString()).to.have.string('document.documentElement.scrollTop');
+    });
+  });
 });
