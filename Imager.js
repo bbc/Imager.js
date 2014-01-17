@@ -36,7 +36,7 @@
         else {
             return function addIEEventListener(el, eventName, fn){
                 return el.attachEvent('on'+eventName, fn);
-            }
+            };
         }
     })();
 
@@ -339,7 +339,7 @@
     Imager.prototype.registerResizeEvent = function(){
         var self = this;
 
-	      addEvent(window, 'resize', function(){
+        addEvent(window, 'resize', function(){
             self.checkImagesNeedReplacing(self.divs);
         }, false);
     };
@@ -353,15 +353,18 @@
             self.scrollCheck();
         }, self.scrollDelay);
 
-	      addEvent(window, 'scroll', function(){
+        addEvent(window, 'scroll', function(){
             self.scrolled = true;
         }, false);
     };
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
-        return ((testCase === true)
-            ? function(){ return window.pageYOffset; }
-            : function(){ return document.documentElement.scrollTop; });
+        if(testCase){
+            return function(){ return window.pageYOffset; };
+        }
+        else {
+            return function(){ return document.documentElement.scrollTop; };
+        }
     };
 
     // This form is used because it seems impossible to stub `window.pageYOffset`
