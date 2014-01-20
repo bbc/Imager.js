@@ -1,11 +1,9 @@
 language: node_js
 node_js:
-  - "0.10"
-notifications:
-  email:
-    recipients:
-      - thomas.parisot@bbc.co.uk
-    on_failure: change
-    on_success: never
-before_script:
-  - npm install -g grunt-cli
+  - '0.10'
+
+addons:
+  sauce_connect:
+    username: "BBC-Imager"
+    access_key:
+      secure: "IISYhoa72N67APDfO/lwzmjlJWdpXRtFVepxFvNpRyHyMB+uPiOVNnCgaDrof6IA9+kPXyTHEdeqHmS6zL19Ix9Bwxf0xdo+kKuG1dn5WC6cYOpxBxQV3kEeMQq966OP59NMogeXhomKD0HIJ5WSJBUH5rS22NlLUw14BNqPvd0="
