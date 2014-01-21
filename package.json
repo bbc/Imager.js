@@ -45,6 +45,6 @@
     "components-jquery": "git://github.com/components/jquery",
     "karma-sinon": "0.0.1",
     "uglify-js": "~2.4.3",
-    "karma-sauce-launcher": "~0.1.5"
+    "karma-sauce-launcher": "~0.1.8"
   }
 }
