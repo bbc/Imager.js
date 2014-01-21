@@ -268,8 +268,8 @@
             .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
     };
 
-    Imager.getPixelRatio = function getPixelRatio(){
-        return window.devicePixelRatio || 1;
+    Imager.getPixelRatio = function getPixelRatio(context){
+        return (context || window)['devicePixelRatio'] || 1;
     };
 
     Imager.createWidthsMap = function createWidthsMap (widths) {
