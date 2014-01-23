@@ -3,6 +3,8 @@
 /* globals describe, it, beforeEach, afterEach, sinon, Imager */
 
 describe('Imager.js HTML data-* API', function(){
+  // Simili-Array.map for IE8 compat purpose
+  var applyEach = Imager.applyEach;
 
   describe('handling {width} in data-src', function(){
     var fixtures;
@@ -18,7 +20,7 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({ availableWidths: [320, 640] });
 
       runAfterAnimationFrame(function(){
-        imgr.divs.forEach(function(el){
+        applyEach(imgr.divs, function(el){
           expect(el).to.have.property('nodeName', 'IMG');
           expect(el.src).to.contain(el.getAttribute('data-src'));
         });
@@ -32,7 +34,7 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({ availableWidths: [640, 320] });
 
       runAfterAnimationFrame(function(){
-        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+        var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
           'base/test/fixtures/media/C-320.jpg',
@@ -49,7 +51,7 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({ availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'} });
 
       runAfterAnimationFrame(function(){
-        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+        var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
           'base/test/fixtures/interpolated/B-n_d.jpg',

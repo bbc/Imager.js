@@ -370,6 +370,9 @@
     // This form is used because it seems impossible to stub `window.pageYOffset`
     Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
 
+    // Exporting for testing purpose
+    Imager.applyEach = applyEach;
+
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
         // CommonJS, just export
