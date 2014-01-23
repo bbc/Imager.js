@@ -39,7 +39,7 @@
     "karma-coffee-preprocessor": "~0.1.0",
     "karma": "~0.10.4",
     "jshint": "~2.3.0",
-    "components-jquery": "git://github.com/components/jquery",
+    "components-jquery": "git://github.com/components/jquery.git#1.10.2",
     "karma-sinon": "0.0.1",
     "uglify-js": "~2.4.3",
     "karma-sauce-launcher": "~0.1.8",
