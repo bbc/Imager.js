@@ -80,14 +80,14 @@
         opts = opts || {};
 
         if (elements !== undefined) {
-            // selector
+            // first argument is selector string
             if (typeof elements === 'string') {
                 opts.selector = elements;
                 elements = undefined;
             }
 
-            // config object
-            else if (!elements.hasOwnProperty('length')) {
+            // first argument is the `opts` object, `elements` is implicitly the `opts.selector` string
+            else if (typeof elements.length === 'undefined') {
                 opts = elements;
                 elements = undefined;
             }
@@ -268,8 +268,8 @@
             .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
     };
 
-    Imager.getPixelRatio = function getPixelRatio(){
-        return window.devicePixelRatio || 1;
+    Imager.getPixelRatio = function getPixelRatio(context){
+        return (context || window)['devicePixelRatio'] || 1;
     };
 
     Imager.createWidthsMap = function createWidthsMap (widths) {

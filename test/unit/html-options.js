@@ -62,6 +62,26 @@ describe('Imager.js HTML data-* API', function(){
     });
   });
 
+  describe('Imager.getPixelRatio', function(){
+      var sandbox;
+
+      beforeEach(function(){
+          sandbox = sinon.sandbox.create();
+      });
+
+      afterEach(function(){
+          sandbox.restore();
+      });
+
+      it('should return a numeric value', function(){
+        expect(Imager.getPixelRatio()).to.be.above(0);
+      });
+
+      it('should return a default value of 1 for old browser', function (){
+        expect(Imager.getPixelRatio({})).to.be.eq(1);
+      });
+  });
+
   describe('handling {pixel_ratio} in data-src', function(){
     var sandbox;
 
@@ -71,14 +91,6 @@ describe('Imager.js HTML data-* API', function(){
 
     afterEach(function(){
       sandbox.restore();
-    });
-
-    it('should always return a pixelRatio', function(){
-      expect(Imager.getPixelRatio()).to.be.above(0);
-
-      sandbox.stub(window, 'devicePixelRatio', undefined);
-      expect(window.devicePixelRatio).to.be.an('undefined');
-      expect(Imager.getPixelRatio()).to.be.eq(1);
     });
 
     it('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function(){
