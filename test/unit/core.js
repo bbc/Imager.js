@@ -64,7 +64,7 @@ describe('Imager.js', function () {
 
         it('should target elements contained in a live NodeList collection', function (done) {
             fixtures = loadFixtures('regular');
-            var imgr = new Imager(document.getElementById('main').getElementsByClassName('delayed-image-load'));
+            var imgr = new Imager(document.getElementById('main').getElementsByTagName('div'));
 
             runAfterAnimationFrame(function () {
                 expect(imgr.initialized).to.equal(true);
