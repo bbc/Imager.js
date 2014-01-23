@@ -106,8 +106,8 @@ module.exports = function (config) {
       SauceiOS: {
         base: 'SauceLabs',
         browserName: 'iphone',
-        platform: 'OS X 10.6',
-        version: 4
+        platform: 'OS X 10.8',
+        version: '5.1'
       }
     },
 
