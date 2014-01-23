@@ -9,7 +9,7 @@ module.exports = function (config) {
 
 
     // frameworks to use
-    frameworks: ['mocha', 'chai', 'sinon'],
+    frameworks: ['mocha', 'mocha', 'expect', 'sinon'],
 
 
     // list of files / patterns to load in the browser
@@ -88,14 +88,14 @@ module.exports = function (config) {
       SauceIE8: {
         base: 'SauceLabs',
         browserName: 'internet explorer',
-        platform: 'Windows XP',
-        version: 8
+        platform: 'Windows 7',
+        version: '8'
       },
       SauceFirefox: {
         base: 'SauceLabs',
         browserName: 'firefox',
-        platform: 'Windows XP',
-        version: 20
+        platform: 'Windows 7',
+        version: '21'
       },
       SauceAndroid: {
         base: 'SauceLabs',
@@ -106,8 +106,13 @@ module.exports = function (config) {
       SauceiOS: {
         base: 'SauceLabs',
         browserName: 'iphone',
-        platform: 'OS X 10.6',
-        version: 4
+        platform: 'OS X 10.8',
+        version: '5.1'
+      },
+      SauceSafari: {
+        base: 'SauceLabs',
+        browserName: 'safari',
+        platform: 'OS X 10.8'
       }
     },
 

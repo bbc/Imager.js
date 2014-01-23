@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray, nextTick;
+    var defaultWidths, getKeys, isArray, nextTick, addEvent;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -26,6 +26,19 @@
     function returnDirectValue (value) {
       return value;
     }
+
+    addEvent = (function(){
+        if (document.addEventListener){
+            return function addStandardEventListener(el, eventName, fn){
+                return el.addEventListener(eventName, fn, false);
+            };
+        }
+        else {
+            return function addIEEventListener(el, eventName, fn){
+                return el.attachEvent('on'+eventName, fn);
+            };
+        }
+    })();
 
     defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
@@ -80,14 +93,14 @@
         opts = opts || {};
 
         if (elements !== undefined) {
-            // selector
+            // first argument is selector string
             if (typeof elements === 'string') {
                 opts.selector = elements;
                 elements = undefined;
             }
 
-            // config object
-            else if (!elements.hasOwnProperty('length')) {
+            // first argument is the `opts` object, `elements` is implicitly the `opts.selector` string
+            else if (typeof elements.length === 'undefined') {
                 opts = elements;
                 elements = undefined;
             }
@@ -206,7 +219,7 @@
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-        var offset = (window.hasOwnProperty('pageYOffset')) ? window.pageYOffset : document.documentElement.scrollTop;
+        var offset = Imager.getPageOffset();
         var elementOffsetTop = 0;
 
         if (element.offsetParent) {
@@ -268,8 +281,8 @@
             .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
     };
 
-    Imager.getPixelRatio = function getPixelRatio(){
-        return window.devicePixelRatio || 1;
+    Imager.getPixelRatio = function getPixelRatio(context){
+        return (context || window)['devicePixelRatio'] || 1;
     };
 
     Imager.createWidthsMap = function createWidthsMap (widths) {
@@ -326,9 +339,9 @@
     Imager.prototype.registerResizeEvent = function(){
         var self = this;
 
-        window.addEventListener('resize', function(){
+        addEvent(window, 'resize', function(){
             self.checkImagesNeedReplacing(self.divs);
-        }, false);
+        });
     };
 
     Imager.prototype.registerScrollEvent = function (){
@@ -340,10 +353,25 @@
             self.scrollCheck();
         }, self.scrollDelay);
 
-        window.addEventListener('scroll', function(){
+        addEvent(window, 'scroll', function(){
             self.scrolled = true;
-        }, false);
+        });
     };
+
+    Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
+        if(testCase){
+            return function(){ return window.pageYOffset; };
+        }
+        else {
+            return function(){ return document.documentElement.scrollTop; };
+        }
+    };
+
+    // This form is used because it seems impossible to stub `window.pageYOffset`
+    Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
+
+    // Exporting for testing purpose
+    Imager.applyEach = applyEach;
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {

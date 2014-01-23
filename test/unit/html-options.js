@@ -3,6 +3,8 @@
 /* globals describe, it, beforeEach, afterEach, sinon, Imager */
 
 describe('Imager.js HTML data-* API', function(){
+  // Simili-Array.map for IE8 compat purpose
+  var applyEach = Imager.applyEach;
 
   describe('handling {width} in data-src', function(){
     var fixtures;
@@ -18,9 +20,9 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({ availableWidths: [320, 640] });
 
       runAfterAnimationFrame(function(){
-        imgr.divs.forEach(function(el){
-          expect(el.nodeName).to.eq('IMG');
-          expect(el.getAttribute('src')).to.eq(el.getAttribute('data-src'));
+        applyEach(imgr.divs, function(el){
+          expect(el).to.have.property('nodeName', 'IMG');
+          expect(el.src).to.contain(el.getAttribute('data-src'));
         });
 
         done();
@@ -32,7 +34,7 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({ availableWidths: [640, 320] });
 
       runAfterAnimationFrame(function(){
-        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+        var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
           'base/test/fixtures/media/C-320.jpg',
@@ -49,7 +51,7 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({ availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'} });
 
       runAfterAnimationFrame(function(){
-        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+        var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
           'base/test/fixtures/interpolated/B-n_d.jpg',
@@ -60,6 +62,26 @@ describe('Imager.js HTML data-* API', function(){
         done();
       });
     });
+  });
+
+  describe('Imager.getPixelRatio', function(){
+      var sandbox;
+
+      beforeEach(function(){
+          sandbox = sinon.sandbox.create();
+      });
+
+      afterEach(function(){
+          sandbox.restore();
+      });
+
+      it('should return a numeric value', function(){
+        expect(Imager.getPixelRatio()).to.be.above(0);
+      });
+
+      it('should return a default value of 1 for old browser', function (){
+        expect(Imager.getPixelRatio({})).to.equal(1);
+      });
   });
 
   describe('handling {pixel_ratio} in data-src', function(){
@@ -73,18 +95,10 @@ describe('Imager.js HTML data-* API', function(){
       sandbox.restore();
     });
 
-    it('should always return a pixelRatio', function(){
-      expect(Imager.getPixelRatio()).to.be.above(0);
-
-      sandbox.stub(window, 'devicePixelRatio', undefined);
-      expect(window.devicePixelRatio).to.be.an('undefined');
-      expect(Imager.getPixelRatio()).to.be.eq(1);
-    });
-
     it('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function(){
-      expect(Imager.transforms.pixelRatio(1)).to.eq('');
-      expect(Imager.transforms.pixelRatio(0.5)).to.eq('-0.5x');
-      expect(Imager.transforms.pixelRatio(1.5)).to.eq('-1.5x');
+      expect(Imager.transforms.pixelRatio(1)).to.equal('');
+      expect(Imager.transforms.pixelRatio(0.5)).to.equal('-0.5x');
+      expect(Imager.transforms.pixelRatio(1.5)).to.equal('-1.5x');
     });
 
     it('should replace {pixel_ratio} from the `data-src`', function(){
@@ -93,15 +107,15 @@ describe('Imager.js HTML data-* API', function(){
 
       dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
       sandbox.stub(imgr, 'devicePixelRatio', 1);
-      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A-320.jpg');
+      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img/A-320.jpg');
       sandbox.stub(imgr, 'devicePixelRatio', 2);
-      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A-320.jpg');
+      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img-2x/A-320.jpg');
 
       dataSrc = 'http://example.com/img{pixel_ratio}/A.jpg';
       sandbox.stub(imgr, 'devicePixelRatio', 1);
-      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img/A.jpg');
+      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img/A.jpg');
       sandbox.stub(imgr, 'devicePixelRatio', 2);
-      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.eq('http://example.com/img-2x/A.jpg');
+      expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img-2x/A.jpg');
     });
   });
 
@@ -118,7 +132,7 @@ describe('Imager.js HTML data-* API', function(){
         fixtures = loadFixtures('regular');
         var imgr = new Imager('#main .delayed-image-load');
 
-        expect(imgr.gif.alt).to.eql('');
+        expect(imgr.gif).to.have.property('alt', '');
 
         runAfterAnimationFrame(function(){
             expect(imgr.divs[0]).to.have.property('alt', imgr.gif.alt);
@@ -131,7 +145,7 @@ describe('Imager.js HTML data-* API', function(){
       fixtures = loadFixtures('regular');
       var imgr = new Imager('#main .delayed-image-load');
 
-      expect(imgr.gif.alt).to.eql('');
+      expect(imgr.gif).to.have.property('alt', '');
 
       runAfterAnimationFrame(function(){
         expect(imgr.divs[1]).to.have.property('alt', 'Responsive Image alternative');
