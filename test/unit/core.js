@@ -124,14 +124,15 @@ describe('Imager.js', function () {
 
         it('can be a function computing a value for you', function (done) {
             // this example will always compute sizes 8 pixels by 8 pixels
-            // we need to stub it for now as events are triggered automatically and generates exceptions we can escape
-            var imgr = new Imager();
+            var imgr = new Imager({
+              onResize: false,
+              lazyload: false,
+              availableWidths: function (image) {
+                return image.clientWidth - image.clientWidth % 8 + (1 * (image.clientWidth % 8 ? 8 : 0));
+              }
+            });
 
             setTimeout(function () {
-                imgr.availableWidths = function (image) {
-                    return image.clientWidth - image.clientWidth % 8 + (1 * (image.clientWidth % 8 ? 8 : 0));
-                };
-
                 var img = { clientWidth: 320 };
                 var spy = sandbox.spy(imgr, 'availableWidths');
 
