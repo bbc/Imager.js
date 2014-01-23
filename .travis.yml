@@ -8,3 +8,11 @@ addons:
       secure: "UfeiLOFTWPtySuwtRj44gVId5OaeDexfHSLNtYWlYzDgzYzQZOl6tHkCWADIrQYgCdjoS3Zc7yDTpI3bTPV7Zs1jdbvc2WZNs87SMVyXmioQOYtHnDup02GEGJi9Bk0+GOBDsz7dXgmHXEiamFQD6cqYWfnrcOaiZqkwF/QAt0Q="
     access_key:
       secure: "FhhmdaYwrOJ6fA4aQTVGDH2AlNIlbPDuElzqBEWINZlTNpM0aEWSVT6XBWq+R51UOJrlrQSDco55dyldvHXu7oNhye0l0tZrFi9WcZxjVI4W8aKsYlHYoSbUxeKTySWz1KL5nhFQWoSOgIvVdv+c3Sa2S2XUsclvG9hnkHwH1D4="
+
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
+script:
+  - npm run test-pre
+  - '[ $TRAVIS_PULL_REQUEST == ''false'' ] && { npm run test-remote; } || { npm run test-local; }'
