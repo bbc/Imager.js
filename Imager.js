@@ -29,7 +29,7 @@
 
     addEvent = (function(){
         if (document.addEventListener){
-            return function addStandartEventLister(el, eventName, fn){
+            return function addStandardEventListener(el, eventName, fn){
                 return el.addEventListener(eventName, fn, false);
             };
         }
@@ -341,7 +341,7 @@
 
         addEvent(window, 'resize', function(){
             self.checkImagesNeedReplacing(self.divs);
-        }, false);
+        });
     };
 
     Imager.prototype.registerScrollEvent = function (){
@@ -355,7 +355,7 @@
 
         addEvent(window, 'scroll', function(){
             self.scrolled = true;
-        }, false);
+        });
     };
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
