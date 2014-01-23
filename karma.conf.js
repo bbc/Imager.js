@@ -88,14 +88,14 @@ module.exports = function (config) {
       SauceIE8: {
         base: 'SauceLabs',
         browserName: 'internet explorer',
-        platform: 'Windows XP',
+        platform: 'Windows 7',
         version: 8
       },
       SauceFirefox: {
         base: 'SauceLabs',
         browserName: 'firefox',
-        platform: 'Windows XP',
-        version: 20
+        platform: 'Windows 7',
+        version: 21
       },
       SauceAndroid: {
         base: 'SauceLabs',
