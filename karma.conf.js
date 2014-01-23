@@ -89,13 +89,13 @@ module.exports = function (config) {
         base: 'SauceLabs',
         browserName: 'internet explorer',
         platform: 'Windows 7',
-        version: 8
+        version: '8'
       },
       SauceFirefox: {
         base: 'SauceLabs',
         browserName: 'firefox',
         platform: 'Windows 7',
-        version: 21
+        version: '21'
       },
       SauceAndroid: {
         base: 'SauceLabs',
@@ -108,6 +108,11 @@ module.exports = function (config) {
         browserName: 'iphone',
         platform: 'OS X 10.8',
         version: '5.1'
+      },
+      SauceSafari: {
+        base: 'SauceLabs',
+        browserName: 'safari',
+        platform: 'OS X 10.8'
       }
     },
 

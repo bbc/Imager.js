@@ -5,7 +5,7 @@
   "main": "Imager.js",
   "scripts": {
     "test": "jshint Imager.js && npm run test-remote",
-    "test-remote": "karma start --single-run --browsers SauceiOS,SauceAndroid,SauceIE8,SauceFirefox",
+    "test-remote": "karma start --single-run --browsers SauceIE8,SauceiOS,SauceAndroid,SauceFirefox,SauceSafari",
     "test-local": "karma start --single-run",
     "test-watch": "karma start",
     "build": "uglifyjs ./Imager.js -o ./dist/Imager.min.js"
