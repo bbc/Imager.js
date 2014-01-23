@@ -4,6 +4,7 @@ node_js:
 
 addons:
   sauce_connect:
-    username: "BBC-Imager"
+    username:
+      secure: "UfeiLOFTWPtySuwtRj44gVId5OaeDexfHSLNtYWlYzDgzYzQZOl6tHkCWADIrQYgCdjoS3Zc7yDTpI3bTPV7Zs1jdbvc2WZNs87SMVyXmioQOYtHnDup02GEGJi9Bk0+GOBDsz7dXgmHXEiamFQD6cqYWfnrcOaiZqkwF/QAt0Q="
     access_key:
-      secure: "IISYhoa72N67APDfO/lwzmjlJWdpXRtFVepxFvNpRyHyMB+uPiOVNnCgaDrof6IA9+kPXyTHEdeqHmS6zL19Ix9Bwxf0xdo+kKuG1dn5WC6cYOpxBxQV3kEeMQq966OP59NMogeXhomKD0HIJ5WSJBUH5rS22NlLUw14BNqPvd0="
+      secure: "FhhmdaYwrOJ6fA4aQTVGDH2AlNIlbPDuElzqBEWINZlTNpM0aEWSVT6XBWq+R51UOJrlrQSDco55dyldvHXu7oNhye0l0tZrFi9WcZxjVI4W8aKsYlHYoSbUxeKTySWz1KL5nhFQWoSOgIvVdv+c3Sa2S2XUsclvG9hnkHwH1D4="
