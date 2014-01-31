@@ -27,6 +27,18 @@
       return value;
     }
 
+    getNaturalWidth = (function(){
+        if (document.createElement('img').hasOwnProperty('naturalWidth')) {
+            return function (image){ return image.naturalWidth;};
+        }
+        // IE8 and below
+        return function (source){
+            var img = document.createElement('img');
+            img.src = source.src;
+            return img.width;
+        }
+    })()
+
     addEvent = (function(){
         if (document.addEventListener){
             return function addStandardEventListener(el, eventName, fn){
@@ -113,6 +125,7 @@
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.noRegression     = opts.hasOwnProperty('noRegression') ? opts.noRegression : false;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -257,10 +270,17 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var computedWidth, src;
+        var computedWidth, src, naturalWidth;
 
+        naturalWidth = getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
+
+        if (this.noRegression
+              && image.src !== this.gif.src
+              && computedWidth <= naturalWidth) {
+            return;
+        }
 
         src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
 
