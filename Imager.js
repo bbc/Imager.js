@@ -120,6 +120,7 @@
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.refreshPixelRatio();
+        this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
 
         if (opts.availableWidths === undefined) {
             opts.availableWidths = defaultWidths;
@@ -127,7 +128,7 @@
 
         if (isArray(opts.availableWidths)) {
             this.availableWidths = opts.availableWidths;
-            this.widthsMap = Imager.createWidthsMap(this.availableWidths);
+            this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator);
         }
         else {
             this.availableWidths = getKeys(opts.availableWidths);
@@ -285,12 +286,12 @@
         return (context || window)['devicePixelRatio'] || 1;
     };
 
-    Imager.createWidthsMap = function createWidthsMap (widths) {
+    Imager.createWidthsMap = function createWidthsMap (widths, interpolator) {
         var map = {},
             i   = widths.length;
 
         while (i--) {
-            map[widths[i]] = null;
+            map[widths[i]] = interpolator(widths[i]);
         }
 
         return map;
