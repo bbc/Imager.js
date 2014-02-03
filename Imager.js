@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray, nextTick, addEvent;
+    var defaultWidths, getKeys, isArray, nextTick, addEvent, getNaturalWidth;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -26,6 +26,18 @@
     function returnDirectValue (value) {
       return value;
     }
+
+    getNaturalWidth = (function(){
+        if (document.createElement('img').hasOwnProperty('naturalWidth')) {
+            return function (image){ return image.naturalWidth;};
+        }
+        // IE8 and below lacks the naturalWidth property
+        return function (source){
+            var img = document.createElement('img');
+            img.src = source.src;
+            return img.width;
+        };
+    })();
 
     addEvent = (function(){
         if (document.addEventListener){
@@ -249,10 +261,15 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var computedWidth, src;
+        var computedWidth, src, naturalWidth;
 
+        naturalWidth = getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
+
+        if (image.src !== this.gif.src && computedWidth <= naturalWidth) {
+            return;
+        }
 
         src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
 
