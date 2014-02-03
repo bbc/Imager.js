@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, nextTick, addEvent;
+    var defaultWidths, getKeys, isArray, nextTick, addEvent, getNaturalWidth;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -31,7 +31,7 @@
         if (document.createElement('img').hasOwnProperty('naturalWidth')) {
             return function (image){ return image.naturalWidth;};
         }
-        // IE8 and below
+        // IE8 and below lacks the naturalWidth property
         return function (source){
             var img = document.createElement('img');
             img.src = source.src;
@@ -125,7 +125,6 @@
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
-        this.noRegression     = opts.hasOwnProperty('noRegression') ? opts.noRegression : false;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -276,9 +275,7 @@
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
-        if (this.noRegression
-              && image.src !== this.gif.src
-              && computedWidth <= naturalWidth) {
+        if (image.src !== this.gif.src && computedWidth <= naturalWidth) {
             return;
         }
 
