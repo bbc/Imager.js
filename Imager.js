@@ -36,8 +36,8 @@
             var img = document.createElement('img');
             img.src = source.src;
             return img.width;
-        }
-    })()
+        };
+    })();
 
     addEvent = (function(){
         if (document.addEventListener){
