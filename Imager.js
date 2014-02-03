@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray, nextTick, addEvent;
+    var defaultWidths, getKeys, nextTick, addEvent;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -51,10 +51,6 @@
         }
 
         return keys;
-    };
-
-    isArray = function isArray (object) {
-        return Object.prototype.toString.call(object) === '[object Array]';
     };
 
 
@@ -119,25 +115,26 @@
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
+        this.availableWidths  = opts.availableWidths || defaultWidths;
+        this.widthMap         = {};
         this.refreshPixelRatio();
         this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
 
-        if (opts.availableWidths === undefined) {
-            opts.availableWidths = defaultWidths;
-        }
-
-        if (isArray(opts.availableWidths)) {
-            this.availableWidths = opts.availableWidths;
+        if (typeof this.availableWidths !== 'function'){
+          if (typeof this.availableWidths.length === 'number') {
             this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator);
-        }
-        else {
-            this.availableWidths = getKeys(opts.availableWidths);
-            this.widthsMap = opts.availableWidths;
+          }
+          else {
+            this.widthsMap = this.availableWidths;
+            this.availableWidths = getKeys(this.availableWidths);
+          }
+
+          this.availableWidths = this.availableWidths.sort(function (a, b) {
+            return a - b;
+          });
         }
 
-        this.availableWidths = this.availableWidths.sort(function (a, b) {
-            return a - b;
-        });
+
 
         if (elements) {
             this.divs = applyEach(elements, returnDirectValue);
