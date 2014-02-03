@@ -53,5 +53,18 @@ describe('Imager.js Events', function(){
       }, 100);
     });
 
+
+    it('should run onImagesReplaced callback after images have been modified', function(done){
+      var imgr = new Imager();
+      var replaceImagesSpy = sandbox.spy(imgr, 'onImagesReplaced');
+
+      expect(replaceImagesSpy.called).to.equal(false);
+
+      setTimeout(function(){
+        expect(replaceImagesSpy.callCount).to.equal(1);
+        done();
+      }, 100);
+    });
+
   });
 });

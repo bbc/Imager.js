@@ -407,6 +407,20 @@ An *experimental* Boolean value. If set to `true`, Imager will update the `src` 
 new Imager({ lazyload: true });
 ```
 
+### `onImagesReplaced`
+
+A callback `Function`. Runs after Imager updates the src of all relevant images.
+
+**Default value**: `function() {}`
+
+```js
+new Imager({
+    onImagesReplaced: function() {
+        console.log('the src of all relevant images has been updated');
+    }
+});
+```
+
 # Grunt Responsive Image Demo
 
 This demo requires the following commands to be run...

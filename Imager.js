@@ -117,6 +117,7 @@
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
         this.widthMap         = {};
+        this.onImagesReplaced = opts.onImagesReplaced || function () {};
         this.refreshPixelRatio();
         this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
 
@@ -242,6 +243,7 @@
             });
 
             this.isResizing = false;
+            this.onImagesReplaced();
         }
     };
 
