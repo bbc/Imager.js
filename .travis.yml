@@ -15,4 +15,4 @@ before_install:
 
 script:
   - npm run test-pre
-  - '[ $TRAVIS_PULL_REQUEST == ''false'' ] && { npm run test-remote; } || { npm run test-local; }'
+  - 'if [[ $TRAVIS_PULL_REQUEST == ''false'' ]]; then { npm run test-remote; }; else { npm run test-local; }; fi'
