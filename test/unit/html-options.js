@@ -73,7 +73,7 @@ describe('Imager.js HTML data-* API', function(){
       });
 
       runAfterAnimationFrame(function(){
-        var src = imgr.divs.map(function(el){ return el.getAttribute('src'); });
+        var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
           'base/test/fixtures/interpolated/B-n_d.jpg',
