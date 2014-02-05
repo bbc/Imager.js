@@ -10,9 +10,7 @@ describe('Imager.js HTML data-* API', function(){
     var fixtures;
 
     afterEach(function(){
-      if(fixtures){
-        document.body.removeChild(fixtures);
-      }
+      cleanFixtures(fixtures);
     });
 
     it('should not use RegExp anymore', function(done){
@@ -147,9 +145,7 @@ describe('Imager.js HTML data-* API', function(){
     var fixtures;
 
     afterEach(function(){
-      if(fixtures){
-        document.body.removeChild(fixtures);
-      }
+      cleanFixtures(fixtures);
     });
 
     it('should generate an empty alt attribute for the responsive image', function(done){

@@ -30,12 +30,12 @@ describe('Imager.js Events', function(){
       expect(resizeSpy.called).to.equal(false);
       expect(scrollSpy.called).to.equal(false);
 
-      setTimeout(function(){
+      runAfterAnimationFrame(function(){
         expect(resizeSpy.callCount).to.equal(1);
         expect(scrollSpy.callCount).to.equal(0);
 
         done();
-      }, 100);
+      });
     });
 
     it('should handle onScroll only', function(done){

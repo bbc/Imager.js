@@ -7,9 +7,7 @@ describe('Imager.js', function () {
         var fixtures;
 
         afterEach(function () {
-            if (fixtures) {
-                document.body.removeChild(fixtures);
-            }
+            cleanFixtures(fixtures);
         });
 
         it('should initialise without arguments', function (done) {
