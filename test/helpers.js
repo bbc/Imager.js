@@ -10,7 +10,8 @@ function loadFixtures(location){
 }
 
 function cleanFixtures(fixtures){
-  if (fixtures instanceof HTMLElement) {
+  // workaround for HTMLElement not existing in IE8
+  if (fixtures !== undefined && fixtures.nodeType === 1) {
     document.body.removeChild(fixtures);
   }
 }
