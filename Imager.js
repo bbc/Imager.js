@@ -243,7 +243,7 @@
             });
 
             this.isResizing = false;
-            this.onImagesReplaced();
+            this.onImagesReplaced(images);
         }
     };
 

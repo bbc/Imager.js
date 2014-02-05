@@ -409,13 +409,13 @@ new Imager({ lazyload: true });
 
 ### `onImagesReplaced`
 
-A callback `Function`. Runs after Imager updates the src of all relevant images.
+A callback `Function`. Runs after Imager updates the `src` attribute of all relevant images.
 
-**Default value**: `function() {}`
+Its first and unique argument is an `Array` of `HTMLImageElement`, the ones processed by Imager.
 
 ```js
 new Imager({
-    onImagesReplaced: function() {
+    onImagesReplaced: function(images) {
         console.log('the src of all relevant images has been updated');
     }
 });

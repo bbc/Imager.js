@@ -9,6 +9,12 @@ function loadFixtures(location){
   return fixtures;
 }
 
+function cleanFixtures(fixtures){
+  if (fixtures instanceof HTMLElement) {
+    document.body.removeChild(fixtures);
+  }
+}
+
 /**
  * Runs a bit of code after an Animation Frame. Supposedly.
  *
