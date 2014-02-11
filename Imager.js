@@ -108,7 +108,6 @@
         this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-        this.gif.className    = this.className;
         this.gif.alt          = '';
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
@@ -187,6 +186,7 @@
         var gif = this.gif.cloneNode(false);
 
         gif.width = element.getAttribute('data-width');
+        gif.className = (element.getAttribute('data-class') ? element.getAttribute('data-class')+' ':'') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
