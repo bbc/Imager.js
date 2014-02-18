@@ -211,4 +211,24 @@ describe('Imager.js', function () {
         expect(generator.toString()).to.have.string('.documentElement.scrollTop');
     });
   });
+  describe('widthGetter', function(){
+    var img;
+
+    beforeEach(function () {
+        img = { parentNode: {clientWidth: 130}
+              , clientWidth: 96
+              };
+    });
+    it('should use the width getter property', function(){
+        var imgr = new Imager({widthGetter: function(i){
+            return i.parentNode.clientWidth;
+        }, availableWidths: [96, 130]});
+        expect(imgr.determineAppropriateResolution(img)).to.equal(130);
+    });
+
+    it('should default to image clientWidth if no width getter defined', function(){
+        var imgr = new Imager({availableWidths: [96, 130]});
+        expect(imgr.determineAppropriateResolution(img)).to.equal(96);
+    });
+  });
 });
