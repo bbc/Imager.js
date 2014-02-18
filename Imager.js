@@ -120,6 +120,9 @@
         this.widthsMap        = {};
         this.refreshPixelRatio();
         this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
+        this.widthGetter      = opts.widthGetter || function (img) {
+                                                      return img.clientWidth;
+                                                    };
 
         if (typeof this.availableWidths !== 'function'){
           if (typeof this.availableWidths.length === 'number') {
@@ -259,7 +262,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        return Imager.getClosestValue(image.clientWidth, this.availableWidths);
+      return Imager.getClosestValue(this.widthGetter(image), this.availableWidths);
     };
 
     /**
