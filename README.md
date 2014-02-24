@@ -26,6 +26,17 @@ Imager runs through the following workflow:
 
 Finally, it will lazy load images to speed up page load time even further.
 
+## Compatibility
+
+Imager is tested against those various browsers:
+
+- Chrome stable
+- Firefox stable
+- Internet Explorer 8
+- Safari 6+
+- Mobile Safari 5.1
+- Android 4.0 Stock Browser
+
 
 ## Install
 
@@ -180,7 +191,7 @@ This will result in the following HTML output:
 
 # Documentation
 
-## HTML Options
+## HTML Attributes
 
 The *HTML API* helps you control how Imager works from the *content point of view*.
 
@@ -242,78 +253,12 @@ So the following HTML...
 <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
 ```
 
-## JavaScript API
+## JavaScript Configuration
 
-The *JavaScript API* helps you instantiate and control how Imager works from a *business logic point of view*.
+You can create one or several concurrent configurations of Imager within the same page. Its configuration options are
+described below.
 
-### `new Imager([selector|elements, [options]])`
-
-Calling the constructor will initialise responsive images for the provided `elements` or the HTML elements concerned by the `selector`.
-
-The `options` bit is an object documented below, in the [JavaScript Options section](#javascript-options).
-
-```js
-new Imager('.responsive-image-placeholder');
-```
-
-The constructor can be saved in a variable for later use...
-
-```js
-var imgr = new Imager('.responsive-image-placeholder', { onResize: false });
-
-// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
-$(window).on('resize scroll.debounced', $.proxy(imgr.checkImagesNeedReplacing, imgr));
-```
-
-For legacy reasons the first argument is optional and defaulted to `.delayed-image-load`:
-
-```js
-new Imager();
-```
-
-### `Imager.checkImagesNeedReplacing()`
-
-Updates the `img[src]` attribute if the container width has changed, and if it matches a different `availableWidths` value.
-
-It is relevant to use this method if an unwatched event occurred and impacts responsive image widths.
-
-```js
-var imgr = new Imager();
-
-// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
-$(document).on('customEvent', $.proxy(imgr.checkImagesNeedReplacing, imgr));
-```
-
-### `Imager.registerResizeEvent()`
-
-Registers a `window.onresize` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
-when the window size changes.
-
-This covers window resizing, device orientation change and entering full screen mode.
-
-```js
-var imgr = new Imager();
-
-// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
-$(document).on('load', $.proxy(imgr.registerResizeEvent, imgr));
-```
-
-### `Imager.registerScrollEvent()`
-
-Registers a `window.onscroll` handler which will update the relevant `img[src]` (using `Imager.checkImagesNeedReplacing`)
-when the content is scrolled.
-
-A default 250ms [debounce](http://benalman.com/projects/jquery-throttle-debounce-plugin/) is performed to avoid
-trashing the rendering performance. You can alter this value by setting the `scrollDelay` option.
-
-```js
-var imgr = new Imager();
-
-// Using jQuery to set-up the event handling and help keep the correct scope when executing the callback
-$(document).on('load', $.proxy(imgr.registerScrollEvent, imgr));
-```
-
-## JavaScript Options
+[Advanced JavaScript API documentation lies in the `doc/` folder](doc/js-api.md).
 
 ### `availableWidths`
 
@@ -421,53 +366,16 @@ new Imager({
 });
 ```
 
-# Grunt Responsive Image Demo
+# Demos
 
-This demo requires the following commands to be run...
+Additional and fully working examples lie in the [`demos` folder](demos/).
 
-- `npm install` (all dependencies specified in package.json)
-- `brew install imagemagick` (for other installations see [http://www.imagemagick.org/script/binary-releases.php](http://www.imagemagick.org/script/binary-releases.php))
 
-Review the `Gruntfile.js` and update the custom sizes that you want to use (if no sizes are specified in the Gruntfile then 320, 640, 1024 are used)...
+# They are using it
 
-```js
-options: {
-    sizes: [
-        {
-            width: 320,
-            height: 240
-        },
-        {
-            name: 'large',
-            width: 640
-        },
-        {
-            name   : 'large',
-            width  : 1024,
-            suffix : '_x2',
-            quality: 0.6
-        }
-    ]
-}
-```
-
-...be aware the names of the files need to change within your HTML...
-
-```html
-<div class="delayed-image-load" data-src="Assets/Images/Generated/A-320.jpg" data-width="1024" alt="alternative text A"></div>
-<div class="delayed-image-load" data-src="Assets/Images/Generated/B-320.jpg" data-width="1024" alt="alternative text B"></div>
-<div class="delayed-image-load" data-src="Assets/Images/Generated/C-320.jpg" data-width="1024" alt="alternative text C"></div>
-```
-
-You can then pass those image sizes through to Imager.js along with a regex for Imager to parse the information...
-
-```js
-var imager = new Imager({
-    availableWidths: [320, 640, 1024]
-});
-```
-
-For full details of the Grunt task options see the [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images/) repo on GitHub.
+- [BBC News](http://m.bbc.co.uk/news)
+- [The Guardian](http://www.theguardian.com/)
+- [`x-imager` Web Component](https://github.com/addyosmani/x-imager)
 
 # Background
 
