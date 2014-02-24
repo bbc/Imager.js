@@ -10,7 +10,8 @@
     "test-local": "karma start --single-run",
     "test-watch": "karma start",
     "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist",
-    "release": "npm run test-pre && npm run test-local && npm run build && npm run tag-and-publish",
+    "release": "npm run test-pre && npm run test-local && npm run build && npm run changelog && npm run tag-and-publish",
+    "changelog": "github-changes -o BBC-News -r Imager.js -n ${npm_package_version} -a && git add CHANGELOG.md && git commit -m 'Updated CHANGELOG'",
     "tag-and-publish": "git tag ${npm_package_version} && git push --tags && npm publish"
   },
   "repository": {
@@ -48,6 +49,7 @@
     "karma-sauce-launcher": "~0.1.8",
     "expect.js": "~0.2.0",
     "karma-expect": "~1.0.0",
-    "sinon": "~1.8.1"
+    "sinon": "~1.8.1",
+    "github-changes": "0.0.5"
   }
 }
