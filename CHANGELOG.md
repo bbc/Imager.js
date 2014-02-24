@@ -1,78 +1,29 @@
-# 0.2.0
+## Change Log
 
-A couple of new additions, with the help of the community!
-One thing to remember is the full compatibility with IE8.
+### 0.2.0 (2014/02/24 15:20 +00:00)
+- [#51](https://github.com/BBC-News/Imager.js/pull/51) fix typos in README.md (@nikai3d)
+- [#76](https://github.com/BBC-News/Imager.js/pull/76) Running SauceLabs on branch, locally otherwise (@oncletom)
+- [#56](https://github.com/BBC-News/Imager.js/pull/56) Add missing </div> end tags in README code examples (@gunnarbittersmann)
+- [#50](https://github.com/BBC-News/Imager.js/pull/50) Changing npm package name to `imager.js` as `imager` is already taken (@oncletom)
+- [#57](https://github.com/BBC-News/Imager.js/pull/57) Adding support for image alt attribute using data-alt (@longprao)
+- [#60](https://github.com/BBC-News/Imager.js/pull/60) Lazyload: adding `offsetTop` of each of the element's offsetParents to fix inaccuracies (@marcinwenger)
+- [#63](https://github.com/BBC-News/Imager.js/pull/63) Placeholders images are created in the document order (was done in reverse order) (@oncletom)
+- [#64](https://github.com/BBC-News/Imager.js/pull/64) Fixing 404 warnings in unit tests (@oncletom)
+- [#53](https://github.com/BBC-News/Imager.js/pull/53) `availablePixelRatios` whitelists the the possible values of `{pixel_ratio}` replacements (@oncletom)
+- [#70](https://github.com/BBC-News/Imager.js/pull/70) IE8, Safari, Mobile Safari, Firefox and Android Continuous Integration unit testing (@oncletom)
+- [#75](https://github.com/BBC-News/Imager.js/pull/75) Fixing Firefox and IE8 compatibility issues (@oncletom)
+- [#78](https://github.com/BBC-News/Imager.js/pull/78) Minifying Imager with uglifyJS compression and mangle options (@oncletom)
+- [#47](https://github.com/BBC-News/Imager.js/pull/47) Adding an `onImagesReplaced` event that gets called after Imager.js replaces the src of images (@joewillnyc)
+- [#68](https://github.com/BBC-News/Imager.js/pull/68) Implementing #67 (@BPScott)
 
-Unit tests on `master` are now ran against those browsers:
+### 0.1.0 (2013/12/08 16:03 +00:00)
+- [#49](https://github.com/BBC-News/Imager.js/pull/49) Imager 0.1.0 (@oncletom)
 
-- Internet Explorer 8
-- Firefox 21
-- Android 4.0
-- Safari Mobile for IOS 5.1
-- Safari 6
-
-## Features
-
- * Internet Explorer 8 code compatibility and testing
- * The `widthInterpolator` option gives the ability to format the `{width}` replacement dynamically ([PR #68](https://github.com/BBC-News/Imager.js/pull/68))
- * Minified version is now mangled and compressed… so smaller filesize ([PR #78](https://github.com/BBC-News/Imager.js/pull/78))
- * Sourcemap files are now provided as well
- * The `onImagesReplaced` option gives you the ability to perform an action each time images have been replaced ([PR #47](https://github.com/BBC-News/Imager.js/pull/47))
- * The `availablePixelRatios` option gives you the ability to whitelist the `{pixel_ratio}` replacement values ([PR #61](https://github.com/BBC-News/Imager.js/pull/61))
- * The `data-alt` container attribute ([PR #57](https://github.com/BBC-News/Imager.js/pull/57))
-
-
-## Bugfixes
-
- * `availableWidths` is now working for real ([PR #67](https://github.com/BBC-News/Imager.js/pull/67))
- * Fixing an `Array.prototype.map` in tests breaking w/ IE8
- * Fixing the lack of `HTMLElement` in IE8
- * Fixing `window.devicePixelRatio` stubbing in tests
- * Fixing `length` check
- * Fixing `offsetTop` calculation in the experimental the lazyloading feature ([PR #60](https://github.com/BBC-News/Imager.js/pull/60))
-
-
-# 0.1.0
-
-A major release which brought Imager under the spotlights of HackerNews and GitHub Explore.
-
-This milestone brings a lot more flexibility in the way you can integrate Imager in your projects.
-The library has now a complete set of examples, a proper documentation and continuous integration.
-
-## Features
-
- * `new Imager` doc
- * JS API documentation
- * Examples for HTML API
- * Implementing dynamic size calculation
- * Imager is now available on `npm` and `bower` registries
- * Regex are replaced by `{width}` interpolation
- * `{pixel_ratio}` helps you to serve dpi specific responsive images
- * Imager constructor accepts either an array, a `NodeList` or a CSS selector string
-
-## Bugfixes
-
- * Using `opts.hasOwnProperty` instead of `'property' in opts`
- * Removed the override of `window.requestAnimationFrame`
-
-
-# 0.0.2
-
-## Features
-
- * Added support for UMD ([PR #41](https://github.com/BBC-News/Imager.js/pull/41))
- * Added experimental lazy loading support ([PR #17](https://github.com/BBC-News/Imager.js/pull/17))
- * Added more demos and tooling to generate responsive images
- * Wraped Imager in IIFE
-
-## Bugfixes
-
- * add main field to package.json ([PR #29](https://github.com/BBC-News/Imager.js/pull/29))
- * Fix Firefox Bug
- * Couple of typos
- * Remove PubSub implementation.
-
-
-# 0.0.1
-
- * Adding initial version
+### 0.0.2 (2013/11/18 22:28 +00:00)
+- [#2](https://github.com/BBC-News/Imager.js/pull/2) imager.js updated. (@stephenplusplus)
+- [#5](https://github.com/BBC-News/Imager.js/pull/5) Removed all redundant files and created working Demo (@Integralist)
+- [#14](https://github.com/BBC-News/Imager.js/pull/14) Automate image generation using Grunt (@Integralist)
+- [#29](https://github.com/BBC-News/Imager.js/pull/29) Fixed README typo (@jonlow)
+- [#17](https://github.com/BBC-News/Imager.js/pull/17) Lazy Loading Images (@Integralist)
+- [#39](https://github.com/BBC-News/Imager.js/pull/39) add main field to package.json (@joewillnyc)
+- [#41](https://github.com/BBC-News/Imager.js/pull/41) add support for umd (@joewillnyc)
