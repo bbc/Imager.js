@@ -1,6 +1,6 @@
 ## Change Log
 
-### 0.2.0 (2014/02/24 15:20 +00:00)
+### 0.2.0 (2014/02/24 17:41 +00:00)
 - [#51](https://github.com/BBC-News/Imager.js/pull/51) fix typos in README.md (@nikai3d)
 - [#76](https://github.com/BBC-News/Imager.js/pull/76) Running SauceLabs on branch, locally otherwise (@oncletom)
 - [#56](https://github.com/BBC-News/Imager.js/pull/56) Add missing </div> end tags in README code examples (@gunnarbittersmann)
