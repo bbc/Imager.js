@@ -1,0 +1,23 @@
+{
+  "name": "imager.js-demos",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Imager.js Demos",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "imager",
+    "bbc",
+    "responsive",
+    "images",
+    "rwd"
+  ],
+  "author": "",
+  "license": "Apache-2",
+  "dependencies": {
+    "grunt": "^0.4.2",
+    "grunt-responsive-images": "^0.1.1"
+  }
+}

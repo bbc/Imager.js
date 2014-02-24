@@ -1,24 +1,19 @@
 module.exports = function (grunt) {
+    'use strict';
 
     // Project configuration.
     grunt.initConfig({
 
-        // Store your Package file so you can reference its specific data whenever necessary
-        pkg: grunt.file.readJSON('package.json'),
+        wd: '<%= grunt.task.current.args[0] || "grunt" %>/Assets/Images',
 
-        imageDirectory: {
-            default: 'Demo - Grunt/Assets/Images/',
-            lazyload: 'Demo - Lazy Load/Assets/Images/'
-        },
-
-        // grunt responsive_images:dev:default
+        // grunt responsive_images:dev:grunt
         // grunt responsive_images:dev:lazyload
         responsive_images: {
             dev: {
                 options: {
                     sizes: [
                         {
-                            width: 320,
+                            width: 320
                         },
                         {
                             width: 640
@@ -30,9 +25,9 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= imageDirectory[grunt.task.current.args[0]] %>',
-                    src: ['*.{jpg,gif,png}'],
-                    dest: '<%= imageDirectory[grunt.task.current.args[0]] %>Generated/'
+                    cwd: '<%= wd %>',
+                    src: '*.{jpg,gif,png}',
+                    dest: '<%= wd %>/Generated'
                 }]
             }
         }
@@ -43,6 +38,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-responsive-images');
 
     // Default Task
-    grunt.registerTask('default', ['responsive_images:dev']);
+    grunt.registerTask('default', ['responsive_images:dev:grunt', 'responsive_images:dev:lazyload']);
 
 };

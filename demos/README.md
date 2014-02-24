@@ -1,47 +1,61 @@
-# Grunt Responsive Image Demo
+# Imager.js Demos
+
+This folder contains several demonstrations of how to use Imager.
+
+Prior to run them, you need to clone or download this `git` repository:
+
+```bash
+git clone https://github.com/BBC-News/Imager.js.git
+cd Imager.js/demos
+```
+
+## Standard Demo
+
+This example in a simple use case using [placehold.it](http://placehold.it/) to refrl the configured breakpoints.
+
+### Running the demo
+
+```bash
+open default/index.html
+```
+
+## Generating Responsives Images with Grunt
+
+This example demonstrates how to use [Grunt](http://gruntjs.com/) to generate your own responsive images
+and how to wire them with Imager.
+
+### Requirements
 
 This demo requires the following commands to be run...
 
-- `npm install` (all dependencies specified in package.json)
-- `brew install imagemagick` (for other installations see [http://www.imagemagick.org/script/binary-releases.php](http://www.imagemagick.org/script/binary-releases.php))
-
-Review the `Gruntfile.js` and update the custom sizes that you want to use (if no sizes are specified in the Gruntfile then 320, 640, 1024 are used)...
-
-```js
-options: {
-    sizes: [
-        {
-            width: 320,
-            height: 240
-        },
-        {
-            name: 'large',
-            width: 640
-        },
-        {
-            name   : 'large',
-            width  : 1024,
-            suffix : '_x2',
-            quality: 0.6
-        }
-    ]
-}
+```bash
+brew install imagemagick graphicsmagick
+npm install -g grunt-cli
+npm install
 ```
 
-...be aware the names of the files need to change within your HTML...
+[Check out `graphicsmagick` install notes for other systems](http://www.graphicsmagick.org/README.html) if needed.
 
-```html
-<div class="delayed-image-load" data-src="Assets/Images/Generated/A-320.jpg" data-width="1024" alt="alternative text A"></div>
-<div class="delayed-image-load" data-src="Assets/Images/Generated/B-320.jpg" data-width="1024" alt="alternative text B"></div>
-<div class="delayed-image-load" data-src="Assets/Images/Generated/C-320.jpg" data-width="1024" alt="alternative text C"></div>
+You can also review the `Gruntfile.js` and update the custom sizes that you want to use [according to `grunt-responsive-images` documentation](https://github.com/andismith/grunt-responsive-images#readme)...
+
+```bash
+grunt
+open grunt/index.html
 ```
 
-You can then pass those image sizes through to Imager.js along with a regex for Imager to parse the information...
+## Lazyloading images
 
-```js
-var imager = new Imager({
-    availableWidths: [320, 640, 1024]
-});
+This examples demonstrates how to lazy load responsive images as the user scrolls.
+
+It is a proof of concept rather than a production recommendation.
+
+### Requirements
+
+Please follow the requirements of *Generating Responsives Images with Grunt*.
+
+### Running the demo
+
+```bash
+grunt
+open lazyload/index.html
 ```
-
-For full details of the Grunt task options see the [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images/) repo on GitHub.

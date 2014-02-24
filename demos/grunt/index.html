@@ -1,0 +1,25 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Imager.js</title>
+        <link rel="stylesheet" href="Assets/Styles/base.css">
+    </head>
+    <body>
+        <h1>Imager.js</h1>
+        <p>Here we're using Grunt to generate a list of image sizes for us.</p>
+        <p>We then pass those sizes into Imager.</p>
+
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/A-{width}.jpg" data-width="1024"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/B-{width}.jpg" data-width="1024"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/C-{width}.jpg" data-width="1024"></div>
+
+        <script src="../../Imager.js"></script>
+        <script>
+            var imager = new Imager({
+                availableWidths: [320, 640, 1024]
+            });
+        </script>
+    </body>
+</html>

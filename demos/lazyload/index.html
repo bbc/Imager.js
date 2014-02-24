@@ -1,0 +1,37 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Imager.js</title>
+        <link rel="stylesheet" href="Assets/Styles/base.css">
+    </head>
+    <body>
+        <h1>Imager.js</h1>
+
+        <p>The following is an example of lazy loading images (i.e. the process of not loading an image until it appears on screen)</p>
+        <p>We've purposely not initialised Imager yet, this is to show you what the placeholders look like before Imager has been run. You'll see the placeholders have a top margin (for the purpose of pushing them off screen, so we can make sure Imager is working properly) and also we've given them a top border of 1px red so you can visually see them.</p>
+        <p>To initialise Imager press the following button <button onclick="startImager();">Start Imager</button></p>
+        <p>We've also set the scrollDelay (i.e. the delay between scrolling and replacing a placeholder with an image) to be very high (two seconds). This is so you can visually see the lazy-loading of images as they happen.</p>
+        <p>The default value is 250ms but you can override that to your own preference.</p>
+
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/A-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/B-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/C-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/D-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/E-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/F-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/G-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/H-{width}.jpg" data-width="640"></div>
+        <div class="delayed-image-load" data-src="Assets/Images/Generated/I-{width}.jpg" data-width="640"></div>
+
+        <script src="../../Imager.js"></script>
+        <script>
+            new Imager({
+                lazyload: true,
+                scrollDelay: 2000, // We'll set this quite high so we get a chance to see the lazy loading happening
+                availableWidths: [320, 640, 1024]
+            });
+        </script>
+    </body>
+</html>
