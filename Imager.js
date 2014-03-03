@@ -187,6 +187,8 @@
         var gif = this.gif.cloneNode(false);
 
         gif.width = element.getAttribute('data-width');
+        var elementClassName = element.getAttribute('data-class');
+        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
