@@ -258,7 +258,7 @@ So the following HTML...
 You can create one or several concurrent configurations of Imager within the same page. Its configuration options are
 described below.
 
-[Advanced JavaScript API documentation lies in the `doc/` folder](doc/js-api.md).
+[Advanced JavaScript API documentation lies in the `docs/` folder](docs/js-api.md).
 
 ### `availableWidths`
 
