@@ -7,7 +7,7 @@
 
 There are many responsive image solutions in the wild: `srcset`, `src-n`, `PictureFill` and so on. They are either
 **verbose** or **hard to debug** (and to maintain/integrate). Some of them don't deal well with *pixel density*
-and suffer from **double asset payload** (meaning you end up downloading assets unnecessarily).
+and suffer from **double asset payload** (meaning you end up downloading assets unndecessarily).
 
 We wanted something **simple**, which **works** and which is **fast** as well as network friendly (only download what you need, when you need it).
 
@@ -258,7 +258,7 @@ So the following HTML...
 You can create one or several concurrent configurations of Imager within the same page. Its configuration options are
 described below.
 
-[Advanced JavaScript API documentation lies in the `doc/` folder](doc/js-api.md).
+[Advanced JavaScript API documentation lies in the `docs/` folder](docs/js-api.md).
 
 ### `availableWidths`
 
