@@ -108,7 +108,6 @@
         this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-        this.gif.className    = this.className;
         this.gif.alt          = '';
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
