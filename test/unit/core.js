@@ -3,13 +3,19 @@
 /* globals describe, beforeEach, afterEach, it, expect, Imager, jQuery, document, sinon */
 
 describe('Imager.js', function () {
+    var fixtures, sandbox;
+
+    beforeEach(function(){
+      fixtures = undefined;
+      sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(function(){
+      sandbox.restore();
+      cleanFixtures(fixtures);
+    });
+
     describe('constructor', function () {
-        var fixtures;
-
-        afterEach(function () {
-            cleanFixtures(fixtures);
-        });
-
         it('should initialise without arguments', function (done) {
             fixtures = loadFixtures('regular');
             var imgr = new Imager();
@@ -90,16 +96,6 @@ describe('Imager.js', function () {
     });
 
     describe('availableWidths', function () {
-        var sandbox;
-
-        beforeEach(function () {
-            sandbox = sinon.sandbox.create();
-        });
-
-        afterEach(function () {
-            sandbox.restore();
-        });
-
         it('should select the closest smallest available image width', function () {
             var imgr = new Imager({ availableWidths: [320, 640, 1024] });
             var img = { clientWidth: 320 };   // stubbing the clientWidth read-only value does not work
@@ -160,15 +156,7 @@ describe('Imager.js', function () {
     });
 
     describe('devicePixelRatio', function(){
-        var sandbox, imgrOptions = { availablePixelRatios: [1, 1.3, 2] };
-
-        beforeEach(function () {
-            sandbox = sinon.sandbox.create();
-        });
-
-        afterEach(function () {
-            sandbox.restore();
-        });
+        var imgrOptions = { availablePixelRatios: [1, 1.3, 2] };
 
         it('should pick a value of 1 if the device pixel ratio is lower than 1', function(){
             sandbox.stub(Imager, 'getPixelRatio', function(){ return 0.8 });
@@ -187,16 +175,6 @@ describe('Imager.js', function () {
     });
 
   describe('getPageOffsetGenerator', function(){
-    var sandbox;
-
-    beforeEach(function(){
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(function(){
-      sandbox.restore();
-    });
-
     it('should use `window.pageYOffset` if the property is available', function(){
         var pageYOffsetIsAvailable = true;
         var generator = Imager.getPageOffsetGenerator(pageYOffsetIsAvailable);

@@ -3,18 +3,19 @@
 /* globals describe, it, beforeEach, afterEach, sinon, Imager */
 
 describe('Imager.js Events', function(){
+  var fixtures, sandbox;
+
+  beforeEach(function(){
+    fixtures = undefined;
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function(){
+    sandbox.restore();
+    cleanFixtures(fixtures);
+  });
+
   describe('Constructor Options', function(){
-    var sandbox, fixtures;
-
-    beforeEach(function(){
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(function(){
-      sandbox.restore();
-      cleanFixtures(fixtures);
-    });
-
     it('should register the relevant events by default', function(){
       var imgr = new Imager();
 

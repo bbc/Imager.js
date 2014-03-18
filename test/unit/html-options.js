@@ -5,14 +5,19 @@
 describe('Imager.js HTML data-* API', function(){
   // Simili-Array.map for IE8 compat purpose
   var applyEach = Imager.applyEach;
+  var fixtures, sandbox;
+
+  beforeEach(function(){
+    fixtures = undefined;
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function(){
+    sandbox.restore();
+    cleanFixtures(fixtures);
+  });
 
   describe('handling {width} in data-src', function(){
-    var fixtures;
-
-    afterEach(function(){
-      cleanFixtures(fixtures);
-    });
-
     it('should not use RegExp anymore', function(done){
       fixtures = loadFixtures('data-src-old');
       var imgr = new Imager({ availableWidths: [320, 640] });
@@ -87,16 +92,6 @@ describe('Imager.js HTML data-* API', function(){
   });
 
   describe('Imager.getPixelRatio', function(){
-      var sandbox;
-
-      beforeEach(function(){
-          sandbox = sinon.sandbox.create();
-      });
-
-      afterEach(function(){
-          sandbox.restore();
-      });
-
       it('should return a numeric value', function(){
         expect(Imager.getPixelRatio()).to.be.above(0);
       });
@@ -107,16 +102,6 @@ describe('Imager.js HTML data-* API', function(){
   });
 
   describe('handling {pixel_ratio} in data-src', function(){
-    var sandbox;
-
-    beforeEach(function(){
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(function(){
-      sandbox.restore();
-    });
-
     it('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function(){
       expect(Imager.transforms.pixelRatio(1)).to.equal('');
       expect(Imager.transforms.pixelRatio(0.5)).to.equal('-0.5x');
@@ -142,12 +127,6 @@ describe('Imager.js HTML data-* API', function(){
   });
 
   describe('handling data-alt', function(){
-    var fixtures;
-
-    afterEach(function(){
-      cleanFixtures(fixtures);
-    });
-
     it('should generate an empty alt attribute for the responsive image', function(done){
         fixtures = loadFixtures('regular');
         var imgr = new Imager('#main .delayed-image-load');
