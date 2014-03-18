@@ -153,4 +153,20 @@ describe('Imager.js HTML data-* API', function(){
       });
     });
   });
+
+  describe('handling data-class', function(){
+    it('should not differ from the placeholder className if not set', function(){
+      fixtures = loadFixtures('data-class');
+      var imgr = new Imager('#main .delayed-image-load');
+
+      expect(imgr.divs[0]).to.have.property('className', imgr.className);
+    });
+
+    it('should unshift one or many class in the placeholder className attribute if set', function(){
+      fixtures = loadFixtures('data-class');
+      var imgr = new Imager('#main .delayed-image-load');
+
+      expect(imgr.divs[1]).to.have.property('className', 'first-class second-class ' + imgr.className);
+    });
+  });
 });
