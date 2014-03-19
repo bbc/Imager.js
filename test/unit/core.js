@@ -126,7 +126,9 @@ describe('Imager.js', function () {
         it('should pick the data-width and not the container\'s size (container\'s size smaller than availableWidths)', function(){
           expect(imgr.determineAppropriateResolution(imgr.divs[5])).to.equal(640);
         });
+    });
 
+    describe('availableWidths', function () {
         it('can be a function computing a value for you', function (done) {
             // this example will always compute sizes 8 pixels by 8 pixels
             var imgr = new Imager({
