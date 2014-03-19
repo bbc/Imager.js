@@ -1,0 +1,14 @@
+<div class="no-constraint">
+  <div class="delayed-image-load" data-src="base/test/fixtures/media/A-{width}.jpg"></div>
+  <div class="delayed-image-load" data-src="base/test/fixtures/media/A-{width}.jpg" data-width="400"></div>
+</div>
+
+<div class="with-constraint" style="width: 410px" data-comment="container is bigger than forced width">
+  <div class="delayed-image-load" data-src="base/test/fixtures/media/A-{width}.jpg"></div>
+  <div class="delayed-image-load" data-src="base/test/fixtures/media/A-{width}.jpg" data-width="400"></div>
+</div>
+
+<div class="with-constraint" style="width: 300px" data-comment="container is bigger than regular width and forced width">
+  <div class="delayed-image-load" data-src="base/test/fixtures/media/A-{width}.jpg"></div>
+  <div class="delayed-image-load" data-src="base/test/fixtures/media/A-{width}.jpg" data-width="400"></div>
+</div>
