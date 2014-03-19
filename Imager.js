@@ -268,7 +268,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        return Imager.getClosestValue(image.clientWidth, this.availableWidths);
+      return Imager.getClosestValue(image.parentNode.clientWidth, this.availableWidths);
     };
 
     /**
