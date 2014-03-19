@@ -65,6 +65,23 @@ describe('Imager.js HTML data-* API', function(){
       });
     });
 
+    it('should interpolate {width} with a function computed value', function(done){
+      fixtures = loadFixtures('data-src-new');
+      var imgr = new Imager({ availableWidths: function(image){ return 640; } });
+
+      runAfterAnimationFrame(function(){
+        var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
+
+        expect(src).to.eql([
+          'base/test/fixtures/media/C-640.jpg',
+          'base/test/fixtures/media/B-640.jpg',
+          'base/test/fixtures/media-640/fillmurray.jpg'
+        ]);
+
+        done();
+      });
+    });
+
     it('should interpolate {width} based on an interpolation function', function(done){
       fixtures = loadFixtures('data-src-interpolate');
       var imgr = new Imager({

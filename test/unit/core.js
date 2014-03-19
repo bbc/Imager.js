@@ -128,46 +128,6 @@ describe('Imager.js', function () {
         });
     });
 
-    describe('availableWidths', function () {
-        it('can be a function computing a value for you', function (done) {
-            // this example will always compute sizes 8 pixels by 8 pixels
-            var imgr = new Imager({
-              onResize: false,
-              lazyload: false,
-              availableWidths: function (image) {
-                return image.clientWidth - image.clientWidth % 8 + (1 * (image.clientWidth % 8 ? 8 : 0));
-              }
-            });
-
-            setTimeout(function () {
-                var img = { clientWidth: 320 };
-                var spy = sandbox.spy(imgr, 'availableWidths');
-
-                // sinon stub api wasn't working so we're manually stubbing instead
-                img.clientWidth = 7;
-                expect(function () {
-                    imgr.replaceImagesBasedOnScreenDimensions(img);
-                }).to.throwException();
-                expect(spy.returned(8)).to.equal(true);
-
-                img.clientWidth = 8;
-                expect(function () {
-                    imgr.replaceImagesBasedOnScreenDimensions(img);
-                }).to.throwException();
-                expect(spy.returned(8)).to.equal(true);
-
-                img.clientWidth = 9;
-                expect(function () {
-                    imgr.replaceImagesBasedOnScreenDimensions(img);
-                }).to.throwException();
-                expect(spy.returned(16)).to.equal(true);
-
-                done();
-            }, 100);
-
-        });
-    });
-
     describe('devicePixelRatio', function(){
         var imgrOptions = { availablePixelRatios: [1, 1.3, 2] };
 
