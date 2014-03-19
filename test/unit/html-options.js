@@ -154,6 +154,24 @@ describe('Imager.js HTML data-* API', function(){
     });
   });
 
+  describe('handling data-width', function(){
+      beforeEach(function(){
+        fixtures = loadFixtures('regular');
+      });
+
+      it('should set the responsive image width attribute if provided', function(){
+        var imgr = new Imager('#main .delayed-image-load');
+
+        expect(imgr.divs[1].hasAttribute('width')).to.equal(true);
+      });
+
+      it('should not set the responsive image width attribute if not provided', function(){
+        var imgr = new Imager('#main .delayed-image-load');
+
+        expect(imgr.divs[0].hasAttribute('width')).to.equal(false);
+      });
+  });
+
   describe('handling data-class', function(){
     it('should not differ from the placeholder className if not set', function(){
       fixtures = loadFixtures('data-class');
