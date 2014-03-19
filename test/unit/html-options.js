@@ -42,7 +42,7 @@ describe('Imager.js HTML data-* API', function(){
         expect(src).to.eql([
           'base/test/fixtures/media/C-640.jpg',
           'base/test/fixtures/media/B-640.jpg',
-          'base/test/fixtures/media-640/fillmurray.jpg'
+          'base/test/fixtures/media-320/fillmurray.jpg'
         ]);
 
         done();

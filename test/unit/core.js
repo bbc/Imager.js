@@ -107,15 +107,15 @@ describe('Imager.js', function () {
           expect(imgr.determineAppropriateResolution(imgr.divs[0])).to.equal(1024);
         });
 
-        it('should pick the closest value from the container\'s width, even with data-width (no container size)', function(){
-          expect(imgr.determineAppropriateResolution(imgr.divs[1])).to.equal(1024);
+        it('should pick the data-width and not the container\'s size (no container size)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[1])).to.equal(640);
         });
 
         it('should pick the closest value from the container\'s width (container\'s size contained in availableWidths)', function(){
           expect(imgr.determineAppropriateResolution(imgr.divs[2])).to.equal(640);
         });
 
-        it('should pick the closest value from the container\'s width, even with data-width (container\'s size contained in availableWidths)', function(){
+        it('should pick the data-width and not the container\'s size (container\'s size contained in availableWidths)', function(){
           expect(imgr.determineAppropriateResolution(imgr.divs[3])).to.equal(640);
         });
 
@@ -123,8 +123,8 @@ describe('Imager.js', function () {
           expect(imgr.determineAppropriateResolution(imgr.divs[4])).to.equal(320);
         });
 
-        it('should pick the closest value from the container\'s width, even with data-width (container\'s size smaller than availableWidths)', function(){
-          expect(imgr.determineAppropriateResolution(imgr.divs[5])).to.equal(320);
+        it('should pick the data-width and not the container\'s size (container\'s size smaller than availableWidths)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[5])).to.equal(640);
         });
 
         it('can be a function computing a value for you', function (done) {
