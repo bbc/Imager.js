@@ -184,10 +184,13 @@
             return element;
         }
 
+        var elementClassName = element.getAttribute('data-class');
         var gif = this.gif.cloneNode(false);
 
-        gif.width = element.getAttribute('data-width');
-        var elementClassName = element.getAttribute('data-class');
+        if (element.hasAttribute('data-width')) {
+          gif.width = element.getAttribute('data-width');
+        }
+
         gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
