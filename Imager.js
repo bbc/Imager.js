@@ -185,10 +185,11 @@
         }
 
         var elementClassName = element.getAttribute('data-class');
+        var elementWidth = element.getAttribute('data-width');
         var gif = this.gif.cloneNode(false);
 
-        if (element.hasAttribute('data-width')) {
-          gif.width = element.getAttribute('data-width');
+        if (elementWidth) {
+          gif.width = elementWidth;
         }
 
         gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;

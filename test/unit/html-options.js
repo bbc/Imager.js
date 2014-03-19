@@ -162,13 +162,13 @@ describe('Imager.js HTML data-* API', function(){
       it('should set the responsive image width attribute if provided', function(){
         var imgr = new Imager('#main .delayed-image-load');
 
-        expect(imgr.divs[1].hasAttribute('width')).to.equal(true);
+        expect(imgr.divs[1].getAttribute('width')).to.be.above(0);
       });
 
       it('should not set the responsive image width attribute if not provided', function(){
         var imgr = new Imager('#main .delayed-image-load');
 
-        expect(imgr.divs[0].hasAttribute('width')).to.equal(false);
+        expect(imgr.divs[0].getAttribute('width')).to.equal(null);
       });
   });
 
