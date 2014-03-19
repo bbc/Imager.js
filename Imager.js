@@ -351,7 +351,7 @@
             i   = widths.length;
 
         while (i--) {
-            map[widths[i]] = interpolator(widths[i]);
+	    map[widths[i]] = interpolator(widths[i], this.devicePixelRatio);
         }
 
         return map;
