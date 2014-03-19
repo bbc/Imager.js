@@ -14,9 +14,37 @@
         <img src="http://placehold.it/340">
 
         <p>Below are three <code>&lt;div&gt;</code> elements that are enhanced using Imager.js and so they will lazy-load more images (as long as JavaScript is enabled).</p>
-        <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
-        <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
-        <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
+
+
+        <div>
+          <h2>No fixed-size container</h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+        </div>
+
+        <hr>
+
+        <div class="constrained-images">
+          <h2>No fixed-size container + <code>img { max-width: 100%; }</code></h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+        </div>
+
+        <hr>
+
+        <div style="width: 600px">
+          <h2>Fixed size container</h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+        </div>
+
+        <hr>
+
+        <div>
+          <h2>Fixed size responsive image (<code>data-width</code>)</h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="320"></div>
+        </div>
 
         <script src="../../Imager.js"></script>
         <script>

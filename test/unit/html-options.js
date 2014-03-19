@@ -40,9 +40,9 @@ describe('Imager.js HTML data-* API', function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
-          'base/test/fixtures/media/C-320.jpg',
+          'base/test/fixtures/media/C-640.jpg',
           'base/test/fixtures/media/B-640.jpg',
-          'base/test/fixtures/media-320/fillmurray.jpg'
+          'base/test/fixtures/media-640/fillmurray.jpg'
         ]);
 
         done();
@@ -57,7 +57,6 @@ describe('Imager.js HTML data-* API', function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
-          'base/test/fixtures/interpolated/B-n_d.jpg',
           'base/test/fixtures/interpolated/B-z_d.jpg',
           'base/test/fixtures/1024/1024.jpg'
         ]);
@@ -71,9 +70,9 @@ describe('Imager.js HTML data-* API', function(){
       var imgr = new Imager({
         availableWidths: [320, 640, 1024],
         widthInterpolator: function(w) {
-          if (w == 320) { return 'n_d'; }
-          if (w == 640) { return 'z_d'; }
-          return '';
+          if (w === 320) { return 'n_d'; }
+          if (w === 640) { return 'z_d'; }
+          return w;
         }
       });
 
@@ -81,7 +80,6 @@ describe('Imager.js HTML data-* API', function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
-          'base/test/fixtures/interpolated/B-n_d.jpg',
           'base/test/fixtures/interpolated/B-z_d.jpg',
           'base/test/fixtures/1024/1024.jpg'
         ]);
