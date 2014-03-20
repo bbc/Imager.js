@@ -1,7 +1,7 @@
 {
   "name": "imager.js",
   "main": "Imager.js",
-  "version": "0.2.0",
+  "version": "0.3.0-beta.1",
   "homepage": "https://github.com/BBC-News/Imager.js",
   "authors": [
     "Mark McDonnell",

@@ -1,6 +1,6 @@
 {
   "name": "imager.js",
-  "version": "0.2.0",
+  "version": "0.3.0-beta.1",
   "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
   "main": "Imager.js",
   "scripts": {
@@ -10,8 +10,9 @@
     "test-local": "karma start --single-run",
     "test-watch": "karma start",
     "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist",
-    "release": "npm run test-pre && npm run test-local && npm run build && npm run changelog && npm run tag-and-publish",
-    "changelog": "github-changes -o BBC-News -r Imager.js -n ${npm_package_version} -a && git add CHANGELOG.md && git commit -m 'Updated CHANGELOG'",
+    "release": "for TASK in (test-pre test-local build changelog changelog-post tag-and-publish); do npm run $TASK; done",
+    "changelog": "github-changes -o BBC-News -r Imager.js -n ${npm_package_version} -a --use-commit-body --only-merges",
+    "changelog-post": " && git add CHANGELOG.md && git commit -m 'Updated CHANGELOG'",
     "tag-and-publish": "git tag ${npm_package_version} && git push --tags && npm publish"
   },
   "repository": {
@@ -48,6 +49,6 @@
     "expect.js": "~0.2.0",
     "karma-expect": "~1.0.0",
     "sinon": "~1.8.1",
-    "github-changes": "^0.0.5"
+    "github-changes": "0.0.10"
   }
 }

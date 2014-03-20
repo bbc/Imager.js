@@ -1,6 +1,6 @@
 ## Change Log
 
-### 0.3.0-beta.1 (2014/03/20 11:49 +00:00)
+### 0.3.0-beta.1 (2014/03/20 12:55 +00:00)
 - [#85](https://github.com/BBC-News/Imager.js/pull/85) Fixed reference to js api docs (@omgmog)
 - [#83](https://github.com/BBC-News/Imager.js/pull/83) Image width is set as 0 sometimes (@oncletom)
 - [#86](https://github.com/BBC-News/Imager.js/pull/86) Containers above max image size load smallest image (@oncletom)

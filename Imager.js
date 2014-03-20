@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, isArray, nextTick, addEvent, getNaturalWidth;
+    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
