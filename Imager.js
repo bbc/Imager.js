@@ -206,7 +206,9 @@
 
         if (elementWidth) {
           gif.width = elementWidth;
+          gif.setAttribute('data-width', elementWidth);
         }
+
         gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
@@ -275,6 +277,8 @@
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
+        image.width = computedWidth;
+
         if (image.src !== this.gif.src && computedWidth <= naturalWidth) {
             return;
         }
@@ -285,7 +289,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('width') || image.parentNode.clientWidth, this.availableWidths);
+      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
     };
 
     /**
