@@ -14,9 +14,46 @@
         <img src="http://placehold.it/340">
 
         <p>Below are three <code>&lt;div&gt;</code> elements that are enhanced using Imager.js and so they will lazy-load more images (as long as JavaScript is enabled).</p>
-        <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
-        <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
-        <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="340"></div>
+
+        <p>Breakpoints occurs at: <code>[96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736]</code>&nbsp;pixels.</p>
+
+        <div>
+          <h2>No fixed-size container</h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+        </div>
+
+        <hr>
+
+        <div class="constrained-images">
+          <h2>No fixed-size container + <code>img { max-width: 100%; }</code></h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+        </div>
+
+        <hr>
+
+        <div style="width: 600px">
+          <h2>Fixed size container</h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}"></div>
+        </div>
+
+        <hr>
+
+        <div>
+          <h2>No fixed-size container + <code>data-width="320"</code></h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="320"></div>
+        </div>
+
+        <hr>
+
+        <div style="width: 600px">
+          <h2>Fixed size container + <code>data-width="500"</code></h2>
+
+          <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="500"></div>
+        </div>
 
         <script src="../../Imager.js"></script>
         <script>

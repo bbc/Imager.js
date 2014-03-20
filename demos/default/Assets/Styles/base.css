@@ -4,10 +4,6 @@ body {
     max-width: 60em; /* 960px/16px */
 }
 
-img {
-    max-width: 100%;
-}
-
 a {
     display: block;
     margin-top: 1em;
@@ -15,4 +11,8 @@ a {
 
 code {
     color: blue;
+}
+
+.constrained-images img {
+  max-width: 100%;
 }

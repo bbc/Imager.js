@@ -95,25 +95,36 @@ describe('Imager.js', function () {
         });
     });
 
-    describe('availableWidths', function () {
-        it('should select the closest smallest available image width', function () {
-            var imgr = new Imager({ availableWidths: [320, 640, 1024] });
-            var img = { clientWidth: 320 };   // stubbing the clientWidth read-only value does not work
+    describe('determineAppropriateResolution', function () {
+        var imgr;
 
-            sandbox.stub(img, 'clientWidth', 319);
-            expect(imgr.determineAppropriateResolution(img)).to.equal(320);
+        beforeEach(function(){
+            fixtures = loadFixtures('widths');
+            imgr = new Imager({ availableWidths: [320, 640, 1024] });
+        });
 
-            sandbox.stub(img, 'clientWidth', 320);
-            expect(imgr.determineAppropriateResolution(img)).to.equal(320);
+        it('should pick the closest value from the container\'s width (no container size)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[0])).to.equal(1024);
+        });
 
-            sandbox.stub(img, 'clientWidth', 639);
-            expect(imgr.determineAppropriateResolution(img)).to.equal(640);
+        it('should pick the data-width and not the container\'s size (no container size)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[1])).to.equal(640);
+        });
 
-            sandbox.stub(img, 'clientWidth', 640);
-            expect(imgr.determineAppropriateResolution(img)).to.equal(640);
+        it('should pick the closest value from the container\'s width (container\'s size contained in availableWidths)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[2])).to.equal(640);
+        });
 
-            sandbox.stub(img, 'clientWidth', 1030);
-            expect(imgr.determineAppropriateResolution(img)).to.equal(1024);
+        it('should pick the data-width and not the container\'s size (container\'s size contained in availableWidths)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[3])).to.equal(640);
+        });
+
+        it('should pick the closest value from the container\'s width (container\'s size smaller than availableWidths)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[4])).to.equal(320);
+        });
+
+        it('should pick the data-width and not the container\'s size (container\'s size smaller than availableWidths)', function(){
+          expect(imgr.determineAppropriateResolution(imgr.divs[5])).to.equal(640);
         });
 
         it('can be a function computing a value for you', function (done) {
