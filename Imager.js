@@ -121,6 +121,10 @@
         this.refreshPixelRatio();
         this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
 
+        // Needed as IE8 adds a default `width`/`height` attribute…
+        this.gif.removeAttribute('height');
+        this.gif.removeAttribute('width');
+
         if (typeof this.availableWidths !== 'function'){
           if (typeof this.availableWidths.length === 'number') {
             this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator);
@@ -184,10 +188,13 @@
             return element;
         }
 
+        var elementClassName = element.getAttribute('data-class');
+        var elementWidth = element.getAttribute('data-width');
         var gif = this.gif.cloneNode(false);
 
-        gif.width = element.getAttribute('data-width');
-        var elementClassName = element.getAttribute('data-class');
+        if (elementWidth) {
+          gif.width = elementWidth;
+        }
         gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
