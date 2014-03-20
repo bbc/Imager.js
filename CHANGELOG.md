@@ -1,5 +1,10 @@
 ## Change Log
 
+### 0.3.0-beta.1 (2014/03/20 11:46 +00:00)
+- [#85](https://github.com/BBC-News/Imager.js/pull/85) Fixed reference to js api docs (@omgmog)
+- [#83](https://github.com/BBC-News/Imager.js/pull/83) Image width is set as 0 sometimes (@oncletom)
+- [#86](https://github.com/BBC-News/Imager.js/pull/86) Containers above max image size load smallest image (@oncletom)
+
 ### 0.2.0 (2014/02/24 17:41 +00:00)
 - [#51](https://github.com/BBC-News/Imager.js/pull/51) fix typos in README.md (@nikai3d)
 - [#76](https://github.com/BBC-News/Imager.js/pull/76) Running SauceLabs on branch, locally otherwise (@oncletom)
