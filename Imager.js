@@ -28,7 +28,7 @@
     }
 
     getNaturalWidth = (function(){
-        if (document.createElement('img').hasOwnProperty('naturalWidth')) {
+        if (Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
             return function (image){ return image.naturalWidth;};
         }
         // IE8 and below lacks the naturalWidth property
