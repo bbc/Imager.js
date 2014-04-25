@@ -27,6 +27,15 @@
       return value;
     }
 
+    function isElement (element) {
+
+        if ( typeof HTMLElement === 'object' ) {
+            return element instanceof HTMLElement;
+        }
+
+        return ( element && typeof element === "object" && element !== null && element.nodeType === 1 && typeof element.nodeName==="string" );
+    }
+
     getNaturalWidth = (function(){
         if (Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
             return function (image){ return image.naturalWidth;};
@@ -389,6 +398,18 @@
             self.scrolled = true;
         });
     };
+
+    Imager.prototype.add = function(elements) {
+        if (typeof elements === 'string') {
+            var elementsArray = applyEach(document.querySelectorAll(elements), returnDirectValue);
+            this.divs = this.divs.concat(elementsArray);
+        }
+        else if (isElement(elements)) {
+            this.divs.push(elements);
+        }
+
+        this.changeDivsToEmptyImages();
+    }
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
         if(testCase){
