@@ -167,9 +167,9 @@ describe('Imager.js', function () {
   
     describe('refreshImages', function(){
         it('should load an image added after constructor has run', function(){
-            fixtures = loadFixtures('regular');
+            fixtures = loadFixtures('refresh-image');
             var imgr = new Imager();
-            document.getElementById('main').innerHTML += '<div class="delayed-image-load" data-src="base/test/fixtures/media/C-320.jpg"></div>'; 
+            document.getElementById('main').innerHTML += '<div class="delayed-image-load" data-src="base/test/fixtures/media/C-320.jpg" data-width="640"></div>'; 
 
             runAfterAnimationFrame(function () {
                 expect(document.getElementsByClassName('delayed-image-load')).to.equal(1);
