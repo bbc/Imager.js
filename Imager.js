@@ -166,16 +166,16 @@
         nextTick(function(){
             self.init();
         });
-    }
+    };
 
     Imager.prototype.findImagesUsingSelector = function(){
         this.divs = applyEach(document.querySelectorAll(this.selector), returnDirectValue);
-    },
+    };
 
     Imager.prototype.refreshImages = function(){
         this.findImagesUsingSelector();
         this.changeDivsToEmptyImages();
-    },
+    };
 
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
