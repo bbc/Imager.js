@@ -166,7 +166,7 @@
         nextTick(function(){
             self.init();
         });
-    };
+    }
 
     Imager.prototype.findImagesUsingSelector = function(){
         this.divs = applyEach(document.querySelectorAll(this.selector), returnDirectValue);
