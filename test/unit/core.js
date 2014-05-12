@@ -164,4 +164,22 @@ describe('Imager.js', function () {
         expect(generator.toString()).to.have.string('.documentElement.scrollTop');
     });
   });
+  
+    describe('refreshImages', function(){
+        it('should load an image added after constructor has run', function(){
+            fixtures = loadFixtures('regular');
+            var imgr = new Imager();
+            document.getElementById('main').innerHTML += '<div class="delayed-image-load" data-src="base/test/fixtures/media/C-320.jpg"></div>'; 
+
+            runAfterAnimationFrame(function () {
+                expect(document.getElementsByClassName('delayed-image-load')).to.equal(1);
+                expect(document.getElementsByClassName('image-replace')).to.equal(1);
+                imgr.refreshImages();
+                expect(document.getElementsByClassName('delayed-image-load')).to.equal(0);
+                expect(document.getElementsByClassName('image-replace')).to.equal(2);
+                
+                done();
+            });
+        });
+    });  
 });

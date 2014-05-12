@@ -158,7 +158,7 @@
             this.selector = null;
         }
         else {
-            this.divs = applyEach(doc.querySelectorAll(this.selector), returnDirectValue);
+            this.findImagesUsingSelector();
         }
 
         this.changeDivsToEmptyImages();
@@ -167,6 +167,15 @@
             self.init();
         });
     }
+
+    Imager.prototype.findImagesUsingSelector = function(){
+        this.divs = applyEach(document.querySelectorAll(this.selector), returnDirectValue);
+    },
+
+    Imager.prototype.refreshImages = function(){
+        this.findImagesUsingSelector();
+        this.changeDivsToEmptyImages();
+    },
 
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
@@ -226,6 +235,11 @@
                 if (self.isThisElementOnScreen(element)) {
                     self.divs[i] = self.createGif(element);
                 } else {
+                    if (self.imagesOffScreen.length === 0) {
+                        self.interval = window.setInterval(function(){
+                            self.scrollCheck();
+                        }, self.scrollDelay);
+                    }
                     self.imagesOffScreen.push(element);
                 }
             } else {
@@ -380,10 +394,6 @@
         var self = this;
 
         this.scrolled = false;
-
-        this.interval = window.setInterval(function(){
-            self.scrollCheck();
-        }, self.scrollDelay);
 
         addEvent(window, 'scroll', function(){
             self.scrolled = true;
