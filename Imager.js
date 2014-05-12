@@ -235,11 +235,6 @@
                 if (self.isThisElementOnScreen(element)) {
                     self.divs[i] = self.createGif(element);
                 } else {
-                    if (self.imagesOffScreen.length === 0) {
-                        self.interval = window.setInterval(function(){
-                            self.scrollCheck();
-                        }, self.scrollDelay);
-                    }
                     self.imagesOffScreen.push(element);
                 }
             } else {
@@ -394,6 +389,10 @@
         var self = this;
 
         this.scrolled = false;
+
+        this.interval = window.setInterval(function(){
+            self.scrollCheck();
+        }, self.scrollDelay);        
 
         addEvent(window, 'scroll', function(){
             self.scrolled = true;
