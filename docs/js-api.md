@@ -72,16 +72,19 @@ $(document).on('load', $.proxy(imgr.registerScrollEvent, imgr));
 
 ### `Imager.refreshImages()`
 
-Find images matching the `selector` parameter. 
+Refreshes the images an instantation of Imager.js deals with, post-instantion. 
 
 When you call `new Imager()`, the images currently present on the page will become eligible for replacing. However, if
 you later add new images into the page, for example after a XMLHttpRequest, then Imager won't know about these new images.
-Call `refreshImages()` on your existing Imager instantiation to let Imager know about these new images.
+Call `refreshImages()` on your existing Imager.js instantiation to let Imager.js know about these new images.
 
-This only works when you use a selector string when calling `new Imager()` - if you pass elements then this method does not work. 
+This only works when you use a selector string when calling `new Imager()` - if you pass elements then this method may give
+undesirable results.
 
-Not yet compatible with the `lazyload` option. For this to work, need to preserve original divs when moving elements from
+Not yet compatible with the `lazyload` option. For this to work, need to preserve original `this.divs` when moving elements from
 `this.imagesOffScreen` to `this.divs`, and re-set the `scrollCheck` interval when new off-screen elements are added.
+
+Sample usage:
 
 ```js
 var imgr = new Imager();
