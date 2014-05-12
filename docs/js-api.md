@@ -80,6 +80,9 @@ Call `refreshImages()` on your existing Imager instantiation to let Imager know 
 
 This only works when you use a selector string when calling `new Imager()` - if you pass elements then this method does not work. 
 
+Not yet compatible with the `lazyload` option. For this to work, need to preserve original divs when moving elements from
+`this.imagesOffScreen` to `this.divs`, and re-set the `scrollCheck` interval when new off-screen elements are added.
+
 ```js
 var imgr = new Imager();
 
