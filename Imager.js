@@ -392,7 +392,7 @@
 
         this.interval = window.setInterval(function(){
             self.scrollCheck();
-        }, self.scrollDelay);        
+        }, self.scrollDelay);
 
         addEvent(window, 'scroll', function(){
             self.scrolled = true;
