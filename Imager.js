@@ -1,5 +1,6 @@
 ;(function (window, document) {
 
+
     'use strict';
 
     var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth;
