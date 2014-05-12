@@ -209,6 +209,10 @@
             return element;
         }
 
+        if (!element.offsetWidth || !element.offsetHeight) {
+            return element;
+        }
+
         var elementClassName = element.getAttribute('data-class');
         var elementWidth = element.getAttribute('data-width');
         var gif = this.gif.cloneNode(false);
