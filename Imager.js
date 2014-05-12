@@ -208,8 +208,8 @@
         if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
             return element;
         }
-
-        if (!element.offsetWidth || !element.offsetHeight) {
+        
+        if (!element.offsetWidth && !element.offsetHeight) {
             return element;
         }
 
