@@ -97,7 +97,9 @@
     function Imager (elements, opts) {
         var self = this,
             doc  = document,
-            defaultGifSrc = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
+            defaultGifSrc = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7',
+            greyGifSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAJAQMAAAAB5D5xAAAAA1BMVEXw8PC7v12rAAAAC0' +
+                'lEQVQIHWNgwAkAABsAAT3ZesEAAAAASUVORK5CYII=';
 
         opts = opts || {};
 
@@ -120,7 +122,7 @@
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
-        this.gif.src          = opts.hasOwnProperty('temporarySrc') ? opts.temporarySrc : defaultGifSrc;
+        this.gif.src          = opts.hasOwnProperty('greyTemporarySrc') && opts.greyTemporarySrc ? defaultGifSrc : greyGifSrc;
         this.gif.className    = this.className;
         this.gif.alt          = '';
         this.scrollDelay      = opts.scrollDelay || 250;
@@ -428,7 +430,7 @@
         module.exports = exports = Imager;
     } else if (typeof define === 'function' && define.amd) {
         // AMD support
-        define(function () { return Imager; });
+        define('vendor/image.js/Imager', [], function () { return Imager; }); // Defining as Image temporary because of juicer
     } else if (typeof window === 'object') {
         // If no AMD and we are in the browser, attach to window
         window.Imager = Imager;
