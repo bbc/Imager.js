@@ -96,7 +96,8 @@
      */
     function Imager (elements, opts) {
         var self = this,
-            doc  = document;
+            doc  = document,
+            defaultGifSrc = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
 
         opts = opts || {};
 
@@ -119,7 +120,7 @@
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
-        this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
+        this.gif.src          = opts.hasOwnProperty('temporarySrc') ? opts.temporarySrc : defaultGifSrc;
         this.gif.className    = this.className;
         this.gif.alt          = '';
         this.scrollDelay      = opts.scrollDelay || 250;
