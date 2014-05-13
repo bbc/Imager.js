@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth;
+    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth, instancesBySelector = [];
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -171,6 +171,13 @@
             self.init();
         });
     }
+    
+    Imager.getSelectorSpecificInstance = function (opts) {
+        if (!instancesBySelector[opts.selector]) {
+            instancesBySelector[opts.selector] = new Imager(opts);
+        }
+        return instancesBySelector[opts.selector];
+    };
 
     Imager.prototype.findImagesUsingSelector = function(){
         this.divs = applyEach(document.querySelectorAll(this.selector), returnDirectValue);
@@ -430,7 +437,7 @@
         module.exports = exports = Imager;
     } else if (typeof define === 'function' && define.amd) {
         // AMD support
-        define('vendor/image.js/Imager', [], function () { return Imager; }); // Defining as Image temporary because of juicer
+        define('vendor/imager.js/Imager', [], function () { return Imager; }); // Defining as Image temporary because of juicer
     } else if (typeof window === 'object') {
         // If no AMD and we are in the browser, attach to window
         window.Imager = Imager;
