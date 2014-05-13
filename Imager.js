@@ -172,7 +172,7 @@
         });
 
         if (opts.selector) {
-            instancesBySelector[opts.selector] = new Imager(opts);
+            instancesBySelector[opts.selector] = this;
         }
     }
     
@@ -180,7 +180,7 @@
         if (instancesBySelector[opts.selector]) {
             return instancesBySelector[opts.selector];
         }
-        return new Imager(opts.selector);
+        return new Imager(opts);
     };
 
     Imager.prototype.findImagesUsingSelector = function(){
