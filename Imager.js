@@ -132,6 +132,7 @@
         this.widthsMap        = {};
         this.refreshPixelRatio();
         this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
+        this.imagesMustHaveWidthOrHeight = opts.imagesMustHaveWidthOrHeight || false;
 
         // Needed as IE8 adds a default `width`/`height` attribute…
         this.gif.removeAttribute('height');
@@ -209,10 +210,6 @@
             return element;
         }
         
-        if (!element.offsetWidth && !element.offsetHeight) {
-            return element;
-        }
-
         var elementClassName = element.getAttribute('data-class');
         var elementWidth = element.getAttribute('data-width');
         var gif = this.gif.cloneNode(false);
@@ -284,6 +281,12 @@
     };
 
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
+        if (this.imagesMustHaveWidthOrHeight) {
+            if (!image.offsetWidth && !image.offsetHeight) {
+                return;
+            }
+        }
+
         var computedWidth, src, naturalWidth;
 
         naturalWidth = getNaturalWidth(image);
