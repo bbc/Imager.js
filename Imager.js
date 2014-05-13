@@ -122,7 +122,7 @@
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
-        this.gif.src          = opts.hasOwnProperty('greyTemporarySrc') && opts.greyTemporarySrc ? defaultGifSrc : greyGifSrc;
+        this.gif.src          = opts.greyTemporarySrc ? greyGifSrc : defaultGifSrc;
         this.gif.className    = this.className;
         this.gif.alt          = '';
         this.scrollDelay      = opts.scrollDelay || 250;
@@ -170,13 +170,17 @@
         nextTick(function(){
             self.init();
         });
+
+        if (opts.selector) {
+            instancesBySelector[opts.selector] = new Imager(opts);
+        }
     }
     
     Imager.getSelectorSpecificInstance = function (opts) {
-        if (!instancesBySelector[opts.selector]) {
-            instancesBySelector[opts.selector] = new Imager(opts);
+        if (instancesBySelector[opts.selector]) {
+            return instancesBySelector[opts.selector];
         }
-        return instancesBySelector[opts.selector];
+        return new Imager(opts.selector);
     };
 
     Imager.prototype.findImagesUsingSelector = function(){
