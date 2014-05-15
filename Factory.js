@@ -2,7 +2,7 @@
 
     'use strict';
     
-    var instancesBySelector = [],
+    var instancesBySelector = {},
         Factory = {
             getSelectorSpecific: function (opts) {
                 require(['imager'], function (Imager) {
@@ -11,6 +11,13 @@
                     }
                     return instancesBySelector[opts.selector];
                 });
+            },
+            
+            refreshAllImages: function () {
+                var key;
+                for (key in instancesBySelector) {
+                    instancesBySelector[key].refreshImages();
+                }
             }
         };    
 
