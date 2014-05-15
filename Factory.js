@@ -6,7 +6,7 @@
     
     Factory = {
         getSelectorSpecific: function (opts) {
-            require('Imager', function (Imager) {
+            require('imager', function (Imager) {
                 if (!instancesBySelector[opts.selector]) {
                     instancesBySelector[opts.selector] = new Imager(opts);
                 }
@@ -21,7 +21,7 @@
         module.exports = exports = Factory;
     } else if (typeof define === 'function' && define.amd) {
         // AMD support
-        define('ImagerFactory', [], function () { return Factory; }); // Defining as a named module temporary because of juicer
+        define('imagerFactory', [], function () { return Factory; }); // Defining as a named module temporary because of juicer
     }
     /* global -module, -exports, -define */
 

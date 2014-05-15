@@ -430,7 +430,7 @@
         module.exports = exports = Imager;
     } else if (typeof define === 'function' && define.amd) {
         // AMD support
-        define('Imager', [], function () { return Imager; }); // Defining as a named module temporary because of juicer
+        define('imager', [], function () { return Imager; }); // Defining as a named module temporary because of juicer
     } else if (typeof window === 'object') {
         // If no AMD and we are in the browser, attach to window
         window.Imager = Imager;
