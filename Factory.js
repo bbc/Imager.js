@@ -5,7 +5,7 @@
     var instancesBySelector = [],
         Factory = {
             getSelectorSpecific: function (opts) {
-                require('imager', function (Imager) {
+                require(['imager'], function (Imager) {
                     if (!instancesBySelector[opts.selector]) {
                         instancesBySelector[opts.selector] = new Imager(opts);
                     }
