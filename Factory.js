@@ -2,18 +2,17 @@
 
     'use strict';
     
-    var instancesBySelector = [];
-    
-    Factory = {
-        getSelectorSpecific: function (opts) {
-            require('imager', function (Imager) {
-                if (!instancesBySelector[opts.selector]) {
-                    instancesBySelector[opts.selector] = new Imager(opts);
-                }
-                return instancesBySelector[opts.selector];
-            });
-        }
-    };    
+    var instancesBySelector = [],
+        Factory = {
+            getSelectorSpecific: function (opts) {
+                require('imager', function (Imager) {
+                    if (!instancesBySelector[opts.selector]) {
+                        instancesBySelector[opts.selector] = new Imager(opts);
+                    }
+                    return instancesBySelector[opts.selector];
+                });
+            }
+        };    
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
