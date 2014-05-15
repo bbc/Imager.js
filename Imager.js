@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth, instancesBySelector = [];
+    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth;
 
     nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -170,18 +170,7 @@
         nextTick(function(){
             self.init();
         });
-
-        if (opts.selector) {
-            instancesBySelector[opts.selector] = this;
-        }
     }
-    
-    Imager.getSelectorSpecificInstance = function (opts) {
-        if (instancesBySelector[opts.selector]) {
-            return instancesBySelector[opts.selector];
-        }
-        return new Imager(opts);
-    };
 
     Imager.prototype.findImagesUsingSelector = function(){
         this.divs = applyEach(document.querySelectorAll(this.selector), returnDirectValue);
