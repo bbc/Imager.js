@@ -27,7 +27,7 @@
         module.exports = exports = Factory;
     } else if (typeof define === 'function' && define.amd) {
         // AMD support
-        define('imagerFactory', [], function () { return Factory; }); // Defining as a named module temporary because of juicer
+        define('imager-factory', [], function () { return Factory; }); // Defining as a named module temporary because of juicer
     }
     /* global -module, -exports, -define */
 
