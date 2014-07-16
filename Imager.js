@@ -28,7 +28,7 @@
     }
 
     getNaturalWidth = (function(){
-        if (Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
+        if ('naturalWidth' in (new Image) || Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
             return function (image){ return image.naturalWidth;};
         }
         // IE8 and below lacks the naturalWidth property
@@ -286,6 +286,8 @@
         src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
 
         image.src = src;
+        image.removeAttribute('width');
+        image.removeAttribute('height');
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
