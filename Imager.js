@@ -28,7 +28,7 @@
     function trueFn(){ return true;}
 
     getNaturalWidth = (function(){
-        if (Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
+	if ('naturalWidth' in (new Image) || Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
             return function (image){ return image.naturalWidth;};
         }
         // IE8 and below lacks the naturalWidth property
@@ -267,7 +267,7 @@
      * Indicates if an element is an Imager placeholder
      *
      * @since 1.3.1
-     * @param {HTMLElement} element
+     * @param {HTMLImageElement} element
      * @returns {boolean}
      */
     Imager.prototype.isPlaceholder = function (element){
@@ -287,7 +287,7 @@
             while (element = element.offsetParent);
         }
 
-        return (elementOffsetTop < (this.viewportHeight + offset)) ? true : false;
+        return elementOffsetTop < (this.viewportHeight + offset);
     };
 
     Imager.prototype.checkImagesNeedReplacing = function (images, filterFn) {
@@ -328,6 +328,8 @@
         }
 
         image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+        image.removeAttribute('width');
+        image.removeAttribute('height');
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
@@ -399,7 +401,7 @@
         var i             = candidates.length,
             selectedWidth = candidates[i - 1];
 
-        baseValue = parseFloat(baseValue, 10);
+        baseValue = parseFloat(baseValue);
 
         while (i--) {
             if (baseValue <= candidates[i]) {
