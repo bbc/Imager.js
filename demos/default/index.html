@@ -55,9 +55,23 @@
           <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="500"></div>
         </div>
 
+        <div>
+          <h2>Adding new image post-Imager.js instantiation</h2>
+          <div>
+              <button onclick="addImageAfterInstantiation();">Add image</button>
+          </div>
+
+          <div class="load-after-instantiation" data-src="http://placehold.it/{width}"></div>
+        </div>
+
         <script src="../../Imager.js"></script>
         <script>
             var imager = new Imager();
+            
+            addImageAfterInstantiation = function () {
+                document.getElementsByClassName('load-after-instantiation')[0].className = 'delayed-image-load';
+                imager.refreshImages();
+            };
         </script>
     </body>
 </html>
