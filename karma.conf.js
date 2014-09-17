@@ -9,7 +9,7 @@ function filterBrowsers(browsers, re){
 }
 
 module.exports = function (config) {
-  var isCI = (Boolean(process.env.CI) && Boolean(process.env.SAUCE_ACCESS_KEY)) === true;
+  var isCI = (Boolean(process.env.CI) && Boolean(process.env.BROWSER_STACK_ACCESS_KEY)) === true;
 
   config.set({
 
@@ -48,6 +48,7 @@ module.exports = function (config) {
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['progress'],
 
+    // essential for non xhr2 browsers
     transports: ['jsonp-polling'],
 
     // web server port
