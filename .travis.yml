@@ -4,6 +4,7 @@ node_js:
 before_install:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
+- cd .. && mv Imager.js imager-js && cd imager-js
 env:
   global:
   - secure: REkbK7Qre238qK7lW4tokWUgUto3xevxNrsIlbubqyBQX8LZpjUvQFruW2F5t8Jb4LAj7jkT11+bRcy9tlz/H4xZeIr5LxSJVDlqBtsQd6gO2mqArM/ooQkNb8SMPzdFJwehtdttiVHrYFFmmb2+VgwlWz1lu7Huf/SqY/x1l0c=
