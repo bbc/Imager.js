@@ -15,4 +15,9 @@ before_install:
 
 script:
   - npm run test-pre
-  - 'if [[ $TRAVIS_PULL_REQUEST == ''false'' ]]; then { npm run test-remote; }; else { npm run test-local; }; fi'
+  - if [[ $SAUCE_ACCESS_KEY == '' ]]; then npm test; fi
+  - if [[ $SAUCE_ACCESS_KEY != '' ]]; then ./node_modules/karma/bin/karma start --browsers SauceIE6,SauceIE7,SauceIE8; fi
+  - if [[ $SAUCE_ACCESS_KEY != '' ]]; then ./node_modules/karma/bin/karma start --browsers SauceIE9,SauceIE10,SauceIE11; fi
+  - if [[ $SAUCE_ACCESS_KEY != '' ]]; then ./node_modules/karma/bin/karma start --browsers SauceFirefox,SauceSafari5; fi
+  - if [[ $SAUCE_ACCESS_KEY != '' ]]; then ./node_modules/karma/bin/karma start --browsers SauceiOS7,SauceiOS6,SauceiOS5; fi
+  - if [[ $SAUCE_ACCESS_KEY != '' ]]; then ./node_modules/karma/bin/karma start --browsers SauceiOS4,SauceAndroid; fi
