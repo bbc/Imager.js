@@ -1,18 +1,29 @@
 language: node_js
 node_js:
-  - '0.10'
-
-addons:
-  sauce_connect:
-    username:
-      secure: "UfeiLOFTWPtySuwtRj44gVId5OaeDexfHSLNtYWlYzDgzYzQZOl6tHkCWADIrQYgCdjoS3Zc7yDTpI3bTPV7Zs1jdbvc2WZNs87SMVyXmioQOYtHnDup02GEGJi9Bk0+GOBDsz7dXgmHXEiamFQD6cqYWfnrcOaiZqkwF/QAt0Q="
-    access_key:
-      secure: "FhhmdaYwrOJ6fA4aQTVGDH2AlNIlbPDuElzqBEWINZlTNpM0aEWSVT6XBWq+R51UOJrlrQSDco55dyldvHXu7oNhye0l0tZrFi9WcZxjVI4W8aKsYlHYoSbUxeKTySWz1KL5nhFQWoSOgIvVdv+c3Sa2S2XUsclvG9hnkHwH1D4="
-
+- '0.10'
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
+- cd .. && mv Imager.js imager-js && cd imager-js
+env:
+  global:
+  - secure: REkbK7Qre238qK7lW4tokWUgUto3xevxNrsIlbubqyBQX8LZpjUvQFruW2F5t8Jb4LAj7jkT11+bRcy9tlz/H4xZeIr5LxSJVDlqBtsQd6gO2mqArM/ooQkNb8SMPzdFJwehtdttiVHrYFFmmb2+VgwlWz1lu7Huf/SqY/x1l0c=
+  - secure: DK26MDZlb7vSYF9SAfBQbcpZLh34jTnNLTU6nM9nD1lPdIounQ8I+xGYGKgb3lA1BdFQgiA1s5VaWxwO/B3B91WF2kIPsXq1hghRQrXdFEae17XfjyiGEFI6oKyO+yKZvu/y86jz54xxwP0XCwspS3ZJI4BvQ8gKfdBEPkWb9Rc=
+  matrix:
+  - BROWSER=BSIE7
+  - BROWSER=BSIE8
+  - BROWSER=BSIE9
+  - BROWSER=BSIE10
+  - BROWSER=BSIE11
+  - BROWSER=BSOS4
+  - BROWSER=BSOS5
+  - BROWSER=BSOS6
+  - BROWSER=BSOS7
+  - BROWSER=BSAndroid2
+  - BROWSER=BSAndroid4
+  - BROWSER=BSFirefox
+  - BROWSER=BSSafari5
+  - BROWSER=BSSafari6
+  - BROWSER=BSSafari7
 
 script:
-  - npm run test-pre
-  - 'if [[ $TRAVIS_PULL_REQUEST == ''false'' ]]; then { npm run test-remote; }; else { npm run test-local; }; fi'
+- npm run test-pre
+- ./node_modules/karma/bin/karma start --browsers $BROWSER

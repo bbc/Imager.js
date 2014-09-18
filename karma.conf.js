@@ -1,7 +1,16 @@
-// Karma configuration
-// Generated on Tue Oct 29 2013 11:45:20 GMT+0000 (GMT)
+'use strict';
+
+/* jshint node:true */
+
+function filterBrowsers(browsers, re){
+  return Object.keys(browsers).filter(function(key){
+    return re.test(key);
+  });
+}
 
 module.exports = function (config) {
+  var isCI = (Boolean(process.env.CI) && Boolean(process.env.BROWSER_STACK_ACCESS_KEY)) === true;
+
   config.set({
 
     // base path, that will be used to resolve files and exclude
@@ -39,6 +48,8 @@ module.exports = function (config) {
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['progress'],
 
+    // essential for non xhr2 browsers
+    transports: ['jsonp-polling'],
 
     // web server port
     port: 9876,
@@ -54,25 +65,18 @@ module.exports = function (config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
-
-
-    // Start these browsers, currently available:
-    // - Chrome
-    // - ChromeCanary
-    // - Firefox
-    // - Opera (has to be installed with `npm install karma-opera-launcher`)
-    // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
-    // - PhantomJS
-    // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJSCustom', 'Firefox'],
+    autoWatch: false,
 
     sauceLabs: {
-      username: process.env.SAUCE_USERNAME,
+      tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER || null,
       accessKey: process.env.SAUCE_ACCESS_KEY,
-      build: process.env.TRAVIS_JOB_NUMBER || 'local tunnel',
-      testName: 'Imager.js',
-      startConnect: true
+      testName: 'BBC-News/Imager.js',
+      startConnect: false
+    },
+
+    browserStack: {
+      project: 'BBC-News/Imager.js',
+      build: process.env.CONTINUOUS_INTEGRATION ? null : ('Local testing - ' + Date.now())
     },
 
     customLaunchers: {
@@ -85,11 +89,152 @@ module.exports = function (config) {
           }
         }
       },
+      // Browserstack
+//      BSIE6: {
+//        base: 'BrowserStack',
+//        browser: 'ie',
+//        browser_version: '6.0',
+//        os: 'Windows',
+//        os_version: 'XP'
+//      },
+      BSIE7: {
+        base: 'BrowserStack',
+        browser: 'ie',
+        browser_version: '7.0',
+        os: 'Windows',
+        os_version: 'XP'
+      },
+      BSIE8: {
+        base: 'BrowserStack',
+        browser: 'ie',
+        browser_version: '8.0',
+        os: 'Windows',
+        os_version: '7'
+      },
+      BSIE9: {
+        base: 'BrowserStack',
+        browser: 'ie',
+        browser_version: '9.0',
+        os: 'Windows',
+        os_version: '7'
+      },
+      BSIE10: {
+        base: 'BrowserStack',
+        browser: 'ie',
+        browser_version: '10.0',
+        os: 'Windows',
+        os_version: '8'
+      },
+      BSIE11: {
+        base: 'BrowserStack',
+        browser: 'ie',
+        browser_version: '11.0',
+        os: 'Windows',
+        os_version: '8.1'
+      },
+      BSOS4: {
+        base: 'BrowserStack',
+        device: 'iPhone 4',
+        os: 'ios',
+        os_version: '4.0'
+      },
+      BSOS5: {
+        base: 'BrowserStack',
+        device: 'iPhone 4S',
+        os: 'ios',
+        os_version: '5.1'
+      },
+      BSOS6: {
+        base: 'BrowserStack',
+        device: 'iPhone 5',
+        os: 'ios',
+        os_version: '6.0'
+      },
+      BSOS7: {
+        base: 'BrowserStack',
+        device: 'iPhone 5S',
+        os: 'ios',
+        os_version: '7.0'
+      },
+      BSAndroid2: {
+        base: 'BrowserStack',
+        device: 'Samsung Galaxy S II',
+        browser: 'android',
+        os: 'android',
+        os_version: '2.3'
+      },
+      BSAndroid4: {
+        base: 'BrowserStack',
+        device: 'Samsung Galaxy Nexus',
+        browser: 'android',
+        os: 'android',
+        os_version: '4.0'
+      },
+      BSFirefox: {
+        base: 'BrowserStack',
+        browser: 'firefox',
+        browser_version: '22.0',
+        os : 'Windows',
+        os_version: '7'
+      },
+      BSSafari5: {
+        base: 'BrowserStack',
+        browser: 'safari',
+        browser_version: '5.1',
+        os: 'OS X',
+        os_version: 'Snow Leopard'
+      },
+      BSSafari6: {
+        base: 'BrowserStack',
+        browser: 'safari',
+        browser_version: '6.1',
+        os: 'OS X',
+        os_version: 'Mountain Lion'
+      },
+      BSSafari7: {
+        base: 'BrowserStack',
+        browser: 'safari',
+        browser_version: '7.0',
+        os: 'OS X',
+        os_version: 'Mavericks'
+      },
+
+      // Saucelabs
+      SauceIE6: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows XP',
+        version: '6'
+      },
+      SauceIE7: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows XP',
+        version: '7'
+      },
       SauceIE8: {
         base: 'SauceLabs',
         browserName: 'internet explorer',
         platform: 'Windows 7',
         version: '8'
+      },
+      SauceIE9: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows 7',
+        version: '9'
+      },
+      SauceIE10: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows 8',
+        version: '10'
+      },
+      SauceIE11: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows 8.1',
+        version: '11'
       },
       SauceFirefox: {
         base: 'SauceLabs',
@@ -103,26 +248,49 @@ module.exports = function (config) {
         platform: 'Linux',
         version: '4.0'
       },
-      SauceiOS: {
+      SauceiOS7: {
+        base: 'SauceLabs',
+        browserName: 'iphone',
+        platform: 'OS X 10.9',
+        version: '7.1'
+      },
+      SauceiOS6: {
+        base: 'SauceLabs',
+        browserName: 'iphone',
+        platform: 'OS X 10.8',
+        version: '6.1'
+      },
+      SauceiOS5: {
         base: 'SauceLabs',
         browserName: 'iphone',
         platform: 'OS X 10.8',
         version: '5.1'
       },
-      SauceSafari: {
+      SauceiOS4: {
+        base: 'SauceLabs',
+        browserName: 'iphone',
+        platform: 'OS X 10.6',
+        version: '4.3'
+      },
+      SauceSafari5: {
         base: 'SauceLabs',
         browserName: 'safari',
-        platform: 'OS X 10.8'
+        platform: 'OS X 10.6'
       }
     },
 
 
-    // If browser does not capture in given timeout [ms], kill it
-    captureTimeout: 60000,
+    captureTimeout: 120000,
+    browserDisconnectTolerance: isCI ? 3 : 1,
+    browserNoActivityTimeout: isCI ? 120000 : null,
 
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: true
+  });
+
+  config.set({
+    browsers: isCI ? filterBrowsers(config.customLaunchers, /^BS/) : ['PhantomJSCustom', 'Firefox']
   });
 };
