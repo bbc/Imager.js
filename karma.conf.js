@@ -280,8 +280,9 @@ module.exports = function (config) {
     },
 
 
-    // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 120000,
+    browserDisconnectTolerance: isCI ? 3 : 1,
+    browserNoActivityTimeout: isCI ? 120000 : null,
 
 
     // Continuous Integration mode
