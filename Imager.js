@@ -179,6 +179,7 @@
     Imager.prototype.refreshImages = function(){
         this.findImagesUsingSelector();
         this.changeDivsToEmptyImages();
+        this.removeHeightAttributes();
     };
 
     Imager.prototype.scrollCheck = function(){
@@ -229,6 +230,12 @@
         element.parentNode.replaceChild(gif, element);
 
         return gif;
+    };
+    
+    Imager.prototype.removeHeightAttributes = function () {
+        applyEach(this.divs, function (element) {
+            element.removeAttribute("height");
+        });
     };
 
     Imager.prototype.changeDivsToEmptyImages = function(){
