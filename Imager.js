@@ -390,7 +390,7 @@
         });
 
         addEvent(window, 'resize', function(){
-        	self.viewportHeight = document.documentElement.clientHeight;
+            self.viewportHeight = document.documentElement.clientHeight;
             self.scrolled = true;
         });
     };
