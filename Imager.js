@@ -388,6 +388,11 @@
         addEvent(window, 'scroll', function(){
             self.scrolled = true;
         });
+
+        addEvent(window, 'resize', function(){
+        	self.viewportHeight = document.documentElement.clientHeight;
+            self.scrolled = true;
+        });
     };
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
