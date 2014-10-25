@@ -279,12 +279,6 @@ module.exports = function (config) {
             }
         },
 
-
-        captureTimeout:             120000,
-        browserDisconnectTolerance: isCI ? 3 : 1,
-        browserNoActivityTimeout:   isCI ? 120000 : null,
-
-
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
         singleRun:                  true
