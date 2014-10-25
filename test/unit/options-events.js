@@ -31,7 +31,7 @@ describe('Imager.js Events', function () {
             expect(resizeSpy.called).to.equal(false);
             expect(scrollSpy.called).to.equal(false);
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(resizeSpy.callCount).to.equal(1);
                 expect(scrollSpy.callCount).to.equal(0);
 
@@ -47,7 +47,7 @@ describe('Imager.js Events', function () {
             expect(resizeSpy.called).to.equal(false);
             expect(scrollSpy.called).to.equal(false);
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(resizeSpy.callCount).to.equal(0);
                 expect(scrollSpy.callCount).to.equal(1);
 
@@ -62,7 +62,7 @@ describe('Imager.js Events', function () {
 
                 expect(replaceImagesSpy.called).to.equal(false);
 
-                runAfterAnimationFrame(function () {
+                imgr.ready(function () {
                     expect(replaceImagesSpy.callCount).to.equal(1);
 
                     done();
@@ -74,7 +74,7 @@ describe('Imager.js Events', function () {
                 var replaceImagesSpy = sandbox.spy();
                 var imgr = new Imager({ selector: '#main .delayed-image-load', onImagesReplaced: replaceImagesSpy });
 
-                runAfterAnimationFrame(function () {
+                imgr.ready(function () {
                     var args = replaceImagesSpy.getCall(0).args;
 
                     expect(args).to.have.length(1);

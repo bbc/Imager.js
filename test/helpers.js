@@ -15,13 +15,3 @@ function cleanFixtures(fixtures){
     document.body.removeChild(fixtures);
   }
 }
-
-/**
- * Runs a bit of code after an Animation Frame. Supposedly.
- *
- * @param {Function} fn
- * @returns {Number} Timeout ID
- */
-function runAfterAnimationFrame(fn){
-  return setTimeout(fn, 20);
-}

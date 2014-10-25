@@ -10,6 +10,7 @@ function filterBrowsers(browsers, re){
 
 module.exports = function (config) {
   var isCI = (Boolean(process.env.CI) && Boolean(process.env.BROWSER_STACK_ACCESS_KEY)) === true;
+  var browsers = process.env.BROWSERS ? process.env.BROWSERS.split(',') : null;
 
   config.set({
 
@@ -148,11 +149,11 @@ module.exports = function (config) {
         base: 'BrowserStack',
         device: 'iPhone 5',
         os: 'ios',
-	os_version: '6.1'
+	      os_version: '6.1'
       },
       BSOS7: {
         base: 'BrowserStack',
-	device: 'iPad mini Retina',
+	      device: 'iPad mini Retina',
         os: 'ios',
         os_version: '7.0'
       },
@@ -291,6 +292,8 @@ module.exports = function (config) {
   });
 
   config.set({
-    browsers: isCI ? filterBrowsers(config.customLaunchers, /^BS/) : ['PhantomJSCustom', 'Firefox']
+    browsers: browsers || (isCI
+        ? filterBrowsers(config.customLaunchers, /^BS/)
+        : ['PhantomJSCustom', 'Firefox'])
   });
 };

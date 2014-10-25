@@ -23,13 +23,9 @@
         return new_collection;
     }
 
-    function returnDirectValue (value) {
-        return value;
-    }
-
-    function trueFn(){
-        return true;
-    }
+    function returnFn(value) { return value; }
+    function noop(){}
+    function trueFn(){ return true;}
 
     getNaturalWidth = (function(){
         if (Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
@@ -131,10 +127,10 @@
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
-        this.onImagesReplaced = opts.onImagesReplaced || function () {};
+        this.onImagesReplaced = opts.onImagesReplaced || noop;
         this.widthsMap        = {};
         this.refreshPixelRatio();
-        this.widthInterpolator = opts.widthInterpolator || returnDirectValue;
+        this.widthInterpolator = opts.widthInterpolator || returnFn;
 
         // Needed as IE8 adds a default `width`/`height` attribute…
         this.gif.removeAttribute('height');
@@ -154,16 +150,15 @@
           });
         }
 
-
-
         if (elements) {
-            this.divs = applyEach(elements, returnDirectValue);
+            this.divs = applyEach(elements, returnFn);
             this.selector = null;
         }
         else {
-            this.divs = applyEach(doc.querySelectorAll(this.selector), returnDirectValue);
+            this.divs = applyEach(doc.querySelectorAll(this.selector), returnFn);
         }
 
+        this.ready(opts.onReady);
         this.changeDivsToEmptyImages(this.divs);
 
         nextTick(function(){
@@ -217,6 +212,19 @@
         if (this.onResize) {
             this.registerResizeEvent(filterFn);
         }
+
+        this.onReady();
+    };
+
+    /**
+     * Executes a function when Imager is ready to work
+     * It acts as a convenient/shortcut for `new Imager({ onReady: fn })`
+     *
+     * @since 0.3.1
+     * @param {Function} fn
+     */
+    Imager.prototype.ready = function(fn){
+        this.onReady = fn || noop;
     };
 
     Imager.prototype.createGif = function (element) {
