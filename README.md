@@ -1,4 +1,4 @@
-# Imager.js [![Build Status](https://secure.travis-ci.org/BBC-News/Imager.js.png?branch=master)](http://travis-ci.org/BBC-News/Imager.js)
+# Imager.js [![Build Status](https://secure.travis-ci.org/BBC-News/Imager.js.svg?branch=master)](http://travis-ci.org/BBC-News/Imager.js)
 
 > Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at [BBC News](http://responsivenews.co.uk/).
 
