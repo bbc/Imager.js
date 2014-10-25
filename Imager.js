@@ -1,8 +1,7 @@
 ;(function (window, document) {
-
     'use strict';
 
-    var defaultWidths, getKeys, addEvent, getNaturalWidth;
+    var defaultWidths, getKeys, addEvent;
 
     var nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -26,18 +25,6 @@
     function returnFn(value) { return value; }
     function noop(){}
     function trueFn(){ return true;}
-
-    getNaturalWidth = (function(){
-	if ('naturalWidth' in (new Image) || Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
-            return function (image){ return image.naturalWidth;};
-        }
-        // IE8 and below lacks the naturalWidth property
-        return function (source){
-            var img = document.createElement('img');
-            img.src = source.src;
-            return img.width;
-        };
-    })();
 
     addEvent = (function(){
         if (document.addEventListener){
@@ -317,7 +304,7 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-        naturalWidth = getNaturalWidth(image);
+	naturalWidth = Imager.getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
@@ -447,6 +434,20 @@
             return function(){ return document.documentElement.scrollTop; };
         }
     };
+
+    Imager.getNaturalWidth = (function () {
+        if ('naturalWidth' in (new Image()) || Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
+            return function (image) {
+                return image.naturalWidth;
+            };
+        }
+        // IE8 and below lacks the naturalWidth property
+        return function (source) {
+            var img = document.createElement('img');
+            img.src = source.src;
+            return img.width;
+        };
+    })();
 
     // This form is used because it seems impossible to stub `window.pageYOffset`
     Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
