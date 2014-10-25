@@ -2,9 +2,9 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth;
+    var defaultWidths, getKeys, addEvent, getNaturalWidth;
 
-    nextTick = window.requestAnimationFrame ||
+    var nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
                window.webkitRequestAnimationFrame ||
                function (callback) {
@@ -114,7 +114,6 @@
             }
         }
 
-        this.imagesOffScreen  = [];
         this.viewportHeight   = doc.documentElement.clientHeight;
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
@@ -161,7 +160,7 @@
             this.divs = applyEach(doc.querySelectorAll(this.selector), returnDirectValue);
         }
 
-        this.changeDivsToEmptyImages();
+        this.changeDivsToEmptyImages(this.divs);
 
         nextTick(function(){
             self.init();
@@ -169,21 +168,33 @@
     }
 
     Imager.prototype.scrollCheck = function(){
+        var self = this;
+        var offscreenImageCount = 0;
+        var elements = [];
+
         if (this.scrolled) {
-            if (!this.imagesOffScreen.length) {
-                window.clearInterval(this.interval);
+            // collects a subset of not-yet-responsive images and not offscreen anymore
+            applyEach(this.divs, function(element){
+                if (element.className.indexOf('imager-placeholder') !== -1) {
+                    ++offscreenImageCount;
+
+                    if (self.isThisElementOnScreen(element)) {
+                        elements.push(element);
+                    }
+                }
+            });
+
+            if (offscreenImageCount === 0) {
+                window.clearInterval(self.interval);
             }
 
-            this.divs = this.imagesOffScreen.slice(0); // copy by value, don't copy by reference
-            this.imagesOffScreen.length = 0;
-            this.changeDivsToEmptyImages();
+            this.changeDivsToEmptyImages(elements);
             this.scrolled = false;
         }
     };
 
     Imager.prototype.init = function(){
         this.initialized = true;
-        this.checkImagesNeedReplacing(this.divs);
 
         if (this.onResize) {
             this.registerResizeEvent();
@@ -191,6 +202,9 @@
 
         if (this.lazyload) {
             this.registerScrollEvent();
+        }
+        else {
+            this.checkImagesNeedReplacing(this.divs);
         }
     };
 
@@ -209,7 +223,7 @@
           gif.setAttribute('data-width', elementWidth);
         }
 
-        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
+        gif.className = [elementClassName, this.className, 'imager-placeholder'].join(' ');
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
@@ -218,23 +232,15 @@
         return gif;
     };
 
-    Imager.prototype.changeDivsToEmptyImages = function(){
+    Imager.prototype.changeDivsToEmptyImages = function(elements){
         var self = this;
 
-        applyEach(this.divs, function(element, i){
-            if (self.lazyload) {
-                if (self.isThisElementOnScreen(element)) {
-                    self.divs[i] = self.createGif(element);
-                } else {
-                    self.imagesOffScreen.push(element);
-                }
-            } else {
-                self.divs[i] = self.createGif(element);
-            }
+        applyEach(elements, function(element, i){
+            elements[i] = self.createGif(element);
         });
 
         if (this.initialized) {
-            this.checkImagesNeedReplacing(this.divs);
+            this.checkImagesNeedReplacing(elements);
         }
     };
 
@@ -270,8 +276,13 @@
         }
     };
 
+    /**
+     * Upgrades an image from an empty placeholder to a fully sourced image element
+     *
+     * @param {HTMLImageElement} image
+     */
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var computedWidth, src, naturalWidth;
+        var computedWidth, naturalWidth;
 
         naturalWidth = getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
@@ -283,9 +294,8 @@
             return;
         }
 
-        src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
-
-        image.src = src;
+        image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+        image.className = image.className.replace(' imager-placeholder', '');
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
