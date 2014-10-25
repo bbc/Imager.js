@@ -443,16 +443,16 @@
      * @return {Number} Image width in pixels
      */
     Imager.getNaturalWidth = (function () {
-        if (window.Image && 'naturalWidth' in (new Image())) {
-            return function getNaturalWidth (image) {
+        if ('naturalWidth' in (new Image())) {
+            return function (image) {
                 return image.naturalWidth;
             };
         }
         // non-HTML5 browsers workaround
-        return function getNaturalWidth (source) {
-            var img = document.createElement('img');
-            img.src = source.src;
-            return img.width;
+        return function (image) {
+            var imageCopy = document.createElement('img');
+            imageCopy.src = image.src;
+            return imageCopy.width;
         };
     })();
 
