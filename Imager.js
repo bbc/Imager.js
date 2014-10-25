@@ -2,9 +2,9 @@
 
     'use strict';
 
-    var defaultWidths, getKeys, nextTick, addEvent, getNaturalWidth;
+    var defaultWidths, getKeys, addEvent, getNaturalWidth;
 
-    nextTick = window.requestAnimationFrame ||
+    var nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
                window.webkitRequestAnimationFrame ||
                function (callback) {
@@ -24,7 +24,11 @@
     }
 
     function returnDirectValue (value) {
-      return value;
+        return value;
+    }
+
+    function trueFn(){
+        return true;
     }
 
     getNaturalWidth = (function(){
@@ -114,7 +118,6 @@
             }
         }
 
-        this.imagesOffScreen  = [];
         this.viewportHeight   = doc.documentElement.clientHeight;
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
@@ -161,7 +164,7 @@
             this.divs = applyEach(doc.querySelectorAll(this.selector), returnDirectValue);
         }
 
-        this.changeDivsToEmptyImages();
+        this.changeDivsToEmptyImages(this.divs);
 
         nextTick(function(){
             self.init();
@@ -169,28 +172,50 @@
     }
 
     Imager.prototype.scrollCheck = function(){
+        var self = this;
+        var offscreenImageCount = 0;
+        var elements = [];
+
         if (this.scrolled) {
-            if (!this.imagesOffScreen.length) {
-                window.clearInterval(this.interval);
+            // collects a subset of not-yet-responsive images and not offscreen anymore
+            applyEach(this.divs, function(element){
+                if (self.isPlaceholder(element)) {
+                    ++offscreenImageCount;
+
+                    if (self.isThisElementOnScreen(element)) {
+                        elements.push(element);
+                    }
+                }
+            });
+
+            if (offscreenImageCount === 0) {
+                window.clearInterval(self.interval);
             }
 
-            this.divs = this.imagesOffScreen.slice(0); // copy by value, don't copy by reference
-            this.imagesOffScreen.length = 0;
-            this.changeDivsToEmptyImages();
+            this.changeDivsToEmptyImages(elements);
             this.scrolled = false;
         }
     };
 
     Imager.prototype.init = function(){
-        this.initialized = true;
-        this.checkImagesNeedReplacing(this.divs);
+        var self = this;
 
-        if (this.onResize) {
-            this.registerResizeEvent();
-        }
+        this.initialized = true;
+        var filterFn = trueFn;
 
         if (this.lazyload) {
             this.registerScrollEvent();
+
+            filterFn = function(element){
+                return self.isPlaceholder(element) === false;
+            };
+        }
+        else {
+            this.checkImagesNeedReplacing(this.divs);
+        }
+
+        if (this.onResize) {
+            this.registerResizeEvent(filterFn);
         }
     };
 
@@ -218,24 +243,27 @@
         return gif;
     };
 
-    Imager.prototype.changeDivsToEmptyImages = function(){
+    Imager.prototype.changeDivsToEmptyImages = function(elements){
         var self = this;
 
-        applyEach(this.divs, function(element, i){
-            if (self.lazyload) {
-                if (self.isThisElementOnScreen(element)) {
-                    self.divs[i] = self.createGif(element);
-                } else {
-                    self.imagesOffScreen.push(element);
-                }
-            } else {
-                self.divs[i] = self.createGif(element);
-            }
+        applyEach(elements, function(element, i){
+            elements[i] = self.createGif(element);
         });
 
         if (this.initialized) {
-            this.checkImagesNeedReplacing(this.divs);
+            this.checkImagesNeedReplacing(elements);
         }
+    };
+
+    /**
+     * Indicates if an element is an Imager placeholder
+     *
+     * @since 1.3.1
+     * @param {HTMLElement} element
+     * @returns {boolean}
+     */
+    Imager.prototype.isPlaceholder = function (element){
+        return element.src === this.gif.src;
     };
 
     Imager.prototype.isThisElementOnScreen = function (element) {
@@ -254,15 +282,18 @@
         return (elementOffsetTop < (this.viewportHeight + offset)) ? true : false;
     };
 
-    Imager.prototype.checkImagesNeedReplacing = function (images) {
+    Imager.prototype.checkImagesNeedReplacing = function (images, filterFn) {
         var self = this;
+        filterFn = filterFn || trueFn;
 
         if (!this.isResizing) {
             this.isResizing = true;
             this.refreshPixelRatio();
 
             applyEach(images, function(image){
-                self.replaceImagesBasedOnScreenDimensions(image);
+                if (filterFn(image)) {
+                    self.replaceImagesBasedOnScreenDimensions(image);
+                }
             });
 
             this.isResizing = false;
@@ -270,8 +301,13 @@
         }
     };
 
+    /**
+     * Upgrades an image from an empty placeholder to a fully sourced image element
+     *
+     * @param {HTMLImageElement} image
+     */
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var computedWidth, src, naturalWidth;
+        var computedWidth, naturalWidth;
 
         naturalWidth = getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
@@ -279,13 +315,11 @@
 
         image.width = computedWidth;
 
-        if (image.src !== this.gif.src && computedWidth <= naturalWidth) {
+        if (!this.isPlaceholder(image) && computedWidth <= naturalWidth) {
             return;
         }
 
-        src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
-
-        image.src = src;
+        image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
@@ -368,11 +402,11 @@
         return selectedWidth;
     };
 
-    Imager.prototype.registerResizeEvent = function(){
+    Imager.prototype.registerResizeEvent = function(filterFn){
         var self = this;
 
         addEvent(window, 'resize', function(){
-            self.checkImagesNeedReplacing(self.divs);
+            self.checkImagesNeedReplacing(self.divs, filterFn);
         });
     };
 
