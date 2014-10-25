@@ -22,7 +22,7 @@ describe('Imager.js HTML data-* API', function(){
       fixtures = loadFixtures('data-src-old');
       var imgr = new Imager({ availableWidths: [320, 640] });
 
-      runAfterAnimationFrame(function(){
+      imgr.ready(function(){
         applyEach(imgr.divs, function(el){
           expect(el).to.have.property('nodeName', 'IMG');
           expect(el.src).to.contain(el.getAttribute('data-src'));
@@ -36,7 +36,7 @@ describe('Imager.js HTML data-* API', function(){
       fixtures = loadFixtures('data-src-new');
       var imgr = new Imager({ availableWidths: [640, 320] });
 
-      runAfterAnimationFrame(function(){
+      imgr.ready(function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
@@ -53,7 +53,7 @@ describe('Imager.js HTML data-* API', function(){
       fixtures = loadFixtures('data-src-interpolate');
       var imgr = new Imager({ availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'} });
 
-      runAfterAnimationFrame(function(){
+      imgr.ready(function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
@@ -69,7 +69,7 @@ describe('Imager.js HTML data-* API', function(){
       fixtures = loadFixtures('data-src-new');
       var imgr = new Imager({ availableWidths: function(image){ return 640; } });
 
-      runAfterAnimationFrame(function(){
+      imgr.ready(function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
@@ -93,7 +93,7 @@ describe('Imager.js HTML data-* API', function(){
         }
       });
 
-      runAfterAnimationFrame(function(){
+      imgr.ready(function(){
         var src = applyEach(imgr.divs, function(el){ return el.getAttribute('src'); });
 
         expect(src).to.eql([
@@ -148,7 +148,7 @@ describe('Imager.js HTML data-* API', function(){
 
         expect(imgr.gif).to.have.property('alt', '');
 
-        runAfterAnimationFrame(function(){
+        imgr.ready(function(){
             expect(imgr.divs[0]).to.have.property('alt', imgr.gif.alt);
 
             done();
@@ -161,7 +161,7 @@ describe('Imager.js HTML data-* API', function(){
 
       expect(imgr.gif).to.have.property('alt', '');
 
-      runAfterAnimationFrame(function(){
+      imgr.ready(function(){
         expect(imgr.divs[1]).to.have.property('alt', 'Responsive Image alternative');
 
         done();

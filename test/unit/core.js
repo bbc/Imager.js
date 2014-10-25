@@ -20,7 +20,7 @@ describe('Imager.js', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager();
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(imgr.initialized).to.equal(true);
                 expect(imgr.scrolled).to.equal(false);
                 expect(imgr.divs).to.have.length(5);
@@ -42,7 +42,7 @@ describe('Imager.js', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager('#main .delayed-image-load');
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(imgr.initialized).to.equal(true);
                 expect(imgr.scrolled).to.equal(false);
                 expect(imgr.divs).to.have.length(3);
@@ -56,7 +56,7 @@ describe('Imager.js', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager(document.querySelectorAll('#main .delayed-image-load'));
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(imgr.initialized).to.equal(true);
                 expect(imgr.scrolled).to.equal(false);
                 expect(imgr.divs).to.have.length(3);
@@ -70,7 +70,7 @@ describe('Imager.js', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager(document.getElementById('main').getElementsByTagName('div'));
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(imgr.initialized).to.equal(true);
                 expect(imgr.scrolled).to.equal(false);
                 expect(imgr.divs).to.have.length(3);
@@ -84,7 +84,7 @@ describe('Imager.js', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager(jQuery('#main .delayed-image-load'));
 
-            runAfterAnimationFrame(function () {
+            imgr.ready(function () {
                 expect(imgr.initialized).to.equal(true);
                 expect(imgr.scrolled).to.equal(false);
                 expect(imgr.divs).to.have.length(3);
