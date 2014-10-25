@@ -1,8 +1,7 @@
 ;(function (window, document) {
-
     'use strict';
 
-    var defaultWidths, getKeys, addEvent, getNaturalWidth;
+    var defaultWidths, getKeys, addEvent;
 
     var nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -26,18 +25,6 @@
     function returnFn(value) { return value; }
     function noop(){}
     function trueFn(){ return true;}
-
-    getNaturalWidth = (function(){
-        if (Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
-            return function (image){ return image.naturalWidth;};
-        }
-        // IE8 and below lacks the naturalWidth property
-        return function (source){
-            var img = document.createElement('img');
-            img.src = source.src;
-            return img.width;
-        };
-    })();
 
     addEvent = (function(){
         if (document.addEventListener){
@@ -267,7 +254,7 @@
      * Indicates if an element is an Imager placeholder
      *
      * @since 1.3.1
-     * @param {HTMLElement} element
+     * @param {HTMLImageElement} element
      * @returns {boolean}
      */
     Imager.prototype.isPlaceholder = function (element){
@@ -287,7 +274,7 @@
             while (element = element.offsetParent);
         }
 
-        return (elementOffsetTop < (this.viewportHeight + offset)) ? true : false;
+        return elementOffsetTop < (this.viewportHeight + offset);
     };
 
     Imager.prototype.checkImagesNeedReplacing = function (images, filterFn) {
@@ -317,7 +304,7 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-        naturalWidth = getNaturalWidth(image);
+	naturalWidth = Imager.getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
@@ -328,6 +315,8 @@
         }
 
         image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+        image.removeAttribute('width');
+        image.removeAttribute('height');
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
@@ -399,7 +388,7 @@
         var i             = candidates.length,
             selectedWidth = candidates[i - 1];
 
-        baseValue = parseFloat(baseValue, 10);
+        baseValue = parseFloat(baseValue);
 
         while (i--) {
             if (baseValue <= candidates[i]) {
@@ -445,6 +434,27 @@
             return function(){ return document.documentElement.scrollTop; };
         }
     };
+
+    /**
+     * Returns the naturalWidth of an image element.
+     *
+     * @since 1.3.1
+     * @param {HTMLImageElement} image
+     * @return {Number} Image width in pixels
+     */
+    Imager.getNaturalWidth = (function () {
+        if ('naturalWidth' in (new Image())) {
+            return function (image) {
+                return image.naturalWidth;
+            };
+        }
+        // non-HTML5 browsers workaround
+        return function (image) {
+            var imageCopy = document.createElement('img');
+            imageCopy.src = image.src;
+            return imageCopy.width;
+        };
+    })();
 
     // This form is used because it seems impossible to stub `window.pageYOffset`
     Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));

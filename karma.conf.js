@@ -199,7 +199,6 @@ module.exports = function (config) {
                 os:              'OS X',
                 os_version:      'Mavericks'
             },
-
             // Saucelabs
             SauceIE6:          {
                 base:        'SauceLabs',
@@ -279,12 +278,6 @@ module.exports = function (config) {
                 platform:    'OS X 10.6'
             }
         },
-
-
-        captureTimeout:             120000,
-        browserDisconnectTolerance: isCI ? 3 : 1,
-        browserNoActivityTimeout:   isCI ? 120000 : null,
-
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
