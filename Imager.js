@@ -291,7 +291,9 @@
             this.refreshPixelRatio();
 
             applyEach(images, function(image){
-                filterFn(image) && self.replaceImagesBasedOnScreenDimensions(image);
+                if (filterFn(image)) {
+                    self.replaceImagesBasedOnScreenDimensions(image);
+                }
             });
 
             this.isResizing = false;
