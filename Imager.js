@@ -435,14 +435,21 @@
         }
     };
 
+    /**
+     * Returns the naturalWidth of an image element.
+     *
+     * @since 1.3.1
+     * @param {HTMLImageElement} image
+     * @return {Number} Image width in pixels
+     */
     Imager.getNaturalWidth = (function () {
-        if ('naturalWidth' in (new Image()) || Object.prototype.hasOwnProperty.call(document.createElement('img'), 'naturalWidth')) {
-            return function (image) {
+        if (window.Image && 'naturalWidth' in (new Image())) {
+            return function getNaturalWidth (image) {
                 return image.naturalWidth;
             };
         }
-        // IE8 and below lacks the naturalWidth property
-        return function (source) {
+        // non-HTML5 browsers workaround
+        return function getNaturalWidth (source) {
             var img = document.createElement('img');
             img.src = source.src;
             return img.width;

@@ -199,7 +199,6 @@ module.exports = function (config) {
                 os:              'OS X',
                 os_version:      'Mavericks'
             },
-
             // Saucelabs
             SauceIE6:          {
                 base:        'SauceLabs',
