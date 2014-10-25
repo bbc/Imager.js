@@ -55,9 +55,38 @@
           <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="500"></div>
         </div>
 
+        <div>
+          <h2>Loading 1 image</h2>
+
+          <div class="delayed-image" data-src="http://placehold.it/{width}"><a href="#" class="load-image">Load image here</a></div>
+
+        </div>
+        
+        <div>
+          <h2>Loading multiple images</h2>
+
+          <div class="delayed-image2" data-src="http://placehold.it/{width}">
+            <a href="#" class="load-images">Load 4 more images</a>
+          </div>
+          <div class="delayed-image2" data-src="http://placehold.it/{width}"></div>
+          <div class="delayed-image2" data-src="http://placehold.it/{width}"></div>
+          <div class="delayed-image2" data-src="http://placehold.it/{width}"></div>
+        </div>
+
         <script src="../../Imager.js"></script>
         <script>
             var imager = new Imager();
+
+            var delayedImageElement = document.querySelector(".delayed-image");
+            document.querySelector(".load-image").addEventListener("click", function(event) {
+              event.preventDefault();
+              imager.add(delayedImageElement);
+            });
+
+            document.querySelector(".load-images").addEventListener("click", function(event) {
+              event.preventDefault();
+              imager.add(".delayed-image2");
+            });
         </script>
     </body>
 </html>
