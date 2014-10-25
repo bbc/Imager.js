@@ -24,7 +24,11 @@
     }
 
     function returnDirectValue (value) {
-      return value;
+        return value;
+    }
+
+    function trueFn(){
+        return true;
     }
 
     getNaturalWidth = (function(){
@@ -175,7 +179,7 @@
         if (this.scrolled) {
             // collects a subset of not-yet-responsive images and not offscreen anymore
             applyEach(this.divs, function(element){
-                if (element.className.indexOf('imager-placeholder') !== -1) {
+                if (self.isPlaceholder(element)) {
                     ++offscreenImageCount;
 
                     if (self.isThisElementOnScreen(element)) {
@@ -194,17 +198,24 @@
     };
 
     Imager.prototype.init = function(){
-        this.initialized = true;
+        var self = this;
 
-        if (this.onResize) {
-            this.registerResizeEvent();
-        }
+        this.initialized = true;
+        var filterFn = trueFn;
 
         if (this.lazyload) {
             this.registerScrollEvent();
+
+            filterFn = function(element){
+                return self.isPlaceholder(element) === false;
+            };
         }
         else {
             this.checkImagesNeedReplacing(this.divs);
+        }
+
+        if (this.onResize) {
+            this.registerResizeEvent(filterFn);
         }
     };
 
@@ -223,7 +234,7 @@
           gif.setAttribute('data-width', elementWidth);
         }
 
-        gif.className = [elementClassName, this.className, 'imager-placeholder'].join(' ');
+        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
@@ -244,6 +255,17 @@
         }
     };
 
+    /**
+     * Indicates if an element is an Imager placeholder
+     *
+     * @since 1.3.1
+     * @param {HTMLElement} element
+     * @returns {boolean}
+     */
+    Imager.prototype.isPlaceholder = function (element){
+        return element.src === this.gif.src;
+    };
+
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
@@ -260,15 +282,16 @@
         return (elementOffsetTop < (this.viewportHeight + offset)) ? true : false;
     };
 
-    Imager.prototype.checkImagesNeedReplacing = function (images) {
+    Imager.prototype.checkImagesNeedReplacing = function (images, filterFn) {
         var self = this;
+        filterFn = filterFn || trueFn;
 
         if (!this.isResizing) {
             this.isResizing = true;
             this.refreshPixelRatio();
 
             applyEach(images, function(image){
-                self.replaceImagesBasedOnScreenDimensions(image);
+                filterFn(image) && self.replaceImagesBasedOnScreenDimensions(image);
             });
 
             this.isResizing = false;
@@ -290,12 +313,11 @@
 
         image.width = computedWidth;
 
-        if (image.src !== this.gif.src && computedWidth <= naturalWidth) {
+        if (!this.isPlaceholder(image) && computedWidth <= naturalWidth) {
             return;
         }
 
         image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
-        image.className = image.className.replace(' imager-placeholder', '');
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
@@ -378,11 +400,11 @@
         return selectedWidth;
     };
 
-    Imager.prototype.registerResizeEvent = function(){
+    Imager.prototype.registerResizeEvent = function(filterFn){
         var self = this;
 
         addEvent(window, 'resize', function(){
-            self.checkImagesNeedReplacing(self.divs);
+            self.checkImagesNeedReplacing(self.divs, filterFn);
         });
     };
 
