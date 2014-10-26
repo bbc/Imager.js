@@ -1,7 +1,31 @@
 ;(function (window, document) {
     'use strict';
 
-    var defaultWidths, getKeys, addEvent;
+    /**
+     * Imager Strategy Interface
+     *
+     * It is responsible to prepare, (eventually) replace and update responsive elements.
+     *
+     * @typedef {Object} ImagerStrategyInterface
+     * @property {Function} prepareElements
+     * @property {Function} updateElementUrl
+     * @property {Function} getDimension
+     */
+
+    /**
+     * Imager.js configuration options
+     *
+     * @typedef {Object} ImagerOptions
+     * @property {Boolean} cssBackground If true, Imager will update the style.backgroundImage CSS property instead of upgrading elements to <img> nodes
+     * @property {Array.<Number>} availableWidths Available widths for your images
+     * @property {String} selector Selector to be used to locate your div placeholders
+     * @property {String} className Class name to give your resizable images
+     * @property {Boolean} onResize If set to true, Imager will update the src attribute of the relevant images
+     * @property {Boolean} lazyload Toggle the lazy load functionality on or off
+     * @property {Number} scrollDelay Used alongside the lazyload feature (helps performance by setting a higher delay)
+     */
+
+    var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
     var nextTick = window.requestAnimationFrame ||
                window.mozRequestAnimationFrame ||
@@ -9,6 +33,31 @@
                function (callback) {
                    window.setTimeout(callback, 1000 / 60);
                };
+
+    var addEvent = (function(){
+        if (document.addEventListener){
+            return function addStandardEventListener(el, eventName, fn){
+                return el.addEventListener(eventName, fn, false);
+            };
+        }
+        else {
+            return function addIEEventListener(el, eventName, fn){
+                return el.attachEvent('on'+eventName, fn);
+            };
+        }
+    })();
+
+
+    var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
+        var keys = [],
+            key;
+
+        for (key in object) {
+            keys.push(key);
+        }
+
+        return keys;
+    };
 
     function applyEach (collection, callbackEach) {
         var i = 0,
@@ -26,60 +75,13 @@
     function noop(){}
     function trueFn(){ return true;}
 
-    addEvent = (function(){
-        if (document.addEventListener){
-            return function addStandardEventListener(el, eventName, fn){
-                return el.addEventListener(eventName, fn, false);
-            };
-        }
-        else {
-            return function addIEEventListener(el, eventName, fn){
-                return el.attachEvent('on'+eventName, fn);
-            };
-        }
-    })();
 
-    defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
-
-    getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
-        var keys = [],
-            key;
-
-        for (key in object) {
-            keys.push(key);
-        }
-
-        return keys;
-    };
-
-
-    /*
-        Construct a new Imager instance, passing an optional configuration object.
-
-        Example usage:
-
-            {
-                // Available widths for your images
-                availableWidths: [Number],
-
-                // Selector to be used to locate your div placeholders
-                selector: '',
-
-                // Class name to give your resizable images
-                className: '',
-
-                // If set to true, Imager will update the src attribute of the relevant images
-                onResize: Boolean,
-
-                // Toggle the lazy load functionality on or off
-                lazyload: Boolean,
-
-                // Used alongside the lazyload feature (helps performance by setting a higher delay)
-                scrollDelay: Number
-            }
-
-        @param {object} configuration settings
-        @return {object} instance of Imager
+    /**
+     * Construct a new Imager instance, passing an optional configuration object.
+     *
+     * @param {Array|String=} elements
+     * @param {ImagerOptions=} opts
+     * @constructor
      */
     function Imager (elements, opts) {
         var self = this,
@@ -101,23 +103,35 @@
             }
         }
 
-        this.viewportHeight   = doc.documentElement.clientHeight;
+        // elements interactions
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
+        this.strategy         = (opts.cssBackground || false) ? BackgroundImageStrategy() : ImageElementStrategy();
+
+        // placeholder configuration
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className    = this.className;
         this.gif.alt          = '';
-        this.scrollDelay      = opts.scrollDelay || 250;
-        this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
-        this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
-        this.scrolled         = false;
-        this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
-        this.availableWidths  = opts.availableWidths || defaultWidths;
-        this.onImagesReplaced = opts.onImagesReplaced || noop;
+
+        // dimensions
         this.widthsMap        = {};
-        this.refreshPixelRatio();
+        this.availableWidths  = opts.availableWidths || defaultWidths;
+        this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.widthInterpolator = opts.widthInterpolator || returnFn;
+
+        // lazyload (experimental)
+        this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.scrollDelay      = opts.scrollDelay || 250;
+
+        // events
+        this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+        this.onImagesReplaced = opts.onImagesReplaced || noop;
+
+        // internal states
+        this.refreshPixelRatio();
+        this.viewportHeight   = doc.documentElement.clientHeight;
+        this.scrolled         = false;
 
         // Needed as IE8 adds a default `width`/`height` attribute…
         this.gif.removeAttribute('height');
@@ -147,8 +161,8 @@
 
         this.ready(opts.onReady);
 
-	// configuration done, let's start the magic!
-	this.strategy.prepareElements(this, this.divs);
+        // configuration done, let's start the magic!
+        this.strategy.prepareElements(this, this.divs);
         nextTick(function(){
             self.init();
         });
@@ -252,7 +266,7 @@
 
             applyEach(images, function(image){
                 if (filterFn(image)) {
-		    self.updateElement(image);
+                    self.updateElement(image);
                 }
             });
 
@@ -267,21 +281,21 @@
      * @param {HTMLImageElement} element
      */
     Imager.prototype.updateElement = function (element) {
-	var naturalWidth = Imager.getNaturalWidth(element);
-	var computedWidth = typeof this.availableWidths === 'function'
-	    ? this.availableWidths(element)
-	    : Imager.getClosestValue(this.strategy.getDimension(element), this.availableWidths);
+        var naturalWidth = Imager.getNaturalWidth(element);
+        var computedWidth = typeof this.availableWidths === 'function'
+            ? this.availableWidths(element)
+            : Imager.getClosestValue(this.strategy.getDimension(element), this.availableWidths);
 
-	element.width = computedWidth;
+        element.width = computedWidth;
 
-	if (!this.isPlaceholder(element) && computedWidth <= naturalWidth) {
+        if (!this.isPlaceholder(element) && computedWidth <= naturalWidth) {
             return;
         }
 
-	this.strategy.updateElementUrl(
-	    element,
-	    this.filterUrl(element.getAttribute('data-src'), computedWidth)
-	);
+        this.strategy.updateElementUrl(
+            element,
+            this.filterUrl(element.getAttribute('data-src'), computedWidth)
+        );
     };
 
     /**
@@ -433,50 +447,50 @@
      * @returns {ImagerStrategyInterface}
      */
     function ImageElementStrategy(){
-	var createGif = function (imgr, element) {
-	    // if the element is already a responsive image then we don't replace it again
-	    if (element.className.match(new RegExp('(^| )' + imgr.className + '( |$)'))) {
-		return element;
-	    }
+        var createGif = function (imgr, element) {
+            // if the element is already a responsive image then we don't replace it again
+            if (element.className.match(new RegExp('(^| )' + imgr.className + '( |$)'))) {
+                return element;
+            }
 
-	    var elementClassName = element.getAttribute('data-class');
-	    var elementWidth = element.getAttribute('data-width');
-	    var gif = imgr.gif.cloneNode(false);
+            var elementClassName = element.getAttribute('data-class');
+            var elementWidth = element.getAttribute('data-width');
+            var gif = imgr.gif.cloneNode(false);
 
-	    if (elementWidth) {
-		gif.width = elementWidth;
-		gif.setAttribute('data-width', elementWidth);
-	    }
+            if (elementWidth) {
+                gif.width = elementWidth;
+                gif.setAttribute('data-width', elementWidth);
+            }
 
-	    gif.className = (elementClassName ? elementClassName + ' ' : '') + imgr.className;
-	    gif.setAttribute('data-src', element.getAttribute('data-src'));
-	    gif.setAttribute('alt', element.getAttribute('data-alt') || imgr.gif.alt);
+            gif.className = (elementClassName ? elementClassName + ' ' : '') + imgr.className;
+            gif.setAttribute('data-src', element.getAttribute('data-src'));
+            gif.setAttribute('alt', element.getAttribute('data-alt') || imgr.gif.alt);
 
-	    element.parentNode.replaceChild(gif, element);
+            element.parentNode.replaceChild(gif, element);
 
-	    return gif;
-	};
+            return gif;
+        };
 
-	return {
-	    prepareElements: function(imgr, elements){
-		applyEach(elements, function(element, i){
-		    elements[i] = createGif(imgr, element);
-		});
+        return {
+            prepareElements: function(imgr, elements){
+                applyEach(elements, function(element, i){
+                    elements[i] = createGif(imgr, element);
+                });
 
-		if (imgr.initialized) {
-		    imgr.checkImagesNeedReplacing(elements);
-		}
+                if (imgr.initialized) {
+                    imgr.checkImagesNeedReplacing(elements);
+                }
 
-	    },
-	    updateElementUrl: function(image, url){
-		image.src = url;
-		image.removeAttribute('width');
-		image.removeAttribute('height');
-	    },
-	    getDimension: function(image){
-		return image.getAttribute('data-width') || image.parentNode.clientWidth;
-	    }
-	};
+            },
+            updateElementUrl: function(image, url){
+                image.src = url;
+                image.removeAttribute('width');
+                image.removeAttribute('height');
+            },
+            getDimension: function(image){
+                return image.getAttribute('data-width') || image.parentNode.clientWidth;
+            }
+        };
     }
 
     /**
@@ -486,15 +500,15 @@
      * @returns {ImagerStrategyInterface}
      */
     function BackgroundImageStrategy(){
-	return {
-	    prepareElements: noop,
-	    updateElementUrl: function(image, url){
-		image.style.backgroundImage = 'url(' + url + ')';
-	    },
-	    getDimension: function(element){
-		return element.clientWidth;
-	    }
-	};
+        return {
+            prepareElements: noop,
+            updateElementUrl: function(image, url){
+                image.style.backgroundImage = 'url(' + url + ')';
+            },
+            getDimension: function(element){
+                return element.clientWidth;
+            }
+        };
     }
 
     /* global module, exports: true, define */
