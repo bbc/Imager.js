@@ -146,8 +146,9 @@
         }
 
         this.ready(opts.onReady);
-        this.changeDivsToEmptyImages(this.divs);
 
+	// configuration done, let's start the magic!
+	this.strategy.prepareElements(this, this.divs);
         nextTick(function(){
             self.init();
         });
@@ -212,42 +213,6 @@
      */
     Imager.prototype.ready = function(fn){
         this.onReady = fn || noop;
-    };
-
-    Imager.prototype.createGif = function (element) {
-        // if the element is already a responsive image then we don't replace it again
-        if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
-            return element;
-        }
-
-        var elementClassName = element.getAttribute('data-class');
-        var elementWidth = element.getAttribute('data-width');
-        var gif = this.gif.cloneNode(false);
-
-        if (elementWidth) {
-          gif.width = elementWidth;
-          gif.setAttribute('data-width', elementWidth);
-        }
-
-        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
-        gif.setAttribute('data-src', element.getAttribute('data-src'));
-        gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
-
-        element.parentNode.replaceChild(gif, element);
-
-        return gif;
-    };
-
-    Imager.prototype.changeDivsToEmptyImages = function(elements){
-        var self = this;
-
-        applyEach(elements, function(element, i){
-            elements[i] = self.createGif(element);
-        });
-
-        if (this.initialized) {
-            this.checkImagesNeedReplacing(elements);
-        }
     };
 
     /**
@@ -457,6 +422,80 @@
 
     // Exporting for testing purpose
     Imager.applyEach = applyEach;
+
+    /*
+     Strategy (classic)
+     */
+    /**
+     * Image Element Strategy (<div> to <img>)
+     *
+     * @since 0.4.0
+     * @returns {ImagerStrategyInterface}
+     */
+    function ImageElementStrategy(){
+	var createGif = function (imgr, element) {
+	    // if the element is already a responsive image then we don't replace it again
+	    if (element.className.match(new RegExp('(^| )' + imgr.className + '( |$)'))) {
+		return element;
+	    }
+
+	    var elementClassName = element.getAttribute('data-class');
+	    var elementWidth = element.getAttribute('data-width');
+	    var gif = imgr.gif.cloneNode(false);
+
+	    if (elementWidth) {
+		gif.width = elementWidth;
+		gif.setAttribute('data-width', elementWidth);
+	    }
+
+	    gif.className = (elementClassName ? elementClassName + ' ' : '') + imgr.className;
+	    gif.setAttribute('data-src', element.getAttribute('data-src'));
+	    gif.setAttribute('alt', element.getAttribute('data-alt') || imgr.gif.alt);
+
+	    element.parentNode.replaceChild(gif, element);
+
+	    return gif;
+	};
+
+	return {
+	    prepareElements: function(imgr, elements){
+		applyEach(elements, function(element, i){
+		    elements[i] = createGif(imgr, element);
+		});
+
+		if (imgr.initialized) {
+		    imgr.checkImagesNeedReplacing(elements);
+		}
+
+	    },
+	    updateElementUrl: function(image, url){
+		image.src = url;
+		image.removeAttribute('width');
+		image.removeAttribute('height');
+	    },
+	    getDimension: function(image){
+		return image.getAttribute('data-width') || image.parentNode.clientWidth;
+	    }
+	};
+    }
+
+    /**
+     * Background Image Strategy
+     *
+     * @since 0.4.0
+     * @returns {ImagerStrategyInterface}
+     */
+    function BackgroundImageStrategy(){
+	return {
+	    prepareElements: noop,
+	    updateElementUrl: function(image, url){
+		image.style.backgroundImage = 'url(' + url + ')';
+	    },
+	    getDimension: function(element){
+		return element.clientWidth;
+	    }
+	};
+    }
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
