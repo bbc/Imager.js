@@ -154,22 +154,21 @@ describe('Imager.js HTML data-* API', function () {
             expect(Imager.transforms.pixelRatio(1.5)).to.equal('-1.5x');
         });
 
-        it('should replace {pixel_ratio} from the `data-src`', function () {
-            var dataSrc,
-                imgr = new Imager();
+        it('should replace {pixel_ratio} from the `data-src`', function(){
+          var dataSrc,
+              imgr = new Imager();
 
-            dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
-            sandbox.stub(imgr, 'devicePixelRatio', 1);
-            expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img/A-320.jpg');
-            sandbox.stub(imgr, 'devicePixelRatio', 2);
-            expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img-2x/A-320.jpg');
+          dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
+          sandbox.stub(imgr, 'devicePixelRatio', 1);
+          expect(imgr.filterUrl(dataSrc, 320)).to.equal('http://example.com/img/A-320.jpg');
+          sandbox.stub(imgr, 'devicePixelRatio', 2);
+          expect(imgr.filterUrl(dataSrc, 320)).to.equal('http://example.com/img-2x/A-320.jpg');
 
-            dataSrc = 'http://example.com/img{pixel_ratio}/A.jpg';
-            sandbox.stub(imgr, 'devicePixelRatio', 1);
-            expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img/A.jpg');
-            sandbox.stub(imgr, 'devicePixelRatio', 2);
-            expect(imgr.changeImageSrcToUseNewImageDimensions(dataSrc, 320)).to.equal('http://example.com/img-2x/A.jpg');
-        });
+          dataSrc = 'http://example.com/img{pixel_ratio}/A.jpg';
+          sandbox.stub(imgr, 'devicePixelRatio', 1);
+          expect(imgr.filterUrl(dataSrc, 320)).to.equal('http://example.com/img/A.jpg');
+          sandbox.stub(imgr, 'devicePixelRatio', 2);
+          expect(imgr.filterUrl(dataSrc, 320)).to.equal('http://example.com/img-2x/A.jpg');
     });
 
     describe('handling data-alt', function () {

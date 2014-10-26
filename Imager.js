@@ -287,7 +287,7 @@
 
             applyEach(images, function(image){
                 if (filterFn(image)) {
-                    self.replaceImagesBasedOnScreenDimensions(image);
+		    self.updateElement(image);
                 }
             });
 
@@ -299,28 +299,24 @@
     /**
      * Upgrades an image from an empty placeholder to a fully sourced image element
      *
-     * @param {HTMLImageElement} image
+     * @param {HTMLImageElement} element
      */
-    Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var computedWidth, naturalWidth;
+    Imager.prototype.updateElement = function (element) {
+	var naturalWidth = Imager.getNaturalWidth(element);
+	var computedWidth = typeof this.availableWidths === 'function'
+	    ? this.availableWidths(element)
+	    : Imager.getClosestValue(this.strategy.getDimension(element), this.availableWidths);
 
-	naturalWidth = Imager.getNaturalWidth(image);
-        computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
-                                                                   : this.determineAppropriateResolution(image);
+	element.width = computedWidth;
 
-        image.width = computedWidth;
-
-        if (!this.isPlaceholder(image) && computedWidth <= naturalWidth) {
+	if (!this.isPlaceholder(element) && computedWidth <= naturalWidth) {
             return;
         }
 
-        image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
-        image.removeAttribute('width');
-        image.removeAttribute('height');
-    };
-
-    Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+	this.strategy.updateElementUrl(
+	    element,
+	    this.filterUrl(element.getAttribute('data-src'), computedWidth)
+	);
     };
 
     /**
@@ -336,7 +332,7 @@
         this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
     };
 
-    Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
+    Imager.prototype.filterUrl = function (src, selectedWidth) {
         return src
             .replace(/{width}/g, Imager.transforms.width(selectedWidth, this.widthsMap))
             .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));

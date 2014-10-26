@@ -96,22 +96,22 @@ describe('Imager.js', function () {
     });
 
     describe('getClosestValue', function () {
-	var availableWidths = [320, 640, 1024];
+        var availableWidths = [320, 640, 1024];
 
-	it('should pick the closest upper value when below the lowest value', function(){
-	  expect(Imager.getClosestValue(300, availableWidths)).to.equal(320);
+        it('should pick the closest upper value when below the lowest value', function(){
+          expect(Imager.getClosestValue(300, availableWidths)).to.equal(320);
         });
 
-	it('should stick to the same value if it corresponds to an available width', function(){
-	    expect(Imager.getClosestValue(320, availableWidths)).to.equal(320);
+        it('should stick to the same value if it corresponds to an available width', function(){
+            expect(Imager.getClosestValue(320, availableWidths)).to.equal(320);
         });
 
-	it('should pick the closest upper value if above an existing one', function(){
-	    expect(Imager.getClosestValue(321, availableWidths)).to.equal(640);
+        it('should pick the closest upper value if above an existing one', function(){
+            expect(Imager.getClosestValue(321, availableWidths)).to.equal(640);
         });
 
-	it('should fallback to the topmost available width if the value is out of range', function(){
-	    expect(Imager.getClosestValue(1240, availableWidths)).to.equal(1024);
+        it('should fallback to the topmost available width if the value is out of range', function(){
+            expect(Imager.getClosestValue(1240, availableWidths)).to.equal(1024);
         });
     });
 
