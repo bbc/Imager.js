@@ -6,8 +6,8 @@
 - [#89](https://github.com/BBC-News/Imager.js/issues/89) Lazy loading does not load images when revealed by a resize (@paul-butcher)
 - [#82](https://github.com/BBC-News/Imager.js/issues/82) JS error: Cannot call method 'replaceChild' of null --- Upon Scroll only (@hi-im-si)
 - [#71](https://github.com/BBC-News/Imager.js/issues/71) Issues with resizing of Lazyloaded images (@anthonybruno)
-- [#106](https://github.com/BBC-News/Imager.js/pull/106) Imager.ready(fn) (@anthonybruno)
-- [#105](https://github.com/BBC-News/Imager.js/pull/105) Imager.getNaturalWidth(image) (@anthonybruno)
+- [#106](https://github.com/BBC-News/Imager.js/pull/106) Imager.ready(fn) (@oncletom)
+- [#105](https://github.com/BBC-News/Imager.js/pull/105) Imager.getNaturalWidth(image) (@oncletom)
 - [#104](https://github.com/BBC-News/Imager.js/pull/104) Lazyload updates only response images on resize (@oncletom)
 
 ### 0.3.0-beta.1 (2014/03/20 12:55 +00:00)
