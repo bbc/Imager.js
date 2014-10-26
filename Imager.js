@@ -106,7 +106,7 @@
         // elements interactions
         this.selector         = opts.selector || '.delayed-image-load';
         this.className        = opts.className || 'image-replace';
-        this.strategy         = (opts.cssBackground || false) ? BackgroundImageStrategy() : ImageElementStrategy();
+        this.strategy         = (opts.cssBackground || false) ? backgroundImageStrategy() : imageElementStrategy();
 
         // placeholder configuration
         this.gif              = doc.createElement('img');
@@ -137,19 +137,7 @@
         this.gif.removeAttribute('height');
         this.gif.removeAttribute('width');
 
-        if (typeof this.availableWidths !== 'function'){
-          if (typeof this.availableWidths.length === 'number') {
-            this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator, this.devicePixelRatio);
-          }
-          else {
-            this.widthsMap = this.availableWidths;
-            this.availableWidths = getKeys(this.availableWidths);
-          }
-
-          this.availableWidths = this.availableWidths.sort(function (a, b) {
-            return a - b;
-          });
-        }
+        this.buildWidthMap();
 
         if (elements) {
             this.divs = applyEach(elements, returnFn);
@@ -167,6 +155,39 @@
             self.init();
         });
     }
+
+    /**
+     * Computes `this.availableWidths` as a function from an array of values.
+     * It basically does nothing it `availableWidths` is already a function.
+     *
+     * @since 0.4.0
+     * @returns {Function}
+     */
+    Imager.prototype.buildWidthMap = function(){
+        if (typeof this.availableWidths === 'function') {
+            return;
+        }
+
+        var widths = this.availableWidths;
+
+        // [320, 640, …]
+        if (typeof this.availableWidths.length === 'number') {
+            this.widthsMap = Imager.createWidthsMap(widths, this.widthInterpolator, this.devicePixelRatio);
+        }
+        // { 320: 'small', 640: 'medium', … }
+        else {
+            this.widthsMap = this.availableWidths;
+            widths = getKeys(this.availableWidths);
+        }
+
+        widths = widths.sort(function (a, b) {
+            return a - b;
+        });
+
+        this.availableWidths = function(element){
+            return Imager.getClosestValue(this.strategy.getDimension(element), widths);
+        };
+    };
 
     Imager.prototype.scrollCheck = function(){
         var self = this;
@@ -282,9 +303,7 @@
      */
     Imager.prototype.updateElement = function (element) {
         var naturalWidth = Imager.getNaturalWidth(element);
-        var computedWidth = typeof this.availableWidths === 'function'
-            ? this.availableWidths(element)
-            : Imager.getClosestValue(this.strategy.getDimension(element), this.availableWidths);
+        var computedWidth = this.availableWidths(element);
 
         element.width = computedWidth;
 
@@ -446,7 +465,7 @@
      * @since 0.4.0
      * @returns {ImagerStrategyInterface}
      */
-    function ImageElementStrategy(){
+    function imageElementStrategy(){
         var createGif = function (imgr, element) {
             // if the element is already a responsive image then we don't replace it again
             if (element.className.match(new RegExp('(^| )' + imgr.className + '( |$)'))) {
@@ -499,7 +518,7 @@
      * @since 0.4.0
      * @returns {ImagerStrategyInterface}
      */
-    function BackgroundImageStrategy(){
+    function backgroundImageStrategy(){
         return {
             prepareElements: noop,
             updateElementUrl: function(image, url){
