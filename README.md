@@ -28,34 +28,22 @@ Finally, it will lazy load images to speed up page load time even further.
 
 ## Compatibility
 
-Imager is tested against those various browsers:
+Imager is tested against the following mobile and desktop browsers:
 
 - Chrome stable
 - Firefox stable
-- Internet Explorer 8
-- Safari 6+
-- Mobile Safari 5.1
-- Android 4.0 Stock Browser
+- IE 8, 9, 10 and 11
+- Safari 5, 6 and 7
+- Mobile Safari 4, 5, 6 and 7
+- Android 2, 3 and 4
 
 
 ## Install
 
-<table>
-  <thead>
-    <tr>
-      <th>npm</th>
-      <th>bower</th>
-      <th>old school</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>npm install --save imager.js</code></td>
-      <td><code>bower install --save imager.js</code></td>
-      <td><a href="https://github.com/BBC-News/Imager.js/archive/master.zip">download zip file</a></td>
-    </tr>
-  </tbody>
-</table>
+npm                            | bower                            | old school
+-------------------------------|----------------------------------|------------------------------------------------------------------------------
+`npm install --save imager.js` | `bower install --save imager.js` | [download zip file](https://github.com/BBC-News/Imager.js/archive/master.zip)
+
 
 ## Using
 
