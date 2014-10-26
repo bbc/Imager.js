@@ -94,6 +94,16 @@ The `img[src]` will be computed as following (according to the reported `window.
 
 Head to this [device pixel density test](http://bjango.com/articles/min-device-pixel-ratio/) resource to learn more about the available pixel ratio for your device.
 
+### Background images
+
+Since 0.4.0, Imager is able to apply responsiveness to CSS background images.
+
+Instead of transforming your `div` into an image, it will update its `style` attribute.
+
+```html
+<div class="delayed-imaged-load" data-src="http://placehold.it/{width}"></div>
+```
+
 ### Interpolating `{width}` value
 
 Imager has the ability to replace `{width}` with a non-numeric value if you
