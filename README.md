@@ -342,6 +342,16 @@ An *experimental* Boolean value. If set to `true`, Imager will update the `src` 
 new Imager({ lazyload: true });
 ```
 
+### `lazyloadOffset`
+
+A `Number` of extra pixels below the fold taken in account by the lazyloading mechanism.
+
+**Default value**: `0`
+
+```js
+new Imager({ lazyload: true, lazyloadOffset: 300 });
+```
+
 ### `onImagesReplaced`
 
 A callback `Function`. Runs after Imager updates the `src` attribute of all relevant images.
