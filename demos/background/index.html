@@ -1,0 +1,38 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Imager.js Background test</title>
+        <link rel="stylesheet" href="../grunt/Assets/Styles/base.css">
+        <style>
+            .delayed-image-load {
+                background-position: center;
+                background-size: cover;
+                height: 200px;
+                margin-bottom: 1.5em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Imager.js</h1>
+
+        <p>The following is an example of CSS background responsive images.</p>
+
+        <p>Assets are declared to be either <code>320</code>, <code>640</code> or <code>1024</code> pixels wide.</p>
+
+        <p>Elements height is up to your responsibility.</p>
+
+        <div class="delayed-image-load" data-src="http://placehold.it/{width}" style="width: 300px"></div>
+        <div class="delayed-image-load" data-src="http://placehold.it/{width}" style="width: 500px"></div>
+        <div class="delayed-image-load" data-src="http://placehold.it/{width}" style="width: 1200px"></div>
+
+        <script src="../../Imager.js"></script>
+        <script>
+            new Imager({
+              cssBackground: true,
+              availableWidths: [320, 640, 1024]
+            });
+        </script>
+    </body>
+</html>
