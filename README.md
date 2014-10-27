@@ -109,7 +109,7 @@ string to be injected into the image URL for a given width. This feature allows 
     new Imager({
         availableWidths: [200, 260, 320, 600],
         widthInterpolator: function(width, pixelRatio) {
-          return width + 'x' + (width/2);
+          return width + 'x' + (width / 2);
         }
     });
 </script>
