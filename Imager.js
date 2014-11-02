@@ -108,6 +108,7 @@
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className    = this.className;
         this.gif.alt          = '';
+        this.lazyloadOffset   = opts.lazyloadOffset || 0;
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
@@ -261,11 +262,17 @@
         return element.src === this.gif.src;
     };
 
+    /**
+     * Returns true if an element is located within a screen offset.
+     *
+     * @param {HTMLElement} element
+     * @returns {boolean}
+     */
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-        var offset = Imager.getPageOffset();
         var elementOffsetTop = 0;
+        var offset = Imager.getPageOffset() + this.lazyloadOffset;
 
         if (element.offsetParent) {
             do {
