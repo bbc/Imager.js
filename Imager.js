@@ -189,6 +189,9 @@
         if (this.lazyload) {
             this.registerScrollEvent();
 
+            this.scrolled = true;
+            self.scrollCheck();
+
             filterFn = function(element){
                 return self.isPlaceholder(element) === false;
             };
