@@ -2,7 +2,7 @@
     'use strict';
 
     var defaultWidths, getKeys, addEvent;
-    
+
     function applyEach (collection, callbackEach) {
         var i = 0,
             length = collection.length,
@@ -44,7 +44,7 @@
 
         return keys;
     };
-    
+
     function debounce(fn, wait) {
         var timeout;
         return function() {
@@ -56,8 +56,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    };
-};
+    }
 
 
     /*
@@ -418,9 +417,9 @@
     Imager.prototype.registerResizeEvent = function(filterFn){
         var self = this;
 
-        addEvent(window, 'resize', function(){
+        addEvent(window, 'resize', debounce(function(){
             self.checkImagesNeedReplacing(self.divs, filterFn);
-        });
+        }, 100));
     };
 
     Imager.prototype.registerScrollEvent = function (){
@@ -478,7 +477,7 @@
     // Exporting for testing and convenience purpose
     Imager.applyEach = applyEach;
     Imager.addEvent = addEvent;
-    Imager.debouce = debouce;
+    Imager.debounce = debounce;
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
