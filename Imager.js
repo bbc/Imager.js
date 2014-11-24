@@ -2,14 +2,7 @@
     'use strict';
 
     var defaultWidths, getKeys, addEvent;
-
-    var nextTick = window.requestAnimationFrame ||
-               window.mozRequestAnimationFrame ||
-               window.webkitRequestAnimationFrame ||
-               function (callback) {
-                   window.setTimeout(callback, 1000 / 60);
-               };
-
+    
     function applyEach (collection, callbackEach) {
         var i = 0,
             length = collection.length,
@@ -82,8 +75,7 @@
         @return {object} instance of Imager
      */
     function Imager (elements, opts) {
-        var self = this,
-            doc  = document;
+        var doc  = document;
 
         opts = opts || {};
 
@@ -149,9 +141,9 @@
         this.ready(opts.onReady);
         this.changeDivsToEmptyImages(this.divs);
 
-        nextTick(function(){
+        setTimeout(function(self){
             self.init();
-        });
+        }, 0, this);
     }
 
     Imager.prototype.scrollCheck = function(){
