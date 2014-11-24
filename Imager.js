@@ -44,6 +44,20 @@
 
         return keys;
     };
+    
+    function debounce(fn, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                fn.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    };
+};
 
 
     /*
@@ -464,6 +478,7 @@
     // Exporting for testing and convenience purpose
     Imager.applyEach = applyEach;
     Imager.addEvent = addEvent;
+    Imager.debouce = debouce;
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
