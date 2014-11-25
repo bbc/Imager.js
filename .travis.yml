@@ -1,35 +1,38 @@
 language: node_js
+
 node_js:
-- '0.10'
+  - '0.10'
+
+sudo: false
+
+before_install:
+  - cd .. && mv Imager.js imager-js && cd imager-js
 
 env:
   global:
-  - secure: REkbK7Qre238qK7lW4tokWUgUto3xevxNrsIlbubqyBQX8LZpjUvQFruW2F5t8Jb4LAj7jkT11+bRcy9tlz/H4xZeIr5LxSJVDlqBtsQd6gO2mqArM/ooQkNb8SMPzdFJwehtdttiVHrYFFmmb2+VgwlWz1lu7Huf/SqY/x1l0c=
-  - secure: DK26MDZlb7vSYF9SAfBQbcpZLh34jTnNLTU6nM9nD1lPdIounQ8I+xGYGKgb3lA1BdFQgiA1s5VaWxwO/B3B91WF2kIPsXq1hghRQrXdFEae17XfjyiGEFI6oKyO+yKZvu/y86jz54xxwP0XCwspS3ZJI4BvQ8gKfdBEPkWb9Rc=
+    - secure: REkbK7Qre238qK7lW4tokWUgUto3xevxNrsIlbubqyBQX8LZpjUvQFruW2F5t8Jb4LAj7jkT11+bRcy9tlz/H4xZeIr5LxSJVDlqBtsQd6gO2mqArM/ooQkNb8SMPzdFJwehtdttiVHrYFFmmb2+VgwlWz1lu7Huf/SqY/x1l0c=
+    - secure: DK26MDZlb7vSYF9SAfBQbcpZLh34jTnNLTU6nM9nD1lPdIounQ8I+xGYGKgb3lA1BdFQgiA1s5VaWxwO/B3B91WF2kIPsXq1hghRQrXdFEae17XfjyiGEFI6oKyO+yKZvu/y86jz54xxwP0XCwspS3ZJI4BvQ8gKfdBEPkWb9Rc=
   matrix:
-  - BROWSER=BSIE7
-  - BROWSER=BSIE8
-  - BROWSER=BSIE9
-  - BROWSER=BSIE10
-  - BROWSER=BSIE11
-  - BROWSER=BSOS4
-  - BROWSER=BSOS5
-  - BROWSER=BSOS6
-  - BROWSER=BSOS7
-  - BROWSER=BSAndroid2
-  - BROWSER=BSAndroid4
-  - BROWSER=BSFirefox
-  - BROWSER=BSSafari5
-  - BROWSER=BSSafari6
-  - BROWSER=BSSafari7
+    - BROWSER=BSIE7
+    - BROWSER=BSIE8
+    - BROWSER=BSIE9
+    - BROWSER=BSIE10
+    - BROWSER=BSIE11
+    - BROWSER=BSOS4
+    - BROWSER=BSOS5
+    - BROWSER=BSOS6
+    - BROWSER=BSOS7
+    - BROWSER=BSAndroid2
+    - BROWSER=BSAndroid4
+    - BROWSER=BSFirefox
+    - BROWSER=BSSafari5
+    - BROWSER=BSSafari6
+    - BROWSER=BSSafari7
 
 matrix:
   allow_failures:
-  - env: BROWSER=BSIE7
-
-before_install:
-- cd .. && mv Imager.js imager-js && cd imager-js
+    - env: BROWSER=BSIE7
 
 script:
-- npm run test-pre
-- ./node_modules/karma/bin/karma start --browsers $BROWSER
+  - npm run test-pre
+  - ./node_modules/karma/bin/karma start --browsers $BROWSER
