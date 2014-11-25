@@ -88,6 +88,7 @@
         @return {object} instance of Imager
      */
     function Imager (elements, opts) {
+        var self = this;
         var doc  = document;
 
         opts = opts || {};
@@ -154,9 +155,9 @@
         this.ready(opts.onReady);
         this.changeDivsToEmptyImages(this.divs);
 
-        setTimeout(function(self){
+        setTimeout(function(){
             self.init();
-        }, 0, this);
+        }, 0);
     }
 
     Imager.prototype.scrollCheck = function(){
