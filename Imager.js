@@ -1,7 +1,31 @@
 ;(function (window, document) {
     'use strict';
 
-    var defaultWidths, getKeys, addEvent;
+    var addEvent = (function(){
+        if (document.addEventListener){
+            return function addStandardEventListener(el, eventName, fn){
+                return el.addEventListener(eventName, fn, false);
+            };
+        }
+        else {
+            return function addIEEventListener(el, eventName, fn){
+                return el.attachEvent('on' + eventName, fn);
+            };
+        }
+    })();
+
+    var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+
+    var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
+        var keys = [],
+            key;
+
+        for (key in object) {
+            keys.push(key);
+        }
+
+        return keys;
+    };
 
     function applyEach (collection, callbackEach) {
         var i = 0,
@@ -18,32 +42,6 @@
     function returnFn(value) { return value; }
     function noop(){}
     function trueFn(){ return true;}
-
-    addEvent = (function(){
-        if (document.addEventListener){
-            return function addStandardEventListener(el, eventName, fn){
-                return el.addEventListener(eventName, fn, false);
-            };
-        }
-        else {
-            return function addIEEventListener(el, eventName, fn){
-                return el.attachEvent('on'+eventName, fn);
-            };
-        }
-    })();
-
-    defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
-
-    getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
-        var keys = [],
-            key;
-
-        for (key in object) {
-            keys.push(key);
-        }
-
-        return keys;
-    };
 
     function debounce(fn, wait) {
         var timeout;
