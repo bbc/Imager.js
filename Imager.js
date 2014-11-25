@@ -1,14 +1,31 @@
 ;(function (window, document) {
     'use strict';
 
-    var defaultWidths, getKeys, addEvent;
+    var addEvent = (function(){
+        if (document.addEventListener){
+            return function addStandardEventListener(el, eventName, fn){
+                return el.addEventListener(eventName, fn, false);
+            };
+        }
+        else {
+            return function addIEEventListener(el, eventName, fn){
+                return el.attachEvent('on' + eventName, fn);
+            };
+        }
+    })();
 
-    var nextTick = window.requestAnimationFrame ||
-               window.mozRequestAnimationFrame ||
-               window.webkitRequestAnimationFrame ||
-               function (callback) {
-                   window.setTimeout(callback, 1000 / 60);
-               };
+    var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+
+    var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
+        var keys = [],
+            key;
+
+        for (key in object) {
+            keys.push(key);
+        }
+
+        return keys;
+    };
 
     function applyEach (collection, callbackEach) {
         var i = 0,
@@ -26,31 +43,18 @@
     function noop(){}
     function trueFn(){ return true;}
 
-    addEvent = (function(){
-        if (document.addEventListener){
-            return function addStandardEventListener(el, eventName, fn){
-                return el.addEventListener(eventName, fn, false);
+    function debounce(fn, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                fn.apply(context, args);
             };
-        }
-        else {
-            return function addIEEventListener(el, eventName, fn){
-                return el.attachEvent('on'+eventName, fn);
-            };
-        }
-    })();
-
-    defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
-
-    getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
-        var keys = [],
-            key;
-
-        for (key in object) {
-            keys.push(key);
-        }
-
-        return keys;
-    };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
 
     /*
@@ -82,8 +86,8 @@
         @return {object} instance of Imager
      */
     function Imager (elements, opts) {
-        var self = this,
-            doc  = document;
+        var self = this;
+        var doc  = document;
 
         opts = opts || {};
 
@@ -149,9 +153,9 @@
         this.ready(opts.onReady);
         this.changeDivsToEmptyImages(this.divs);
 
-        nextTick(function(){
+        setTimeout(function(){
             self.init();
-        });
+        }, 0);
     }
 
     Imager.prototype.scrollCheck = function(){
@@ -412,9 +416,9 @@
     Imager.prototype.registerResizeEvent = function(filterFn){
         var self = this;
 
-        addEvent(window, 'resize', function(){
+        addEvent(window, 'resize', debounce(function(){
             self.checkImagesNeedReplacing(self.divs, filterFn);
-        });
+        }, 100));
     };
 
     Imager.prototype.registerScrollEvent = function (){
@@ -469,8 +473,10 @@
     // This form is used because it seems impossible to stub `window.pageYOffset`
     Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
 
-    // Exporting for testing purpose
+    // Exporting for testing and convenience purpose
     Imager.applyEach = applyEach;
+    Imager.addEvent = addEvent;
+    Imager.debounce = debounce;
 
     /* global module, exports: true, define */
     if (typeof module === 'object' && typeof module.exports === 'object') {
