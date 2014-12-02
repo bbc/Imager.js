@@ -520,7 +520,12 @@
      */
     function backgroundImageStrategy(){
         return {
-            prepareElements: noop,
+            prepareElements: function(image, elements) {
+                applyEach(elements, function(element) {
+                    var elementClassName = element.getAttribute('data-class');
+                    element.className = (elementClassName ? elementClassName + ' ' : '') + image.className;
+                });
+            },
             updateElementUrl: function(image, url){
                 image.style.backgroundImage = 'url(' + url + ')';
             },
