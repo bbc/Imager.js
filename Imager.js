@@ -158,6 +158,17 @@
         }, 0);
     }
 
+    Imager.prototype.add = function (elementsOrSelector) {
+        elementsOrSelector = elementsOrSelector || this.selector;
+        var elements = typeof elementsOrSelector === 'string' ?
+            document.querySelectorAll(elementsOrSelector) : // Selector
+            elementsOrSelector; // Elements (NodeList or array of Nodes)
+        if (elements.length) {
+            this.divs = this.divs.concat(applyEach(elements, returnFn));
+            this.changeDivsToEmptyImages(this.divs);
+        }
+    };
+
     Imager.prototype.scrollCheck = function(){
         var self = this;
         var offscreenImageCount = 0;

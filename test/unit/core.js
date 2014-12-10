@@ -95,6 +95,58 @@ describe('Imager.js', function () {
         });
     });
 
+    describe('add', function () {
+
+        it('should add additional images based on a custom selector', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                expect(imgr.divs).to.have.length(2);
+                imgr.add('.triggered-image-load');
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should add additional images based on the default selector', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                var elements = document.querySelectorAll('#test-case div');
+                for (var i = 0; i < elements.length; i += 1)
+                  elements[i].className = 'delayed-image-load';
+                imgr.add();
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should add additional images based on NodeList passed in', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                var elements = document.querySelectorAll('#test-case div');
+                imgr.add(elements);
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should add additional images based on Node array passed in', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                var elements = document.querySelectorAll('#test-case div');
+                var a = [];
+                for(var i = 0, n; n = elements[i]; ++i) a.push(n);
+                elements = a;
+                imgr.add(elements);
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+    });
+
     describe('determineAppropriateResolution', function () {
         var imgr, windowWidth, availableWidths = [320, 640, 1024];
 
