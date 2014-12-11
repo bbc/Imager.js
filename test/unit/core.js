@@ -138,7 +138,7 @@ describe('Imager.js', function () {
             imgr.ready(function () {
                 var elements = document.querySelectorAll('#test-case div');
                 var a = [];
-                for(var i = 0, n; n = elements[i]; ++i) a.push(n);
+                for (var i = 0, n; n = elements[i]; ++i) a.push(n);
                 elements = a;
                 imgr.add(elements);
                 expect(imgr.divs).to.have.length(4);
