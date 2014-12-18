@@ -50,7 +50,7 @@ module.exports = function (config) {
         reporters:     ['progress'],
 
         // essential for non xhr2 browsers
-        transports:    ['jsonp-polling'],
+        transports:    ['websocket', 'jsonp-polling'],
 
         // web server port
         port:          9876,
