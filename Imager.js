@@ -37,11 +37,11 @@
         }
 
         return new_collection;
-    }
+    };
 
-    var returnFn = function (value) { return value; }
-    var noop = function () {}
-    var trueFn = function () { return true;}
+    var returnFn = function (value) { return value; };
+    var noop = function () {};
+    var trueFn = function () { return true; };
 
     var debounce = function (fn, wait) {
         var timeout;
@@ -54,7 +54,7 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    }
+    };
 
 
     /*
@@ -150,7 +150,7 @@
         setTimeout(function () {
             self.init();
         }, 0);
-    }
+    };
 
     Imager.prototype.add = function (elementsOrSelector) {
 
