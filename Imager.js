@@ -448,7 +448,7 @@
     };
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase) {
-        if(testCase) {
+        if (testCase) {
             return function () { return window.pageYOffset; };
         }
         else {
