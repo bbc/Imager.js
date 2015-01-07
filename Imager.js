@@ -30,13 +30,13 @@
     function applyEach (collection, callbackEach) {
         var i = 0,
             length = collection.length,
-            new_collection = [];
+            newCollection = [];
 
         for (; i < length; i++) {
-            new_collection[i] = callbackEach(collection[i], i);
+            newCollection[i] = callbackEach(collection[i], i);
         }
 
-        return new_collection;
+        return newCollection;
     }
 
     function returnFn(value) { return value; }
