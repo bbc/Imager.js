@@ -33,7 +33,6 @@ describe('Imager.js', function () {
         it('should initialise with one argument, the options', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager({selector: '#main .delayed-image-load'});
-
             expect(imgr.divs).to.have.length(3);
             expect(imgr.selector).to.equal('#main .delayed-image-load');
         });
@@ -113,8 +112,9 @@ describe('Imager.js', function () {
             var imgr = new Imager();
             imgr.ready(function () {
                 var elements = document.querySelectorAll('#test-case div');
-                for (var i = 0; i < elements.length; i += 1)
-                  elements[i].className = 'delayed-image-load';
+                Imager.applyEach(elements, function (element) {
+                  element.className = 'delayed-image-load';
+                });
                 imgr.add();
                 expect(imgr.divs).to.have.length(4);
                 done();
@@ -137,9 +137,7 @@ describe('Imager.js', function () {
             var imgr = new Imager();
             imgr.ready(function () {
                 var elements = document.querySelectorAll('#test-case div');
-                var a = [];
-                for (var i = 0, n; n = elements[i]; ++i) a.push(n);
-                elements = a;
+                elements = Imager.applyEach(elements, function (element) { return element; });
                 imgr.add(elements);
                 expect(imgr.divs).to.have.length(4);
                 done();
