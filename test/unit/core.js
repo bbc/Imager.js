@@ -143,6 +143,16 @@ describe('Imager.js', function () {
                 done();
             });
         });
+
+        it('should handle "null" selector scenario gracefully', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager([]);
+            imgr.ready(function () {
+                imgr.add();
+                expect(imgr.divs).to.have.length(0);
+                done();
+            });
+        });
     });
 
     describe('determineAppropriateResolution', function () {

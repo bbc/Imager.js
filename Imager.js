@@ -159,7 +159,7 @@
             document.querySelectorAll(elementsOrSelector) : // Selector
             elementsOrSelector; // Elements (NodeList or array of Nodes)
 
-        if (elements.length) {
+        if (elements && elements.length) {
             var additional = applyEach(elements, returnFn);
             this.changeDivsToEmptyImages(additional);
             this.divs = this.divs.concat(additional);
