@@ -160,8 +160,9 @@
             elementsOrSelector; // Elements (NodeList or array of Nodes)
 
         if (elements.length) {
-            this.divs = this.divs.concat(applyEach(elements, returnFn));
-            this.changeDivsToEmptyImages(this.divs);
+            var additional = applyEach(elements, returnFn);
+            this.changeDivsToEmptyImages(additional);
+            this.divs = this.divs.concat(additional);
         }
     };
 
