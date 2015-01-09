@@ -1,5 +1,9 @@
 ## Change Log
 
+### 0.5.0 (2015/01/09 19:30 +00:00)
+- [#118](https://github.com/BBC-News/Imager.js/pull/118) Ability to add elements to Imager after initialisation (WebSeed)
+- [#113](https://github.com/BBC-News/Imager.js/pull/113) Add Imager.addEvent and Imager.debounce
+
 ### 0.3.1 (2014/10/26 15:32 +00:00)
 - [#98](https://github.com/BBC-News/Imager.js/issues/98) Firefox 29 requests `undefined` URL in case of lazy loading (@tokkonopapa)
 - [#90](https://github.com/BBC-News/Imager.js/issues/90) Fix #89, images not loaded when revealed by resize (@paul-butcher)
