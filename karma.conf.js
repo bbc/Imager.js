@@ -68,13 +68,6 @@ module.exports = function (config) {
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch:     false,
 
-        sauceLabs: {
-            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER || null,
-            accessKey:        process.env.SAUCE_ACCESS_KEY,
-            testName:         'BBC-News/Imager.js',
-            startConnect:     false
-        },
-
         browserStack: {
             project: 'BBC-News/Imager.js',
             build:   process.env.CONTINUOUS_INTEGRATION ? null : ('Local testing - ' + Date.now())
@@ -198,84 +191,6 @@ module.exports = function (config) {
                 browser_version: '7.0',
                 os:              'OS X',
                 os_version:      'Mavericks'
-            },
-            // Saucelabs
-            SauceIE6:          {
-                base:        'SauceLabs',
-                browserName: 'internet explorer',
-                platform:    'Windows XP',
-                version:     '6'
-            },
-            SauceIE7:          {
-                base:        'SauceLabs',
-                browserName: 'internet explorer',
-                platform:    'Windows XP',
-                version:     '7'
-            },
-            SauceIE8:          {
-                base:        'SauceLabs',
-                browserName: 'internet explorer',
-                platform:    'Windows 7',
-                version:     '8'
-            },
-            SauceIE9:          {
-                base:        'SauceLabs',
-                browserName: 'internet explorer',
-                platform:    'Windows 7',
-                version:     '9'
-            },
-            SauceIE10:         {
-                base:        'SauceLabs',
-                browserName: 'internet explorer',
-                platform:    'Windows 8',
-                version:     '10'
-            },
-            SauceIE11:         {
-                base:        'SauceLabs',
-                browserName: 'internet explorer',
-                platform:    'Windows 8.1',
-                version:     '11'
-            },
-            SauceFirefox:      {
-                base:        'SauceLabs',
-                browserName: 'firefox',
-                platform:    'Windows 7',
-                version:     '21'
-            },
-            SauceAndroid:      {
-                base:        'SauceLabs',
-                browserName: 'android',
-                platform:    'Linux',
-                version:     '4.0'
-            },
-            SauceiOS7:         {
-                base:        'SauceLabs',
-                browserName: 'iphone',
-                platform:    'OS X 10.9',
-                version:     '7.1'
-            },
-            SauceiOS6:         {
-                base:        'SauceLabs',
-                browserName: 'iphone',
-                platform:    'OS X 10.8',
-                version:     '6.1'
-            },
-            SauceiOS5:         {
-                base:        'SauceLabs',
-                browserName: 'iphone',
-                platform:    'OS X 10.8',
-                version:     '5.1'
-            },
-            SauceiOS4:         {
-                base:        'SauceLabs',
-                browserName: 'iphone',
-                platform:    'OS X 10.6',
-                version:     '4.3'
-            },
-            SauceSafari5:      {
-                base:        'SauceLabs',
-                browserName: 'safari',
-                platform:    'OS X 10.6'
             }
         },
 

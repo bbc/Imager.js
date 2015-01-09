@@ -175,220 +175,13 @@ This will result in the following HTML output:
 </div>
 ```
 
----
-
 # Documentation
 
-## HTML Attributes
-
-The *HTML API* helps you control how Imager works from the *content point of view*.
-
-### `data-src`
-
-Available placeholders are:
-
-- `{width}`: best available image width (numeric value)
-- `{pixel_ratio}`: device pixel ratio (either *blank* or `-1.3x`, `-2x`, `-3x` etc.)
-
-
-So the following HTML...
-
-```html
-<div data-src="http://placehold.it/{width}"></div>
-```
-
-...is converted to...
-
-```html
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" class="image-replace">
-```
-
-### `data-width`
-
-`data-width` is the enforced size of the image placeholder; where the actual image will eventually be loaded.
-
-This can be especially useful if you don't want to depend on the image container width.
-
-So the following HTML...
-
-```html
-<div style="width:600px">
-    <div data-src="http://placehold.it/{width}" data-width="300" data-alt="alternative text"></div>
-</div>
-```
-
-...is converted to...
-
-```html
-<div style="width:600px">
-    <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" alt="alternative text" class="image-replace">
-</div>
-```
-
-### `data-alt` and `data-class`
-
-These two `data-*` attributes are copied from the responsive placeholder to the response `img` element.nnot process images or who have image loading disabled. It is converted to the `alt` attribute of the `img element.
-
-So the following HTML...
-
-```html
-<div data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
-<div data-src="http://placehold.it/{width}" data-class="london calling"></div>
-```
-
-...is converted to...
-
-```html
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="" class="london calling image-replace">
-```
-
-## JavaScript Configuration
-
-You can create one or several concurrent configurations of Imager within the same page. Its configuration options are
-described below.
-
-[Advanced JavaScript API documentation lies in the `docs/` folder](docs/js-api.md).
-
-### `availableWidths`
-
-This option is intended to reflect the available widths of each responsive image. These values will be used as replacements
-for the `{width}` variable in `data-src` placeholders.
-
-The following examples demonstrate the results of passing through different object types for the `availableWidths` option...
-
-`Array`: the widths are represented as numeric values
-
-```js
-new Imager({
-    availableWidths: [240, 320, 640]
-});
-```
-
-`Object`: the widths associate a string value for their numeric counterpart
-
-```js
-new Imager({
-    availableWidths: {
-        240: 'small',
-        320: 'medium',
-        640: 'large'
-    }
-});
-```
-
-`Function`: must return a value for the provided width argument
-
-```js
-// will return a double sized image width as a numeric value
-new Imager({
-    availableWidths: function (image) {
-        return image.clientWidth * 2;
-    }
-});
-```
-
-### `availablePixelRatios`
-
-An Array which indicates what are the available pixel ratios available for your responsive images.
-
-These values will be used as replacements for the `{pixel_ratio}` variable in `data-src` placeholders.
-
-```js
-new Imager({ availablePixelRatios: [1, 2] });
-```
-
-**Default value**: `[1, 2]`
-
-### `className`
-
-A String which indicates what the `className` value will be added on the newly created responsive image.
-
-```js
-new Imager({ className: 'image-replace' });
-```
-
-**Default value**: `image-replace`
-
-### `scrollDelay`
-
-An Integer value (in milliseconds) to indicate when Imager will check if a scroll has ended. If a scroll has stopped after this delay and the `lazyload` option is `true`, Imager will update the `src` attribute of the relevant images.
-
-**Default value**: `250`
-
-```js
-new Imager({ scrollDelay: 250 });
-```
-
-**Notice**: set the `scrollDelay` value to `0` at your own risk; unless you know what you're doing, setting the value to zero will make the user experience totally janky! (and that would be an odd thing to do as you have chosen to use Imager to improve the user experience)
-
-### `onResize`
-
-A Boolean value. If set to `true`, Imager will update the `src` attribute of the relevant images.
-
-**Default value**: `true`
-
-```js
-new Imager({ onResize: true });
-```
-
-### `lazyload`
-
-An *experimental* Boolean value. If set to `true`, Imager will update the `src` attribute only of visible (and nearly visible) images.
-
-**Default value**: `false`
-
-```js
-new Imager({ lazyload: true });
-```
-
-### `lazyloadOffset`
-
-A `Number` of extra pixels below the fold taken in account by the lazyloading mechanism.
-
-**Default value**: `0`
-
-```js
-new Imager({ lazyload: true, lazyloadOffset: 300 });
-```
-
-### `onImagesReplaced`
-
-A callback `Function`. Runs after Imager updates the `src` attribute of all relevant images.
-
-Its first and unique argument is an `Array` of `HTMLImageElement`, the ones processed by Imager.
-
-```js
-new Imager({
-    onImagesReplaced: function(images) {
-        console.log('the src of all relevant images has been updated');
-    }
-});
-```
-
-## JavaScript API
-
-### `.ready(fn)`
-
-Executes a function when Imager is ready to work.
-
-```js
-new Imager({ ... }).ready(function(){
-  console.log('Placeholders divs have been replaced');
-});
-```
-
-### `.add(elements | selector)`
-
-Add new elements to the existing pool of responsive images.
-
-```js
-var imgr = new Imager('.delayed-image-load');
-
-imgr.add('.new-delayed-image-load-selector');
-imgr.add(newElements);
-imgr.add();     // reuses the constructor selector ('.delayed-image-load')
-```
+Browse Imager public APIs and options – versioned alongside the source code of the project:
+
+- [HTML options](docs/html-api.md)
+- [JavaScript options](docs/js-options.md)
+- [JavaScript API](docs/js-api.md)
 
 # Demos
 
@@ -398,8 +191,10 @@ Additional and fully working examples lie in the [`demos` folder](demos/).
 # They are using it
 
 - [BBC News](http://m.bbc.co.uk/news)
+- [BBC Sport](http://m.bbc.co.uk/sport)
 - [The Guardian](http://www.theguardian.com/)
 - [`x-imager` Web Component](https://github.com/addyosmani/x-imager)
+- [Imager.jsx React Component](https://www.npmjs.com/package/imager.jsx)
 
 # Background
 
@@ -415,6 +210,7 @@ Much of this work can be repurposed to work with a more standards-based approach
 
 For the purposes of maintaining a distinguishment between the ImageEnhancer concept built by BBC News and this project, we're calling it **Imager.js**
 
+**[Read more on BBC Responsive News blog](http://responsivenews.co.uk/post/58244240772/imager-js)**.
 
 # Credits
 
@@ -426,7 +222,7 @@ For the purposes of maintaining a distinguishment between the ImageEnhancer conc
 
 # Licence
 
-> Copyright 2014 British Broadcasting Corporation
+> Copyright 2015 British Broadcasting Corporation
 >
 > Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 >
