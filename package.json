@@ -30,7 +30,7 @@
     "components-jquery": "git://github.com/components/jquery.git#1.10.2",
     "expect.js": "^0.2.0",
     "jshint": "^2.4.3",
-    "karma": "git://github.com/dash1291/karma#socketio-1.1-new",
+    "karma": "^0.12.31",
     "karma-browserstack-launcher": "^0.1.1",
     "karma-chrome-launcher": "^0.1.0",
     "karma-expect": "^1.0.0",

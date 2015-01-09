@@ -33,7 +33,6 @@ describe('Imager.js', function () {
         it('should initialise with one argument, the options', function () {
             fixtures = loadFixtures('regular');
             var imgr = new Imager({selector: '#main .delayed-image-load'});
-
             expect(imgr.divs).to.have.length(3);
             expect(imgr.selector).to.equal('#main .delayed-image-load');
         });
@@ -90,6 +89,67 @@ describe('Imager.js', function () {
                 expect(imgr.divs).to.have.length(3);
                 expect(imgr.selector).to.equal(null);
 
+                done();
+            });
+        });
+    });
+
+    describe('add', function () {
+
+        it('should add additional images based on a custom selector', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                expect(imgr.divs).to.have.length(2);
+                imgr.add('.triggered-image-load');
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should add additional images based on the default selector', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                var elements = document.querySelectorAll('#test-case div');
+                Imager.applyEach(elements, function (element) {
+                  element.className = 'delayed-image-load';
+                });
+                imgr.add();
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should add additional images based on NodeList passed in', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                var elements = document.querySelectorAll('#test-case div');
+                imgr.add(elements);
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should add additional images based on Node array passed in', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager();
+            imgr.ready(function () {
+                var elements = document.querySelectorAll('#test-case div');
+                elements = Imager.applyEach(elements, function (element) { return element; });
+                imgr.add(elements);
+                expect(imgr.divs).to.have.length(4);
+                done();
+            });
+        });
+
+        it('should handle "null" selector scenario gracefully', function (done) {
+            fixtures = loadFixtures('add');
+            var imgr = new Imager([]);
+            imgr.ready(function () {
+                imgr.add();
+                expect(imgr.divs).to.have.length(0);
                 done();
             });
         });

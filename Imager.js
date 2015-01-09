@@ -1,14 +1,14 @@
 ;(function (window, document) {
     'use strict';
 
-    var addEvent = (function(){
-        if (document.addEventListener){
-            return function addStandardEventListener(el, eventName, fn){
+    var addEvent = (function () {
+        if (document.addEventListener) {
+            return function addStandardEventListener(el, eventName, fn) {
                 return el.addEventListener(eventName, fn, false);
             };
         }
         else {
-            return function addIEEventListener(el, eventName, fn){
+            return function addIEEventListener(el, eventName, fn) {
                 return el.attachEvent('on' + eventName, fn);
             };
         }
@@ -27,7 +27,7 @@
         return keys;
     };
 
-    function applyEach (collection, callbackEach) {
+    var applyEach = function (collection, callbackEach) {
         var i = 0,
             length = collection.length,
             new_collection = [];
@@ -37,24 +37,24 @@
         }
 
         return new_collection;
-    }
+    };
 
-    function returnFn(value) { return value; }
-    function noop(){}
-    function trueFn(){ return true;}
+    var returnFn = function (value) { return value; };
+    var noop = function () {};
+    var trueFn = function () { return true; };
 
-    function debounce(fn, wait) {
+    var debounce = function (fn, wait) {
         var timeout;
-        return function() {
+        return function () {
             var context = this, args = arguments;
-            var later = function() {
+            var later = function () {
                 timeout = null;
                 fn.apply(context, args);
             };
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    }
+    };
 
 
     /*
@@ -85,20 +85,21 @@
         @param {object} configuration settings
         @return {object} instance of Imager
      */
-    function Imager (elements, opts) {
+    var Imager = function (elements, opts) {
         var self = this;
         var doc  = document;
 
         opts = opts || {};
 
         if (elements !== undefined) {
-            // first argument is selector string
+
+            // selector string (not elements)
             if (typeof elements === 'string') {
                 opts.selector = elements;
                 elements = undefined;
             }
 
-            // first argument is the `opts` object, `elements` is implicitly the `opts.selector` string
+            // 'opts' object (not elements)
             else if (typeof elements.length === 'undefined') {
                 opts = elements;
                 elements = undefined;
@@ -106,7 +107,7 @@
         }
 
         this.viewportHeight   = doc.documentElement.clientHeight;
-        this.selector         = opts.selector || '.delayed-image-load';
+        this.selector         = !elements ? (opts.selector || '.delayed-image-load') : null;
         this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
@@ -128,7 +129,7 @@
         this.gif.removeAttribute('height');
         this.gif.removeAttribute('width');
 
-        if (typeof this.availableWidths !== 'function'){
+        if (typeof this.availableWidths !== 'function') {
           if (typeof this.availableWidths.length === 'number') {
             this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator, this.devicePixelRatio);
           }
@@ -142,30 +143,37 @@
           });
         }
 
-        if (elements) {
-            this.divs = applyEach(elements, returnFn);
-            this.selector = null;
-        }
-        else {
-            this.divs = applyEach(doc.querySelectorAll(this.selector), returnFn);
-        }
-
+        this.divs = [];
+        this.add(elements || this.selector);
         this.ready(opts.onReady);
-        this.changeDivsToEmptyImages(this.divs);
 
-        setTimeout(function(){
+        setTimeout(function () {
             self.init();
         }, 0);
-    }
+    };
 
-    Imager.prototype.scrollCheck = function(){
+    Imager.prototype.add = function (elementsOrSelector) {
+
+        elementsOrSelector = elementsOrSelector || this.selector;
+        var elements = typeof elementsOrSelector === 'string' ?
+            document.querySelectorAll(elementsOrSelector) : // Selector
+            elementsOrSelector; // Elements (NodeList or array of Nodes)
+
+        if (elements && elements.length) {
+            var additional = applyEach(elements, returnFn);
+            this.changeDivsToEmptyImages(additional);
+            this.divs = this.divs.concat(additional);
+        }
+    };
+
+    Imager.prototype.scrollCheck = function () {
         var self = this;
         var offscreenImageCount = 0;
         var elements = [];
 
         if (this.scrolled) {
             // collects a subset of not-yet-responsive images and not offscreen anymore
-            applyEach(this.divs, function(element){
+            applyEach(this.divs, function (element) {
                 if (self.isPlaceholder(element)) {
                     ++offscreenImageCount;
 
@@ -184,7 +192,7 @@
         }
     };
 
-    Imager.prototype.init = function(){
+    Imager.prototype.init = function () {
         var self = this;
 
         this.initialized = true;
@@ -196,7 +204,7 @@
             this.scrolled = true;
             self.scrollCheck();
 
-            filterFn = function(element){
+            filterFn = function (element) {
                 return self.isPlaceholder(element) === false;
             };
         }
@@ -218,7 +226,7 @@
      * @since 0.3.1
      * @param {Function} fn
      */
-    Imager.prototype.ready = function(fn){
+    Imager.prototype.ready = function (fn) {
         this.onReady = fn || noop;
     };
 
@@ -246,10 +254,10 @@
         return gif;
     };
 
-    Imager.prototype.changeDivsToEmptyImages = function(elements){
+    Imager.prototype.changeDivsToEmptyImages = function (elements) {
         var self = this;
 
-        applyEach(elements, function(element, i){
+        applyEach(elements, function (element, i) {
             elements[i] = self.createGif(element);
         });
 
@@ -265,7 +273,7 @@
      * @param {HTMLImageElement} element
      * @returns {boolean}
      */
-    Imager.prototype.isPlaceholder = function (element){
+    Imager.prototype.isPlaceholder = function (element) {
         return element.src === this.gif.src;
     };
 
@@ -299,7 +307,7 @@
             this.isResizing = true;
             this.refreshPixelRatio();
 
-            applyEach(images, function(image){
+            applyEach(images, function (image) {
                 if (filterFn(image)) {
                     self.replaceImagesBasedOnScreenDimensions(image);
                 }
@@ -346,7 +354,7 @@
      * @api
      * @since 1.0.1
      */
-    Imager.prototype.refreshPixelRatio = function refreshPixelRatio(){
+    Imager.prototype.refreshPixelRatio = function refreshPixelRatio() {
         this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
     };
 
@@ -356,7 +364,7 @@
             .replace(/{pixel_ratio}/g, Imager.transforms.pixelRatio(this.devicePixelRatio));
     };
 
-    Imager.getPixelRatio = function getPixelRatio(context){
+    Imager.getPixelRatio = function getPixelRatio(context) {
         return (context || window)['devicePixelRatio'] || 1;
     };
 
@@ -398,7 +406,7 @@
      * @param {Array.<Number>} candidates
      * @returns {Number}
      */
-    Imager.getClosestValue = function getClosestValue(baseValue, candidates){
+    Imager.getClosestValue = function getClosestValue(baseValue, candidates) {
         var i             = candidates.length,
             selectedWidth = candidates[i - 1];
 
@@ -413,39 +421,39 @@
         return selectedWidth;
     };
 
-    Imager.prototype.registerResizeEvent = function(filterFn){
+    Imager.prototype.registerResizeEvent = function (filterFn) {
         var self = this;
 
-        addEvent(window, 'resize', debounce(function(){
+        addEvent(window, 'resize', debounce(function () {
             self.checkImagesNeedReplacing(self.divs, filterFn);
         }, 100));
     };
 
-    Imager.prototype.registerScrollEvent = function (){
+    Imager.prototype.registerScrollEvent = function () {
         var self = this;
 
         this.scrolled = false;
 
-        this.interval = window.setInterval(function(){
+        this.interval = window.setInterval(function () {
             self.scrollCheck();
         }, self.scrollDelay);
 
-        addEvent(window, 'scroll', function(){
+        addEvent(window, 'scroll', function () {
             self.scrolled = true;
         });
 
-        addEvent(window, 'resize', function(){
+        addEvent(window, 'resize', function () {
             self.viewportHeight = document.documentElement.clientHeight;
             self.scrolled = true;
         });
     };
 
-    Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase){
-        if(testCase){
-            return function(){ return window.pageYOffset; };
+    Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase) {
+        if (testCase) {
+            return function () { return window.pageYOffset; };
         }
         else {
-            return function(){ return document.documentElement.scrollTop; };
+            return function () { return document.documentElement.scrollTop; };
         }
     };
 

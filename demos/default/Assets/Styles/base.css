@@ -2,6 +2,7 @@ body {
     font: normal 100%/1.3 sans-serif;
     margin: auto;
     max-width: 60em; /* 960px/16px */
+    padding: 16px;
 }
 
 a {
@@ -13,6 +14,14 @@ code {
     color: blue;
 }
 
+button {
+    padding: 8px;
+}
+
 .constrained-images img {
-  max-width: 100%;
+    max-width: 100%;
+}
+
+.trigger-button {
+    display: block;
 }

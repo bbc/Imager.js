@@ -55,9 +55,23 @@
           <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-width="500"></div>
         </div>
 
+        <hr>
+
+        <div class="trigger-section">
+          <h2>Triggered image load (add elements)</h2>
+          <div class="triggered-image-load" data-src="http://placehold.it/{width}"></div>
+          <button class="trigger-button">Trigger</button>
+        </div>
+
         <script src="../../Imager.js"></script>
         <script>
             var imager = new Imager();
+
+            var trigger = document.querySelector('.trigger-button');
+            trigger.addEventListener('click', function () {
+                imager.add('.triggered-image-load');
+                document.querySelector('.trigger-section').removeChild(trigger);
+            });
         </script>
     </body>
 </html>
