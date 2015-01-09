@@ -366,6 +366,30 @@ new Imager({
 });
 ```
 
+## JavaScript API
+
+### `.ready(fn)`
+
+Executes a function when Imager is ready to work.
+
+```js
+new Imager({ ... }).ready(function(){
+  console.log('Placeholders divs have been replaced');
+});
+```
+
+### `.add(elements | selector)`
+
+Add new elements to the existing pool of responsive images.
+
+```js
+var imgr = new Imager('.delayed-image-load');
+
+imgr.add('.new-delayed-image-load-selector');
+imgr.add(newElements);
+imgr.add();     // reuses the constructor selector ('.delayed-image-load')
+```
+
 # Demos
 
 Additional and fully working examples lie in the [`demos` folder](demos/).
