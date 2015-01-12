@@ -4,16 +4,30 @@
     var addEvent = (function () {
         if (document.addEventListener) {
             return function addStandardEventListener(el, eventName, fn) {
+            	attachedEvents.push({
+					'element': el,
+					'eventName': eventName,
+					'handler': fn
+				});
+				
                 return el.addEventListener(eventName, fn, false);
             };
         }
         else {
             return function addIEEventListener(el, eventName, fn) {
+            	attachedEvents.push({
+					'element': el,
+					'eventName': eventName,
+					'handler': fn
+				});
+				
                 return el.attachEvent('on' + eventName, fn);
             };
         }
     })();
-
+	
+	var attachedEvents = [];
+	
     var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
     var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
@@ -89,7 +103,7 @@
         var self = this;
         var doc  = document;
 
-        opts = opts || {};
+        this.options = opts || {};
 
         if (elements !== undefined) {
 
@@ -107,44 +121,44 @@
         }
 
         this.viewportHeight   = doc.documentElement.clientHeight;
-        this.selector         = !elements ? (opts.selector || '.delayed-image-load') : null;
-        this.className        = opts.className || 'image-replace';
+        this.options.selector         = !elements ? (opts.selector || '.delayed-image-load') : null;
+        this.options.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-        this.gif.className    = this.className;
+        this.gif.className    = this.options.className;
         this.gif.alt          = '';
-        this.lazyloadOffset   = opts.lazyloadOffset || 0;
-        this.scrollDelay      = opts.scrollDelay || 250;
-        this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
-        this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.options.lazyloadOffset   = opts.lazyloadOffset || 0;
+        this.options.scrollDelay      = opts.scrollDelay || 250;
+        this.options.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+        this.options.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled         = false;
-        this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
-        this.availableWidths  = opts.availableWidths || defaultWidths;
-        this.onImagesReplaced = opts.onImagesReplaced || noop;
+        this.options.availablePixelRatios = opts.availablePixelRatios || [1, 2];
+        this.options.availableWidths  = opts.availableWidths || defaultWidths;
+        this.options.onImagesReplaced = opts.onImagesReplaced || noop;
         this.widthsMap        = {};
         this.refreshPixelRatio();
-        this.widthInterpolator = opts.widthInterpolator || returnFn;
+        this.options.widthInterpolator = opts.widthInterpolator || returnFn;
 
         // Needed as IE8 adds a default `width`/`height` attribute…
         this.gif.removeAttribute('height');
         this.gif.removeAttribute('width');
 
-        if (typeof this.availableWidths !== 'function') {
-          if (typeof this.availableWidths.length === 'number') {
-            this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator, this.devicePixelRatio);
+        if (typeof this.options.availableWidths !== 'function') {
+          if (typeof this.options.availableWidths.length === 'number') {
+            this.widthsMap = Imager.createWidthsMap(this.options.availableWidths, this.options.widthInterpolator, this.devicePixelRatio);
           }
           else {
-            this.widthsMap = this.availableWidths;
-            this.availableWidths = getKeys(this.availableWidths);
+            this.widthsMap = this.options.availableWidths;
+            this.options.availableWidths = getKeys(this.options.availableWidths);
           }
 
-          this.availableWidths = this.availableWidths.sort(function (a, b) {
+          this.options.availableWidths = this.options.availableWidths.sort(function (a, b) {
             return a - b;
           });
         }
 
         this.divs = [];
-        this.add(elements || this.selector);
+        this.add(elements || this.options.selector);
         this.ready(opts.onReady);
 
         setTimeout(function () {
@@ -154,7 +168,7 @@
 
     Imager.prototype.add = function (elementsOrSelector) {
 
-        elementsOrSelector = elementsOrSelector || this.selector;
+        elementsOrSelector = elementsOrSelector || this.options.selector;
         var elements = typeof elementsOrSelector === 'string' ?
             document.querySelectorAll(elementsOrSelector) : // Selector
             elementsOrSelector; // Elements (NodeList or array of Nodes)
@@ -165,6 +179,41 @@
             this.divs = this.divs.concat(additional);
         }
     };
+
+	Imager.prototype.update = function(newOpts) {
+		var self = this, prop, doc = document, i, max = attachedEvents.length, event;
+		
+		// add any new options
+		if (typeof newOpts !== 'undefined') {
+			for (prop in newOpts) {
+				if (newOpts.hasOwnProperty(prop)) {
+					this.options[prop] = newOpts[prop];
+				}
+			}
+		}
+		// delete the events associated with the existing elements
+		if (document.addEventListener) {
+			for (i = 0; i < max; i++) {
+				event = attachedEvents.pop();
+				event.element.removeEventListener(event.eventName, event.handler);
+			}	
+		} else {
+			for (i = 0; i < max; i++) {
+				event = attachedEvents.pop();
+				event.element.detachEvent(event.eventName, event.handler);
+			}
+		}	
+		// re-run initialization
+		this.divs = [];
+        this.add(this.options.selector);
+        //this.divs = applyEach(document.querySelectorAll(this.options.selector), returnFn);
+        //this.ready(this.options.onReady);
+
+        setTimeout(function () {
+            self.init();
+        }, 0);
+		 	
+	};
 
     Imager.prototype.scrollCheck = function () {
         var self = this;
@@ -198,7 +247,7 @@
         this.initialized = true;
         var filterFn = trueFn;
 
-        if (this.lazyload) {
+        if (this.options.lazyload) {
             this.registerScrollEvent();
 
             this.scrolled = true;
@@ -212,7 +261,7 @@
             this.checkImagesNeedReplacing(this.divs);
         }
 
-        if (this.onResize) {
+        if (this.options.onResize) {
             this.registerResizeEvent(filterFn);
         }
 
@@ -232,7 +281,7 @@
 
     Imager.prototype.createGif = function (element) {
         // if the element is already a responsive image then we don't replace it again
-        if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
+        if (element.className.match(new RegExp('(^| )' + this.options.className + '( |$)'))) {
             return element;
         }
 
@@ -245,7 +294,7 @@
           gif.setAttribute('data-width', elementWidth);
         }
 
-        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
+        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.options.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
@@ -287,7 +336,7 @@
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
         var elementOffsetTop = 0;
-        var offset = Imager.getPageOffset() + this.lazyloadOffset;
+        var offset = Imager.getPageOffset() + this.options.lazyloadOffset;
 
         if (element.offsetParent) {
             do {
@@ -314,7 +363,7 @@
             });
 
             this.isResizing = false;
-            this.onImagesReplaced(images);
+            this.options.onImagesReplaced(images);
         }
     };
 
@@ -327,7 +376,7 @@
         var computedWidth, naturalWidth;
 
 	naturalWidth = Imager.getNaturalWidth(image);
-        computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
+        computedWidth = typeof this.options.availableWidths === 'function' ? this.options.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
         image.width = computedWidth;
@@ -342,7 +391,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.options.availableWidths);
     };
 
     /**
@@ -355,7 +404,7 @@
      * @since 1.0.1
      */
     Imager.prototype.refreshPixelRatio = function refreshPixelRatio() {
-        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
+        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.options.availablePixelRatios);
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
@@ -436,7 +485,7 @@
 
         this.interval = window.setInterval(function () {
             self.scrollCheck();
-        }, self.scrollDelay);
+        }, self.options.scrollDelay);
 
         addEvent(window, 'scroll', function () {
             self.scrolled = true;
@@ -500,3 +549,4 @@
     /* global -module, -exports, -define */
 
 }(window, document));
+
