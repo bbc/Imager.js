@@ -175,6 +175,31 @@ This will result in the following HTML output:
 </div>
 ```
 
+### Passing a collection of elements
+
+You might want to pass a NodeList or an array of **placeholder elements** as the first argument rather than a class selector.
+
+```html
+<div style="width: 240px">
+    <div class="delayed-image-load" data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
+</div>
+
+<script>
+    var placeholderElems = document.querySelectorAll('.delayed-image-load');
+    var imgrPlaceholder = new Imager(placeholderElems, {
+        availableWidths: [200, 260, 320, 600]
+    });
+</script>
+```
+
+This will result in the following HTML output:
+
+```html
+<div style="width: 240px">
+    <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
+</div>
+```
+
 # Documentation
 
 Browse Imager public APIs and options – versioned alongside the source code of the project:
