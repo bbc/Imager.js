@@ -4,30 +4,16 @@
     var addEvent = (function () {
         if (document.addEventListener) {
             return function addStandardEventListener(el, eventName, fn) {
-            	attachedEvents.push({
-					'element': el,
-					'eventName': eventName,
-					'handler': fn
-				});
-				
                 return el.addEventListener(eventName, fn, false);
             };
         }
         else {
             return function addIEEventListener(el, eventName, fn) {
-            	attachedEvents.push({
-					'element': el,
-					'eventName': eventName,
-					'handler': fn
-				});
-				
                 return el.attachEvent('on' + eventName, fn);
             };
         }
     })();
-	
-	var attachedEvents = [];
-	
+
     var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
     var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
@@ -100,10 +86,10 @@
         @return {object} instance of Imager
      */
     var Imager = function (elements, opts) {
-        var self = this;
-        var doc  = document;
+        var self = this,
+        	doc = document;
 
-        this.options = opts || {};
+        opts = opts || {};
 
         if (elements !== undefined) {
 
@@ -121,44 +107,44 @@
         }
 
         this.viewportHeight   = doc.documentElement.clientHeight;
-        this.options.selector         = !elements ? (opts.selector || '.delayed-image-load') : null;
-        this.options.className        = opts.className || 'image-replace';
+        this.selector         = !elements ? (opts.selector || '.delayed-image-load') : null;
+        this.className        = opts.className || 'image-replace';
         this.gif              = doc.createElement('img');
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-        this.gif.className    = this.options.className;
+        this.gif.className    = this.className;
         this.gif.alt          = '';
-        this.options.lazyloadOffset   = opts.lazyloadOffset || 0;
-        this.options.scrollDelay      = opts.scrollDelay || 250;
-        this.options.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
-        this.options.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.lazyloadOffset   = opts.lazyloadOffset || 0;
+        this.scrollDelay      = opts.scrollDelay || 250;
+        this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+        this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.scrolled         = false;
-        this.options.availablePixelRatios = opts.availablePixelRatios || [1, 2];
-        this.options.availableWidths  = opts.availableWidths || defaultWidths;
-        this.options.onImagesReplaced = opts.onImagesReplaced || noop;
+        this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
+        this.availableWidths  = opts.availableWidths || defaultWidths;
+        this.onImagesReplaced = opts.onImagesReplaced || noop;
         this.widthsMap        = {};
         this.refreshPixelRatio();
-        this.options.widthInterpolator = opts.widthInterpolator || returnFn;
+        this.widthInterpolator = opts.widthInterpolator || returnFn;
 
         // Needed as IE8 adds a default `width`/`height` attribute…
         this.gif.removeAttribute('height');
         this.gif.removeAttribute('width');
 
-        if (typeof this.options.availableWidths !== 'function') {
-          if (typeof this.options.availableWidths.length === 'number') {
-            this.widthsMap = Imager.createWidthsMap(this.options.availableWidths, this.options.widthInterpolator, this.devicePixelRatio);
+        if (typeof this.availableWidths !== 'function') {
+          if (typeof this.availableWidths.length === 'number') {
+            this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator, this.devicePixelRatio);
           }
           else {
-            this.widthsMap = this.options.availableWidths;
-            this.options.availableWidths = getKeys(this.options.availableWidths);
+            this.widthsMap = this.availableWidths;
+            this.availableWidths = getKeys(this.availableWidths);
           }
 
-          this.options.availableWidths = this.options.availableWidths.sort(function (a, b) {
+          this.availableWidths = this.availableWidths.sort(function (a, b) {
             return a - b;
           });
         }
 
         this.divs = [];
-        this.add(elements || this.options.selector);
+        this.add(elements || this.selector);
         this.ready(opts.onReady);
 
         setTimeout(function () {
@@ -167,60 +153,32 @@
     };
 
     Imager.prototype.add = function (elementsOrSelector) {
-
-        elementsOrSelector = elementsOrSelector || this.options.selector;
-        var elements = typeof elementsOrSelector === 'string' ?
+    	var elements, additional;
+    	
+        elementsOrSelector = elementsOrSelector || this.selector;
+        elements = typeof elementsOrSelector === 'string' ?
             document.querySelectorAll(elementsOrSelector) : // Selector
             elementsOrSelector; // Elements (NodeList or array of Nodes)
 
         if (elements && elements.length) {
-            var additional = applyEach(elements, returnFn);
+            additional = applyEach(elements, returnFn);
             this.changeDivsToEmptyImages(additional);
             this.divs = this.divs.concat(additional);
         }
     };
-
-	Imager.prototype.update = function(newOpts) {
-		var self = this, prop, doc = document, i, max = attachedEvents.length, event;
-		
-		// add any new options
-		if (typeof newOpts !== 'undefined') {
-			for (prop in newOpts) {
-				if (newOpts.hasOwnProperty(prop)) {
-					this.options[prop] = newOpts[prop];
-				}
-			}
-		}
-		// delete the events associated with the existing elements
-		if (document.addEventListener) {
-			for (i = 0; i < max; i++) {
-				event = attachedEvents.pop();
-				event.element.removeEventListener(event.eventName, event.handler);
-			}	
-		} else {
-			for (i = 0; i < max; i++) {
-				event = attachedEvents.pop();
-				event.element.detachEvent(event.eventName, event.handler);
-			}
-		}	
-		// re-run initialization
+	
+	Imager.prototype.update = function() {
 		this.divs = [];
-        this.add(this.options.selector);
-        //this.divs = applyEach(document.querySelectorAll(this.options.selector), returnFn);
-        //this.ready(this.options.onReady);
-
-        setTimeout(function () {
-            self.init();
-        }, 0);
-		 	
+		this.add();
+		this.lazyLoad && this.scrollCheck(true);	
 	};
+	
+    Imager.prototype.scrollCheck = function (force) {
+        var self = this,
+        	offscreenImageCount = 0,
+        	elements = [];
 
-    Imager.prototype.scrollCheck = function () {
-        var self = this;
-        var offscreenImageCount = 0;
-        var elements = [];
-
-        if (this.scrolled) {
+        if (Boolean(force) || this.scrolled) {
             // collects a subset of not-yet-responsive images and not offscreen anymore
             applyEach(this.divs, function (element) {
                 if (self.isPlaceholder(element)) {
@@ -242,12 +200,12 @@
     };
 
     Imager.prototype.init = function () {
-        var self = this;
+        var self = this,
+			filterFn = trueFn;
 
         this.initialized = true;
-        var filterFn = trueFn;
 
-        if (this.options.lazyload) {
+        if (this.lazyload) {
             this.registerScrollEvent();
 
             this.scrolled = true;
@@ -261,7 +219,7 @@
             this.checkImagesNeedReplacing(this.divs);
         }
 
-        if (this.options.onResize) {
+        if (this.onResize) {
             this.registerResizeEvent(filterFn);
         }
 
@@ -281,20 +239,20 @@
 
     Imager.prototype.createGif = function (element) {
         // if the element is already a responsive image then we don't replace it again
-        if (element.className.match(new RegExp('(^| )' + this.options.className + '( |$)'))) {
+        if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
             return element;
         }
 
-        var elementClassName = element.getAttribute('data-class');
-        var elementWidth = element.getAttribute('data-width');
-        var gif = this.gif.cloneNode(false);
+        var elementClassName = element.getAttribute('data-class'),
+        	elementWidth = element.getAttribute('data-width'),
+        	gif = this.gif.cloneNode(false);
 
         if (elementWidth) {
           gif.width = elementWidth;
           gif.setAttribute('data-width', elementWidth);
         }
 
-        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.options.className;
+        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
@@ -335,8 +293,8 @@
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-        var elementOffsetTop = 0;
-        var offset = Imager.getPageOffset() + this.options.lazyloadOffset;
+        var elementOffsetTop = 0,
+        	offset = Imager.getPageOffset() + this.lazyloadOffset;
 
         if (element.offsetParent) {
             do {
@@ -363,7 +321,7 @@
             });
 
             this.isResizing = false;
-            this.options.onImagesReplaced(images);
+            this.onImagesReplaced(images);
         }
     };
 
@@ -375,9 +333,10 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-	naturalWidth = Imager.getNaturalWidth(image);
-        computedWidth = typeof this.options.availableWidths === 'function' ? this.options.availableWidths(image)
-                                                                   : this.determineAppropriateResolution(image);
+		naturalWidth = Imager.getNaturalWidth(image);
+        computedWidth = typeof this.availableWidths === 'function' ? 
+			this.availableWidths(image) :
+            this.determineAppropriateResolution(image);
 
         image.width = computedWidth;
 
@@ -391,7 +350,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.options.availableWidths);
+    	return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
     };
 
     /**
@@ -404,7 +363,7 @@
      * @since 1.0.1
      */
     Imager.prototype.refreshPixelRatio = function refreshPixelRatio() {
-        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.options.availablePixelRatios);
+        this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
     };
 
     Imager.prototype.changeImageSrcToUseNewImageDimensions = function (src, selectedWidth) {
@@ -419,7 +378,7 @@
 
     Imager.createWidthsMap = function createWidthsMap (widths, interpolator, pixelRatio) {
         var map = {},
-            i   = widths.length;
+            i = widths.length;
 
         while (i--) {
             map[widths[i]] = interpolator(widths[i], pixelRatio);
@@ -456,7 +415,7 @@
      * @returns {Number}
      */
     Imager.getClosestValue = function getClosestValue(baseValue, candidates) {
-        var i             = candidates.length,
+        var i = candidates.length,
             selectedWidth = candidates[i - 1];
 
         baseValue = parseFloat(baseValue);
@@ -485,7 +444,7 @@
 
         this.interval = window.setInterval(function () {
             self.scrollCheck();
-        }, self.options.scrollDelay);
+        }, self.scrollDelay);
 
         addEvent(window, 'scroll', function () {
             self.scrolled = true;
@@ -549,4 +508,3 @@
     /* global -module, -exports, -define */
 
 }(window, document));
-
