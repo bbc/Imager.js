@@ -472,7 +472,7 @@
      * @returns {boolean} Whether or not the element is visible
      */
     Imager.isElementVisible = function (el) {
-        return !!(el.offsetWidth && el.offsetHeight);
+        return el.offsetWidth > 0 && el.offsetHeight > 0;
     };
 
     /**
