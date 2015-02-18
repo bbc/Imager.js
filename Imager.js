@@ -117,6 +117,7 @@
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.loadHidden       = opts.hasOwnProperty('loadHidden') ? opts.loadHidden : true;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -308,7 +309,7 @@
             this.refreshPixelRatio();
 
             applyEach(images, function (image) {
-                if (filterFn(image)) {
+                if (self.isImageEligibleForReplacing(image) && filterFn(image)) {
                     self.replaceImagesBasedOnScreenDimensions(image);
                 }
             });
@@ -316,6 +317,10 @@
             this.isResizing = false;
             this.onImagesReplaced(images);
         }
+    };
+
+    Imager.prototype.isImageEligibleForReplacing = function (image) {
+        return this.loadHidden || Imager.isElementVisible(image);
     };
 
     /**
@@ -455,6 +460,19 @@
         else {
             return function () { return document.documentElement.scrollTop; };
         }
+    };
+
+    /**
+     * Elements are considered visible if they consume space in the document.
+     * Visible elements have a width or height that is greater than zero.
+     * Elements with visibility: hidden or opacity: 0 are considered visible,
+     * since they still consume space in the layout.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean} Whether or not the element is visible
+     */
+    Imager.isElementVisible = function (el) {
+        return !!(el.offsetWidth && el.offsetHeight);
     };
 
     /**
