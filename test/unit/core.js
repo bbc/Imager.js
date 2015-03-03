@@ -333,7 +333,7 @@ describe('Imager.js', function () {
             expect(Imager.isElementVisible(fixtures.querySelector('#hidden-element'))).to.equal(false);
         });
 
-        it('should return false if the element has no height', function () {
+        it('should return false if the element has no height or width', function () {
             fixtures = loadFixtures('hidden');
             expect(Imager.isElementVisible(fixtures.querySelector('#hidden-element-implicit'))).to.equal(false);
         });
