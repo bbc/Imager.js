@@ -17,7 +17,7 @@ describe('Imager.js Events', function () {
 
     describe('Constructor Options', function () {
         it('should register the relevant events by default', function () {
-            var imgr = new Imager();
+	    var imgr = new Imager('.delayed-image-load');
 
             expect(imgr.onResize).to.equal(true);
             expect(imgr.lazyload).to.equal(false);
@@ -72,7 +72,7 @@ describe('Imager.js Events', function () {
             it('should receive the targeted list of images as sole argument', function (done) {
                 loadFixtures('regular');
                 var replaceImagesSpy = sandbox.spy();
-                var imgr = new Imager({ selector: '#main .delayed-image-load', onImagesReplaced: replaceImagesSpy });
+		var imgr = new Imager('#main .delayed-image-load', { onImagesReplaced: replaceImagesSpy });
 
                 imgr.ready(function () {
                     var args = replaceImagesSpy.getCall(0).args;

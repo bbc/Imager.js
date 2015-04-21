@@ -18,7 +18,7 @@ describe('Imager.js', function () {
     describe('constructor', function () {
         it('should initialise without arguments', function (done) {
             fixtures = loadFixtures('regular');
-            var imgr = new Imager();
+	    var imgr = new Imager('.delayed-image-load');
 
             imgr.ready(function () {
                 expect(imgr.initialized).to.equal(true);
@@ -28,13 +28,6 @@ describe('Imager.js', function () {
 
                 done();
             });
-        });
-
-        it('should initialise with one argument, the options', function () {
-            fixtures = loadFixtures('regular');
-            var imgr = new Imager({selector: '#main .delayed-image-load'});
-            expect(imgr.divs).to.have.length(3);
-            expect(imgr.selector).to.equal('#main .delayed-image-load');
         });
 
         it('should target elements with a string as first argument', function (done) {
@@ -98,7 +91,7 @@ describe('Imager.js', function () {
 
         it('should add additional images based on a custom selector', function (done) {
             fixtures = loadFixtures('add');
-            var imgr = new Imager();
+	    var imgr = new Imager('.delayed-image-load');
             imgr.ready(function () {
                 expect(imgr.divs).to.have.length(2);
                 imgr.add('.triggered-image-load');
@@ -109,7 +102,7 @@ describe('Imager.js', function () {
 
         it('should add additional images based on the default selector', function (done) {
             fixtures = loadFixtures('add');
-            var imgr = new Imager();
+	    var imgr = new Imager('.delayed-image-load');
             imgr.ready(function () {
                 var elements = document.querySelectorAll('#test-case div');
                 Imager.applyEach(elements, function (element) {
@@ -123,7 +116,7 @@ describe('Imager.js', function () {
 
         it('should add additional images based on NodeList passed in', function (done) {
             fixtures = loadFixtures('add');
-            var imgr = new Imager();
+	    var imgr = new Imager('.delayed-image-load');
             imgr.ready(function () {
                 var elements = document.querySelectorAll('#test-case div');
                 imgr.add(elements);
@@ -134,7 +127,7 @@ describe('Imager.js', function () {
 
         it('should add additional images based on Node array passed in', function (done) {
             fixtures = loadFixtures('add');
-            var imgr = new Imager();
+	    var imgr = new Imager('.delayed-image-load');
             imgr.ready(function () {
                 var elements = document.querySelectorAll('#test-case div');
                 elements = Imager.applyEach(elements, function (element) { return element; });
@@ -235,7 +228,7 @@ describe('Imager.js', function () {
         var offsetStub, imgr;
 
         beforeEach(function(){
-            imgr = new Imager();
+	    imgr = new Imager('.delayed-image-load');
             offsetStub = sandbox.stub(imgr, 'viewportHeight', 1024);
 
 

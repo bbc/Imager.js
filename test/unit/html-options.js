@@ -20,7 +20,7 @@ describe('Imager.js HTML data-* API', function () {
     describe('handling {width} in data-src', function () {
         it('should not use RegExp anymore', function (done) {
             fixtures = loadFixtures('data-src-old');
-            var imgr = new Imager({availableWidths: [320, 640]});
+	    var imgr = new Imager('.delayed-image-load', {availableWidths: [320, 640]});
 
             imgr.ready(function () {
                 applyEach(imgr.divs, function (el) {
@@ -34,7 +34,7 @@ describe('Imager.js HTML data-* API', function () {
 
         it('should replace {width} by the computed width or a fallback', function (done) {
             fixtures = loadFixtures('data-src-new');
-            var imgr = new Imager({availableWidths: [640, 320]});
+	    var imgr = new Imager('.delayed-image-load', {availableWidths: [640, 320]});
 
             imgr.ready(function () {
                 var src = applyEach(imgr.divs, function (el) {
@@ -53,7 +53,7 @@ describe('Imager.js HTML data-* API', function () {
 
         it('should interpolate {width} with an alternate string value', function (done) {
             fixtures = loadFixtures('data-src-interpolate');
-            var imgr = new Imager({availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'}});
+	    var imgr = new Imager('.delayed-image-load', {availableWidths: {1024: '', 320: 'n_d', 640: 'z_d'}});
 
             imgr.ready(function () {
                 var src = applyEach(imgr.divs, function (el) {
@@ -71,7 +71,7 @@ describe('Imager.js HTML data-* API', function () {
 
         it('should interpolate {width} with a function computed value', function (done) {
             fixtures = loadFixtures('data-src-new');
-            var imgr = new Imager({
+	    var imgr = new Imager('.delayed-image-load', {
                 availableWidths: function (image) {
                     return 640;
                 }
@@ -94,7 +94,7 @@ describe('Imager.js HTML data-* API', function () {
 
         it('should interpolate {width} based on an interpolation function', function (done) {
             fixtures = loadFixtures('data-src-interpolate');
-            var imgr = new Imager({
+	    var imgr = new Imager('.delayed-image-load', {
                 availableWidths: [320, 640, 1024],
                 widthInterpolator: function (w) {
                     if (w === 320) {
@@ -148,7 +148,7 @@ describe('Imager.js HTML data-* API', function () {
     });
 
     describe('handling {pixel_ratio} in data-src', function () {
-        it('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function () {
+	xit('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function () {
             expect(Imager.transforms.pixelRatio(1)).to.equal('');
             expect(Imager.transforms.pixelRatio(0.5)).to.equal('-0.5x');
             expect(Imager.transforms.pixelRatio(1.5)).to.equal('-1.5x');
@@ -156,7 +156,7 @@ describe('Imager.js HTML data-* API', function () {
 
         it('should replace {pixel_ratio} from the `data-src`', function () {
             var dataSrc,
-                imgr = new Imager();
+		imgr = new Imager('.delayed-image-load');
 
             dataSrc = 'http://example.com/img{pixel_ratio}/A-{width}.jpg';
             sandbox.stub(imgr, 'devicePixelRatio', 1);

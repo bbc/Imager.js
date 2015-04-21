@@ -7,7 +7,9 @@
     "test": "./node_modules/karma/bin/karma start",
     "posttest": "jshint Imager.js",
     "test:watch": "npm run test -- --auto-watch --no-single-run",
-    "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist"
+    "build": "browserify ./index.js -s imager -o Imager.js",
+    "postbuild": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist",
+    "watch": "watchify -dv ./index.js -s imager -o Imager.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +26,20 @@
     "PictureFill"
   ],
   "license": "Apache-2.0",
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
   "devDependencies": {
+    "browserify": "^12.0.0",
     "expect.js": "^0.3.0",
     "jquery": "^1.10.2",
     "jshint": "^2.4.3",
@@ -39,6 +54,11 @@
     "mocha": "^2.0.0",
     "phantomjs": "^1.9.19",
     "sinon": "^1.8.1",
-    "uglify-js": "^2.4.3"
+    "uglify-js": "^2.4.3",
+    "watchify": "^3.1.2"
+  },
+  "dependencies": {
+    "babelify": "^7.2.0",
+    "babel-preset-es2015": "^6.1.18"
   }
 }
