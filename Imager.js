@@ -14,6 +14,19 @@
         }
     })();
 
+    var removeEvent = (function () {
+      if (document.removeEventListener) {
+            return function removeStandardEventListener(el, eventName, fn) {
+                return el.removeEventListener(eventName, fn, false);
+            };
+        }
+        else {
+            return function removeIEEventListener(el, eventName, fn) {
+                return el.detachEvent('on' + eventName, fn);
+            };
+        }
+    })();
+
     var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
     var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
@@ -144,6 +157,8 @@
         }
 
         this.divs = [];
+        this.scrollListeners = [];
+        this.resizeListeners = [];
         this.add(elements || this.selector);
         this.ready(opts.onReady);
 
@@ -424,9 +439,12 @@
     Imager.prototype.registerResizeEvent = function (filterFn) {
         var self = this;
 
-        addEvent(window, 'resize', debounce(function () {
+        var resizeListener = debounce(function () {
             self.checkImagesNeedReplacing(self.divs, filterFn);
-        }, 100));
+        }, 100);
+
+        addEvent(window, 'resize', resizeListener);
+        this.resizeListeners.push(resizeListener);
     };
 
     Imager.prototype.registerScrollEvent = function () {
@@ -438,14 +456,37 @@
             self.scrollCheck();
         }, self.scrollDelay);
 
-        addEvent(window, 'scroll', function () {
+        var onScroll = function () {
             self.scrolled = true;
-        });
+        };
 
-        addEvent(window, 'resize', function () {
+        var onResize = function () {
             self.viewportHeight = document.documentElement.clientHeight;
             self.scrolled = true;
-        });
+        };
+
+        addEvent(window, 'scroll', onScroll);
+        addEvent(window, 'resize', onResize);
+
+        this.scrollListeners.push(onScroll);
+        this.resizeListeners.push(onResize);
+    };
+
+    Imager.prototype.cleanup = function () {
+      applyEach(this.resizeListeners, function(listener) {
+        removeEvent(window, 'resize', listener);
+      });
+      applyEach(this.scrollListeners, function(listener) {
+        removeEvent(window, 'scroll', listener);
+      });
+
+      if(this.interval) {
+        window.clearInterval(this.interval);
+      }
+
+      this.resizeListeners = [];
+      this.scrollListeners = [];
+      this.interval = null;
     };
 
     Imager.getPageOffsetGenerator = function getPageVerticalOffset(testCase) {
