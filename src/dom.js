@@ -24,3 +24,16 @@ export const getNaturalWidth = (function () {
 export function getPixelRatio (context) {
   return (context || window)['devicePixelRatio'] || 1;
 }
+
+export function getPageOffsetGenerator (testCase) {
+  if (testCase) {
+    return function () {
+      return window.pageYOffset;
+    };
+  }
+  else {
+    return function () {
+      return document.documentElement.scrollTop;
+    };
+  }
+}

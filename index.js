@@ -2,7 +2,7 @@
 
 import { applyEach } from './src/shims';
 import { getClosestValue } from './src/calc';
-import { getNaturalWidth, getPixelRatio } from './src/dom';
+import { getNaturalWidth, getPixelRatio, getPageOffsetGenerator } from './src/dom';
 import { returnFn, noop, trueFn, debounce } from './src/utils';
 
 import * as lazyloadPlugin from './src/plugins/lazyload';
@@ -323,20 +323,7 @@ export default class Imager {
 
     return map;
   }
-
-  static getPageOffsetGenerator (testCase) {
-    if (testCase) {
-      return function () {
-        return window.pageYOffset;
-      };
-    }
-    else {
-      return function () {
-        return document.documentElement.scrollTop;
-      };
-    }
-  }
 }
 
 // This form is used because it seems impossible to stub `window.pageYOffset`
-Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
+Imager.getPageOffset = getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
