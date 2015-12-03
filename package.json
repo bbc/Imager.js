@@ -37,7 +37,7 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "karma-sinon": "^1.0.3",
     "mocha": "^2.0.0",
-    "phantomjs": "1.9.18",
+    "phantomjs": "^1.9.19",
     "sinon": "^1.8.1",
     "uglify-js": "^2.4.3"
   }
