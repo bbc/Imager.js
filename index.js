@@ -1,11 +1,15 @@
 'use strict';
 
-import { returnFn, noop, trueFn, debounce } from './src/utils.js';
-import * as transforms from './src/transforms.js';
+import { applyEach } from './src/shims';
+import { getClosestValue } from './src/calc';
+import { getNaturalWidth, getPixelRatio } from './src/dom';
+import { returnFn, noop, trueFn, debounce } from './src/utils';
+
+import * as lazyloadPlugin from './src/plugins/lazyload';
+import * as transforms from './src/transforms';
 
 const doc = document;
-const defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
-
+const DEFAULT_WIDTHS = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
 /*
  Construct a new Imager instance, passing an optional configuration object.
@@ -38,7 +42,6 @@ const defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485
 
 export default class Imager {
   constructor (elements, opts = {}) {
-
     if (elements === undefined) {
       throw new Error('Imager.js now expects the first argument to be either a CSS string selector or a collection of HTMLElement.')
     }
@@ -55,24 +58,32 @@ export default class Imager {
       elements = undefined;
     }
 
-    this.viewportHeight = doc.documentElement.clientHeight;
+    this.availableWidths = opts.availableWidths || DEFAULT_WIDTHS;
     this.selector = !elements ? (opts.selector || '.delayed-image-load') : null;
     this.className = opts.className || 'image-replace';
+    this.onResize = opts.hasOwnProperty('onResize') ? opts.onResize : true;
+    this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
+    this.onImagesReplaced = opts.onImagesReplaced || noop;
+    this.widthInterpolator = opts.widthInterpolator || returnFn;
+
+    // lazyload options (deprecated)
+    this.lazyload = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+    this.lazyloadOffset = opts.lazyloadOffset || 0;
+    this.scrollDelay = opts.scrollDelay || 250;
+
+    // gif configuration
     this.gif = doc.createElement('img');
     this.gif.src = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
     this.gif.className = this.className;
     this.gif.alt = '';
-    this.lazyloadOffset = opts.lazyloadOffset || 0;
-    this.scrollDelay = opts.scrollDelay || 250;
-    this.onResize = opts.hasOwnProperty('onResize') ? opts.onResize : true;
-    this.lazyload = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
-    this.scrolled = false;
-    this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
-    this.availableWidths = opts.availableWidths || defaultWidths;
-    this.onImagesReplaced = opts.onImagesReplaced || noop;
+
+    // non-configurable options
+    this.initialized = false;
+    this.divs = [];
+    this.viewportHeight = doc.documentElement.clientHeight;
     this.widthsMap = {};
+
     this.refreshPixelRatio();
-    this.widthInterpolator = opts.widthInterpolator || returnFn;
 
     // Needed as IE8 adds a default `width`/`height` attribute…
     this.gif.removeAttribute('height');
@@ -92,7 +103,6 @@ export default class Imager {
       });
     }
 
-    this.divs = [];
     this.add(elements || this.selector);
     this.ready(opts.onReady);
 
@@ -104,10 +114,8 @@ export default class Imager {
     var filterFn = trueFn;
 
     if (this.lazyload) {
-      this.registerScrollEvent();
+      lazyloadPlugin.register(this)();
 
-      this.scrolled = true;
-      this.scrollCheck();
 
       filterFn = (element) => this.isPlaceholder(element) === false;
     }
@@ -134,36 +142,31 @@ export default class Imager {
   }
 
   add (elementsOrSelector) {
-
     elementsOrSelector = elementsOrSelector || this.selector;
-    var elements = typeof elementsOrSelector === 'string' ?
+
+    const elements = typeof elementsOrSelector === 'string' ?
       document.querySelectorAll(elementsOrSelector) : // Selector
       elementsOrSelector; // Elements (NodeList or array of Nodes)
 
     if (elements && elements.length) {
-      var additional = elements.map(returnFn);
+      const additional = applyEach(elements, returnFn);
       this.changeDivsToEmptyImages(additional);
       this.divs = this.divs.concat(additional);
     }
   }
 
   scrollCheck () {
-    var offscreenImageCount = 0;
-    var elements = [];
+    const elements = [];
 
     if (this.scrolled) {
       // collects a subset of not-yet-responsive images and not offscreen anymore
-      this.divs.forEach(element => {
-        if (this.isPlaceholder(element)) {
-          ++offscreenImageCount;
-
-          if (this.isThisElementOnScreen(element)) {
-            elements.push(element);
-          }
+      applyEach(this.divs, element => {
+        if (this.isPlaceholder(element) && this.isThisElementOnScreen(element)) {
+          elements.push(element);
         }
       });
 
-      if (offscreenImageCount === 0) {
+      if (elements.length) {
         window.clearInterval(this.interval);
       }
 
@@ -197,7 +200,7 @@ export default class Imager {
   }
 
   changeDivsToEmptyImages (elements) {
-    elements.forEach((element, i) => {
+    applyEach(elements, (element, i) => {
       elements[i] = this.createGif(element);
     });
 
@@ -246,7 +249,7 @@ export default class Imager {
       this.isResizing = true;
       this.refreshPixelRatio();
 
-      images.forEach(image => {
+      applyEach(images, image => {
         if (filterFn(image)) {
           this.replaceImagesBasedOnScreenDimensions(image);
         }
@@ -265,7 +268,7 @@ export default class Imager {
   replaceImagesBasedOnScreenDimensions (image) {
     var computedWidth, naturalWidth;
 
-    naturalWidth = Imager.getNaturalWidth(image);
+    naturalWidth = getNaturalWidth(image);
     computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
       : this.determineAppropriateResolution(image);
 
@@ -278,10 +281,12 @@ export default class Imager {
     image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
     image.removeAttribute('width');
     image.removeAttribute('height');
+
+    return image;
   }
 
   determineAppropriateResolution (image) {
-    return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+    return getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
   }
 
   /**
@@ -294,40 +299,19 @@ export default class Imager {
    * @since 1.0.1
    */
   refreshPixelRatio () {
-    this.devicePixelRatio = Imager.getClosestValue(Imager.getPixelRatio(), this.availablePixelRatios);
+    this.devicePixelRatio = getClosestValue(getPixelRatio(), this.availablePixelRatios);
   }
 
   changeImageSrcToUseNewImageDimensions (src, selectedWidth) {
     return src
-      .replace(/{width}/g, transforms.width(selectedWidth, this.widthsMap))
-      .replace(/{pixel_ratio}/g, transforms.pixelRatio(this.devicePixelRatio));
+      .replace(/\{width\}/g, transforms.width(selectedWidth, this.widthsMap))
+      .replace(/\{pixel_ratio\}/g, transforms.pixelRatio(this.devicePixelRatio));
   }
 
 
   registerResizeEvent (filterFn) {
     window.addEventListener('resize', debounce(() => this.checkImagesNeedReplacing(this.divs, filterFn), 100));
   }
-
-  registerScrollEvent () {
-    this.scrolled = false;
-
-    this.interval = window.setInterval(() => this.scrollCheck(), this.scrollDelay);
-
-    window.addEventListener('scroll', () => {
-      this.scrolled = true
-    });
-
-    window.addEventListener('resize', () => {
-      this.viewportHeight = document.documentElement.clientHeight;
-      this.scrolled = true;
-    });
-  }
-
-  static getPixelRatio (context) {
-    return (context || window)['devicePixelRatio'] || 1;
-  }
-
-;
 
   static createWidthsMap (widths, interpolator, pixelRatio) {
     var map = {},
@@ -338,42 +322,6 @@ export default class Imager {
     }
 
     return map;
-  }
-
-;
-
-
-  /**
-   * Returns the closest upper value.
-   *
-   * ```js
-   * var candidates = [1, 1.5, 2];
-   *
-   * Imager.getClosestValue(0.8, candidates); // -> 1
-   * Imager.getClosestValue(1, candidates); // -> 1
-   * Imager.getClosestValue(1.3, candidates); // -> 1.5
-   * Imager.getClosestValue(3, candidates); // -> 2
-   * ```
-   *
-   * @api
-   * @since 1.0.1
-   * @param {Number} baseValue
-   * @param {Array.<Number>} candidates
-   * @returns {Number}
-   */
-  static getClosestValue (baseValue, candidates) {
-    var i = candidates.length,
-      selectedWidth = candidates[i - 1];
-
-    baseValue = parseFloat(baseValue);
-
-    while (i--) {
-      if (baseValue <= candidates[i]) {
-        selectedWidth = candidates[i];
-      }
-    }
-
-    return selectedWidth;
   }
 
   static getPageOffsetGenerator (testCase) {
@@ -389,27 +337,6 @@ export default class Imager {
     }
   }
 }
-
-/**
- * Returns the naturalWidth of an image element.
- *
- * @since 1.3.1
- * @param {HTMLImageElement} image
- * @return {Number} Image width in pixels
- */
-Imager.getNaturalWidth = (function () {
-  if ('naturalWidth' in (new Image())) {
-    return function (image) {
-      return image.naturalWidth;
-    };
-  }
-  // non-HTML5 browsers workaround
-  return function (image) {
-    var imageCopy = document.createElement('img');
-    imageCopy.src = image.src;
-    return imageCopy.width;
-  };
-})();
 
 // This form is used because it seems impossible to stub `window.pageYOffset`
 Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));

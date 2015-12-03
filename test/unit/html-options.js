@@ -1,10 +1,12 @@
 'use strict';
 
-/* globals describe, it, cleanFixtures, beforeEach, expect, afterEach, sinon, Imager */
+import Imager from '../../index';
+import { getPixelRatio } from '../../src/dom'
+import { applyEach } from '../../src/shims'
+import { loadFixtures, cleanFixtures } from '../helpers';
 
 describe('Imager.js HTML data-* API', function () {
     // Simili-Array.map for IE8 compat purpose
-    var applyEach = Imager.applyEach;
     var fixtures, sandbox;
 
     beforeEach(function () {
@@ -123,8 +125,6 @@ describe('Imager.js HTML data-* API', function () {
 
         it('should provide both width and pixelRatio to the widthInterpolator function', function(){
             var interpolatorStub = sandbox.stub();
-            var pixelRatioStub = sandbox.stub(Imager, 'getPixelRatio');
-            pixelRatioStub.returns(2);
 
             new Imager({
                 availableWidths: [320, 640],
@@ -133,17 +133,7 @@ describe('Imager.js HTML data-* API', function () {
 
             expect(interpolatorStub.firstCall.args).to.have.length(2);
             expect(interpolatorStub.firstCall.args[0]).to.equal(640);
-            expect(interpolatorStub.firstCall.args[1]).to.equal(2);
-        });
-    });
-
-    describe('Imager.getPixelRatio', function () {
-        it('should return a numeric value', function () {
-            expect(Imager.getPixelRatio()).to.be.above(0);
-        });
-
-        it('should return a default value of 1 for old browser', function () {
-            expect(Imager.getPixelRatio({})).to.equal(1);
+            expect(interpolatorStub.firstCall.args[1]).to.equal(1);
         });
     });
 
