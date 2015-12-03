@@ -24,7 +24,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files:      [
-            'node_modules/components-jquery/jquery.min.js',
+	    'node_modules/jquery/dist/jquery.min.js',
             'test/fixtures/jquery-noconflict.js',
             'test/fixtures/*.html',
             'Imager.js',
@@ -204,6 +204,6 @@ module.exports = function (config) {
     config.set({
         browsers: browsers || (isCI
             ? filterBrowsers(config.customLaunchers, /^BS/)
-            : ['PhantomJSCustom', 'Firefox'])
+	    : ['PhantomJSCustom'])
     });
 };
