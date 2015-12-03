@@ -19,12 +19,12 @@ module.exports = function (config) {
 
 
         // frameworks to use
-        frameworks: ['mocha', 'mocha', 'expect', 'sinon'],
+	frameworks: ['mocha', 'expect', 'sinon'],
 
 
         // list of files / patterns to load in the browser
         files:      [
-            'node_modules/components-jquery/jquery.min.js',
+	    'node_modules/jquery/dist/jquery.min.js',
             'test/fixtures/jquery-noconflict.js',
             'test/fixtures/*.html',
             'Imager.js',
@@ -50,7 +50,7 @@ module.exports = function (config) {
         reporters:     ['progress'],
 
         // essential for non xhr2 browsers
-        transports:    ['websocket', 'htmlfile', 'jsonp-polling'],
+	transports:    ['polling'],
 
         // web server port
         port:          9876,
@@ -126,6 +126,13 @@ module.exports = function (config) {
                 os:              'Windows',
                 os_version:      '8.1'
             },
+		  BSEDGE12:            {
+		base:            'BrowserStack',
+		browser:         'edge',
+		browser_version: '12.0',
+		os:              'Windows',
+		os_version:      '10'
+	    },
             BSOS4:             {
                 base:       'BrowserStack',
                 device:     'iPhone 4',
@@ -142,14 +149,20 @@ module.exports = function (config) {
                 base:       'BrowserStack',
                 device:     'iPhone 5',
                 os:         'ios',
-                os_version: '6.1'
+		os_version: '6.0'
             },
             BSOS7:             {
                 base:       'BrowserStack',
-                device:     'iPad mini Retina',
+		device:     'iPad 4th',
                 os:         'ios',
                 os_version: '7.0'
             },
+	    BSOS8:             {
+		base:       'BrowserStack',
+		device:     'iPhone 6',
+		os:         'ios',
+		os_version: '8.3'
+	    },
             BSAndroid2:        {
                 base:       'BrowserStack',
                 device:     'Samsung Galaxy S II',
@@ -164,6 +177,13 @@ module.exports = function (config) {
                 os:         'android',
                 os_version: '4.0'
             },
+	    BSAndroid5:        {
+		base:       'BrowserStack',
+		device:     'Google Nexus 5',
+		browser:    'android',
+		os:         'android',
+		os_version: '5.0'
+	    },
             BSFirefox:         {
                 base:            'BrowserStack',
                 browser:         'firefox',
@@ -171,6 +191,20 @@ module.exports = function (config) {
                 os:              'Windows',
                 os_version:      '7'
             },
+	    BSChrome:         {
+		base:            'BrowserStack',
+		browser:         'chrome',
+		browser_version: '33',
+		os:              'OS X',
+		os_version:      'Yosemite'
+	    },
+	    BSOpera:         {
+		base:            'BrowserStack',
+		browser:         'opera',
+		browser_version: '12.15',
+		os:              'OS X',
+		os_version:      'Yosemite'
+	    },
             BSSafari5:         {
                 base:            'BrowserStack',
                 browser:         'safari',
@@ -191,6 +225,20 @@ module.exports = function (config) {
                 browser_version: '7.0',
                 os:              'OS X',
                 os_version:      'Mavericks'
+	    },
+	    BSSafari8:         {
+		base:            'BrowserStack',
+		browser:         'safari',
+		browser_version: '8.0',
+		os:              'OS X',
+		os_version:      'Yosemite'
+	    },
+	    BSSafari9:         {
+		base:            'BrowserStack',
+		browser:         'safari',
+		browser_version: '9.0',
+		os:              'OS X',
+		os_version:      'El Capitan'
             }
         },
 
@@ -198,12 +246,14 @@ module.exports = function (config) {
         // if true, it capture browsers, run tests and exit
         singleRun:                  true,
 
-        browserNoActivityTimeout:   45000
+	browserNoActivityTimeout:   45000,
+
+	captureTimeout: isCI ? 120000 : 5000
     });
 
     config.set({
         browsers: browsers || (isCI
             ? filterBrowsers(config.customLaunchers, /^BS/)
-            : ['PhantomJSCustom', 'Firefox'])
+	    : ['PhantomJSCustom'])
     });
 };

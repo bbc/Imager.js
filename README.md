@@ -30,10 +30,12 @@ Finally, it will lazy load images to speed up page load time even further.
 
 Imager is tested against the following mobile and desktop browsers:
 
-- Chrome stable
-- Firefox stable
-- IE 8, 9, 10 and 11
-- Safari 5, 6 and 7
+- Chrome 33
+- Firefox 22
+- Opera 12.15
+- Edge 12
+- Internet Explorer 8, 9, 10 and 11
+- Safari 5, 6, 7, 8 and 9
 - Mobile Safari 4, 5, 6 and 7
 - Android 2, 3 and 4
 
