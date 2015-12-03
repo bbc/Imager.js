@@ -2,7 +2,7 @@
 
 import { applyEach } from './src/shims';
 import { getClosestValue, createWidthsMap } from './src/calc';
-import { getNaturalWidth, getPixelRatio, getPageOffsetGenerator } from './src/dom';
+import { getNaturalWidth, getPixelRatio } from './src/dom';
 import { returnFn, noop, trueFn, debounce } from './src/utils';
 
 import * as lazyloadPlugin from './src/plugins/lazyload';
@@ -155,26 +155,6 @@ export default class Imager {
     }
   }
 
-  scrollCheck () {
-    const elements = [];
-
-    if (this.scrolled) {
-      // collects a subset of not-yet-responsive images and not offscreen anymore
-      applyEach(this.divs, element => {
-        if (this.isPlaceholder(element) && this.isThisElementOnScreen(element)) {
-          elements.push(element);
-        }
-      });
-
-      if (elements.length) {
-        window.clearInterval(this.interval);
-      }
-
-      this.changeDivsToEmptyImages(elements);
-      this.scrolled = false;
-    }
-  }
-
   createGif (element) {
     // if the element is already a responsive image then we don't replace it again
     if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
@@ -218,28 +198,6 @@ export default class Imager {
    */
   isPlaceholder (element) {
     return element.src === this.gif.src;
-  }
-
-  /**
-   * Returns true if an element is located within a screen offset.
-   *
-   * @param {HTMLElement} element
-   * @returns {boolean}
-   */
-  isThisElementOnScreen (element) {
-    // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
-    // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-    var elementOffsetTop = 0;
-    var offset = Imager.getPageOffset() + this.lazyloadOffset;
-
-    if (element.offsetParent) {
-      do {
-        elementOffsetTop += element.offsetTop;
-      }
-      while (element = element.offsetParent);
-    }
-
-    return elementOffsetTop < (this.viewportHeight + offset);
   }
 
   checkImagesNeedReplacing (images, filterFn) {
@@ -313,6 +271,3 @@ export default class Imager {
     window.addEventListener('resize', debounce(() => this.checkImagesNeedReplacing(this.divs, filterFn), 100));
   }
 }
-
-// This form is used because it seems impossible to stub `window.pageYOffset`
-Imager.getPageOffset = getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));

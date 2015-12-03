@@ -26,20 +26,4 @@ describe('dom', function () {
             expect(getPixelRatio({})).to.equal(1);
         });
     });
-
-    describe('getPageOffsetGenerator', function () {
-      it('should use `window.pageYOffset` if the property is available', function () {
-        var pageYOffsetIsAvailable = true;
-        var generator = getPageOffsetGenerator(pageYOffsetIsAvailable);
-
-        expect(generator.toString()).to.have.string('.pageYOffset');
-      });
-
-      it('should rather use `document.documentElement.scrollTop` if `window.pageYOffset` is not available', function () {
-        var pageYOffsetIsAvailable = false;
-        var generator = getPageOffsetGenerator(pageYOffsetIsAvailable);
-
-        expect(generator.toString()).to.have.string('.documentElement.scrollTop');
-      });
-    });
 });
