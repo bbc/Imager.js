@@ -42,9 +42,8 @@ Imager is tested against the following mobile and desktop browsers:
 
 ## Install
 
-npm                            | bower                            | old school
--------------------------------|----------------------------------|------------------------------------------------------------------------------
-`npm install --save imager.js` | `bower install --save imager.js` | [download zip file](https://github.com/BBC-News/Imager.js/archive/master.zip)
+| *npm*        | `npm install --save imager.js` |
+| *old school* | [download zip file](https://github.com/BBC-News/Imager.js/archive/master.zip) |
 
 
 ## Using
