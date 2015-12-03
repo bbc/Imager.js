@@ -1,7 +1,5 @@
 language: node_js
-
-node_js:
-  - '0.10'
+node_js: v4
 
 sudo: false
 
@@ -30,6 +28,4 @@ matrix:
   allow_failures:
     - env: BROWSER=BSIE7
 
-script:
-  - npm run test-pre
-  - ./node_modules/karma/bin/karma start --browsers $BROWSER
+script: npm test -- --browsers $BROWSER
