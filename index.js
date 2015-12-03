@@ -1,7 +1,7 @@
 'use strict';
 
 import { applyEach } from './src/shims';
-import { getClosestValue } from './src/calc';
+import { getClosestValue, createWidthsMap } from './src/calc';
 import { getNaturalWidth, getPixelRatio, getPageOffsetGenerator } from './src/dom';
 import { returnFn, noop, trueFn, debounce } from './src/utils';
 
@@ -91,7 +91,7 @@ export default class Imager {
 
     if (typeof this.availableWidths !== 'function') {
       if (typeof this.availableWidths.length === 'number') {
-        this.widthsMap = Imager.createWidthsMap(this.availableWidths, this.widthInterpolator, this.devicePixelRatio);
+        this.widthsMap = createWidthsMap(this.availableWidths, this.widthInterpolator, this.devicePixelRatio);
       }
       else {
         this.widthsMap = this.availableWidths;
@@ -311,17 +311,6 @@ export default class Imager {
 
   registerResizeEvent (filterFn) {
     window.addEventListener('resize', debounce(() => this.checkImagesNeedReplacing(this.divs, filterFn), 100));
-  }
-
-  static createWidthsMap (widths, interpolator, pixelRatio) {
-    var map = {},
-      i = widths.length;
-
-    while (i--) {
-      map[widths[i]] = interpolator(widths[i], pixelRatio);
-    }
-
-    return map;
   }
 }
 

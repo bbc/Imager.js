@@ -32,3 +32,14 @@ export function getClosestValue (baseValue, candidates) {
 
   return selectedWidth;
 }
+
+export function createWidthsMap (widths, interpolator, pixelRatio) {
+  const map = {};
+  let i = widths.length;
+
+  while (i--) {
+    map[widths[i]] = interpolator(widths[i], pixelRatio);
+  }
+
+  return map;
+}
