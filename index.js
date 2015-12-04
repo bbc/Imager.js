@@ -43,7 +43,7 @@ const DEFAULT_WIDTHS = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 48
 export default class Imager {
   constructor (elements, opts = {}) {
     if (elements === undefined) {
-      throw new Error('Imager.js now expects the first argument to be either a CSS string selector or a collection of HTMLElement.')
+      throw new Error('Imager.js now expects the first argument to be either a CSS string selector or a collection of HTMLElement.');
     }
 
     // selector string (not elements)
@@ -72,7 +72,7 @@ export default class Imager {
     this.scrollDelay = opts.scrollDelay || 250;
 
     // gif configuration
-    this.gif = dom.getPlaceholderElement({ classname: this.className })
+    this.gif = dom.getPlaceholderElement({ classname: this.className });
 
     // non-configurable options
     this.initialized = false;
@@ -91,9 +91,7 @@ export default class Imager {
         this.availableWidths = Object.keys(this.availableWidths);
       }
 
-      this.availableWidths = this.availableWidths.sort(function (a, b) {
-        return a - b;
-      });
+      this.availableWidths = this.availableWidths.sort((a, b) => a - b);
     }
 
     this.add(elements || this.selector);

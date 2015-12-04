@@ -9,7 +9,7 @@ export function register (imgr) {
   imgr.interval = window.setInterval(() => scrollCheck(imgr), imgr.scrollDelay);
 
   window.addEventListener('scroll', () => {
-    imgr.scrolled = true
+    imgr.scrolled = true;
   });
 
   window.addEventListener('resize', () => {
@@ -80,8 +80,9 @@ export function isThisElementOnScreen (element, options = { lazyloadOffset: 0, v
   if (element.offsetParent) {
     do {
       elementOffsetTop += element.offsetTop;
+      element = element.offsetParent;
     }
-    while (element = element.offsetParent);
+    while (element);
   }
 
   return elementOffsetTop < (options.viewportHeight + offset);

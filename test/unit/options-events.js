@@ -80,8 +80,8 @@ describe('Imager.js Events', function () {
       });
     });
 
-    describe('onresize', function (done) {
-      it('should update the viewportHeight internal on window resize if lazyloading is enabled', function () {
+    describe('onresize', function () {
+      it('should update the viewportHeight internal on window resize if lazyloading is enabled', function (done) {
         var imgr = new Imager({lazyload: true});
 
         // we could do better but trigger window.onresize is not the most funny thing

@@ -24,13 +24,15 @@ export const getNaturalWidth = (function () {
 })();
 
 export function getPixelRatio (context) {
-  return (context || window)['devicePixelRatio'] || 1;
+  return (context || window).devicePixelRatio || 1;
 }
 
-export function getPlaceholderElement (options = { className }) {
+export function getPlaceholderElement (options) {
+  const { className } = options;
+
   const placeholder = document.createElement('img');
   placeholder.src = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-  placeholder.className = options.className;
+  placeholder.className = className;
   placeholder.alt = '';
 
   // Needed as IE8 adds a default `width`/`height` attribute…
@@ -42,7 +44,7 @@ export function getPlaceholderElement (options = { className }) {
   return placeholder;
 }
 
-export function createPlaceholder (element, options = { className, placeholderElement }) {
+export function createPlaceholder (element, options) {
   const { className, placeholderElement } = options;
 
   // if the element is already a responsive image then we don't replace it again

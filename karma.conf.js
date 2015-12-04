@@ -45,7 +45,7 @@ module.exports = function (config) {
 
     browserify: {
       debug: true,
-      transform: ['babelify']
+      transform: ['babelify', 'envify']
     },
 
     // list of files to exclude
