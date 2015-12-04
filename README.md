@@ -33,7 +33,7 @@ Imager is tested against the following mobile and desktop browsers:
 - Chrome 33
 - Firefox 22
 - Opera 12.15
-- Edge 12
+- Microsoft Edge 12
 - Internet Explorer 8, 9, 10 and 11
 - Safari 5, 6, 7, 8 and 9
 - Mobile Safari 4, 5, 6 and 7
@@ -43,7 +43,12 @@ Imager is tested against the following mobile and desktop browsers:
 ## Install
 
 | *npm*        | `npm install --save imager.js` |
-| *old school* | [download zip file](https://github.com/BBC-News/Imager.js/archive/master.zip) |
+| *CDN*        | [cdnjs][download-cdnjs], [browserify CDN][download-wzrdin] |
+| *old school* | [download zip file][download-zip] |
+
+[download-cdnjs]: https://cdnjs.com/libraries/imager.js
+[download-wzrdin]: https://wzrd.in/standalone/imager.js@latest
+[download-zip]: https://github.com/BBC-News/Imager.js/archive/master.zip
 
 
 ## Using
