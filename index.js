@@ -2,7 +2,7 @@
 
 import { applyEach } from './src/shims';
 import { getClosestValue, createWidthsMap } from './src/calc';
-import { getNaturalWidth, getPixelRatio } from './src/dom';
+import * as dom from './src/dom';
 import { returnFn, noop, trueFn, debounce } from './src/utils';
 
 import * as lazyloadPlugin from './src/plugins/lazyload';
@@ -72,10 +72,7 @@ export default class Imager {
     this.scrollDelay = opts.scrollDelay || 250;
 
     // gif configuration
-    this.gif = doc.createElement('img');
-    this.gif.src = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
-    this.gif.className = this.className;
-    this.gif.alt = '';
+    this.gif = dom.getPlaceholderElement({ classname: this.className })
 
     // non-configurable options
     this.initialized = false;
@@ -84,10 +81,6 @@ export default class Imager {
     this.widthsMap = {};
 
     this.refreshPixelRatio();
-
-    // Needed as IE8 adds a default `width`/`height` attribute…
-    this.gif.removeAttribute('height');
-    this.gif.removeAttribute('width');
 
     if (typeof this.availableWidths !== 'function') {
       if (typeof this.availableWidths.length === 'number') {
@@ -150,42 +143,8 @@ export default class Imager {
 
     if (elements && elements.length) {
       const additional = applyEach(elements, returnFn);
-      this.changeDivsToEmptyImages(additional);
+      dom.convertToPlaceholderImages(this, additional);
       this.divs = this.divs.concat(additional);
-    }
-  }
-
-  createGif (element) {
-    // if the element is already a responsive image then we don't replace it again
-    if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
-      return element;
-    }
-
-    var elementClassName = element.getAttribute('data-class');
-    var elementWidth = element.getAttribute('data-width');
-    var gif = this.gif.cloneNode(false);
-
-    if (elementWidth) {
-      gif.width = elementWidth;
-      gif.setAttribute('data-width', elementWidth);
-    }
-
-    gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
-    gif.setAttribute('data-src', element.getAttribute('data-src'));
-    gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
-
-    element.parentNode.replaceChild(gif, element);
-
-    return gif;
-  }
-
-  changeDivsToEmptyImages (elements) {
-    applyEach(elements, (element, i) => {
-      elements[i] = this.createGif(element);
-    });
-
-    if (this.initialized) {
-      this.checkImagesNeedReplacing(elements);
     }
   }
 
@@ -226,7 +185,7 @@ export default class Imager {
   replaceImagesBasedOnScreenDimensions (image) {
     var computedWidth, naturalWidth;
 
-    naturalWidth = getNaturalWidth(image);
+    naturalWidth = dom.getNaturalWidth(image);
     computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
       : this.determineAppropriateResolution(image);
 
@@ -257,7 +216,7 @@ export default class Imager {
    * @since 1.0.1
    */
   refreshPixelRatio () {
-    this.devicePixelRatio = getClosestValue(getPixelRatio(), this.availablePixelRatios);
+    this.devicePixelRatio = getClosestValue(dom.getPixelRatio(), this.availablePixelRatios);
   }
 
   changeImageSrcToUseNewImageDimensions (src, selectedWidth) {

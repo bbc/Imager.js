@@ -1,5 +1,6 @@
 'use strict';
 
+import { convertToPlaceholderImages } from '../dom';
 import { applyEach } from '../shims';
 
 export function register (imgr) {
@@ -59,7 +60,7 @@ function scrollCheck (imgr) {
       window.clearInterval(imgr.interval);
     }
 
-    imgr.changeDivsToEmptyImages(elements);
+    convertToPlaceholderImages(imgr, elements);
     imgr.scrolled = false;
   }
 }
