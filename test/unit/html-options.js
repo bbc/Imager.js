@@ -132,7 +132,7 @@ describe('Imager.js HTML data-* API', function () {
     it('should provide both width and pixelRatio to the widthInterpolator function', function () {
       var interpolatorStub = sandbox.stub();
 
-      new Imager({
+      new Imager('.delayed-image-load', {
         availableWidths:   [320, 640],
         widthInterpolator: interpolatorStub
       });

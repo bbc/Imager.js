@@ -25,7 +25,7 @@ describe('Imager.js Events', function () {
     });
 
     it('should handle onResize only', function (done) {
-      var imgr = new Imager({onResize: true, lazyload: false});
+      var imgr = new Imager('.delayed-image-load', {onResize: true, lazyload: false});
       var resizeSpy = sandbox.spy(imgr, 'registerResizeEvent');
 
       expect(resizeSpy.called).to.equal(false);
@@ -38,7 +38,7 @@ describe('Imager.js Events', function () {
     });
 
     it('should handle onScroll only', function (done) {
-      var imgr = new Imager({onResize: false, lazyload: true});
+      var imgr = new Imager('.delayed-image-load', {onResize: false, lazyload: true});
       var resizeSpy = sandbox.spy(imgr, 'registerResizeEvent');
 
       expect(resizeSpy.called).to.equal(false);
@@ -53,7 +53,7 @@ describe('Imager.js Events', function () {
     describe('onImagesReplaced', function () {
       it('should run during the init process', function (done) {
         var replaceImagesSpy = sandbox.spy();
-        var imgr = new Imager({onImagesReplaced: replaceImagesSpy});
+        var imgr = new Imager('.delayed-image-load', {onImagesReplaced: replaceImagesSpy});
 
         expect(replaceImagesSpy.called).to.equal(false);
 
@@ -82,7 +82,7 @@ describe('Imager.js Events', function () {
 
     describe('onresize', function () {
       it('should update the viewportHeight internal on window resize if lazyloading is enabled', function (done) {
-        var imgr = new Imager({lazyload: true});
+        var imgr = new Imager('.delayed-image-load', {lazyload: true});
 
         // we could do better but trigger window.onresize is not the most funny thing
         imgr.ready(() => {

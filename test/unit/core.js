@@ -21,6 +21,10 @@ describe('Imager.js', function () {
   });
 
   describe('constructor', function () {
+    it('should raise if the first argument is not provided', function () {
+      expect(function(){ new Imager() }).to.throwError();
+    });
+
     it('should initialise without arguments', function (done) {
       fixtures = loadFixtures('regular');
       var imgr = new Imager('.delayed-image-load');
@@ -29,7 +33,6 @@ describe('Imager.js', function () {
         expect(imgr.initialized).to.equal(true);
         expect(imgr.scrolled).to.be(undefined);
         expect(imgr.divs).to.have.length(5);
-        expect(imgr.selector).to.equal('.delayed-image-load');
 
         done();
       });
@@ -42,7 +45,6 @@ describe('Imager.js', function () {
       imgr.ready(function () {
         expect(imgr.initialized).to.equal(true);
         expect(imgr.divs).to.have.length(3);
-        expect(imgr.selector).to.equal('#main .delayed-image-load');
 
         done();
       });
@@ -55,7 +57,6 @@ describe('Imager.js', function () {
       imgr.ready(function () {
         expect(imgr.initialized).to.equal(true);
         expect(imgr.divs).to.have.length(3);
-        expect(imgr.selector).to.equal(null);
 
         done();
       });
@@ -68,7 +69,6 @@ describe('Imager.js', function () {
       imgr.ready(function () {
         expect(imgr.initialized).to.equal(true);
         expect(imgr.divs).to.have.length(3);
-        expect(imgr.selector).to.equal(null);
 
         done();
       });
@@ -81,7 +81,6 @@ describe('Imager.js', function () {
       imgr.ready(function () {
         expect(imgr.initialized).to.equal(true);
         expect(imgr.divs).to.have.length(3);
-        expect(imgr.selector).to.equal(null);
 
         done();
       });
@@ -101,26 +100,17 @@ describe('Imager.js', function () {
       });
     });
 
-    it('should add additional images based on the default selector', function (done) {
-      fixtures = loadFixtures('add');
+    it('should raise if no parameter is given', function () {
       var imgr = new Imager('.delayed-image-load');
-      imgr.ready(function () {
-        var elements = document.querySelectorAll('#test-case div');
-        applyEach(elements, function (element) {
-          element.className = 'delayed-image-load';
-        });
-        imgr.add();
-        expect(imgr.divs).to.have.length(4);
-        done();
-      });
+      expect(() => imgr.add()).to.throwError();
     });
 
     it('should add additional images based on NodeList passed in', function (done) {
       fixtures = loadFixtures('add');
       var imgr = new Imager('.delayed-image-load');
       imgr.ready(function () {
-        var elements = document.querySelectorAll('#test-case div');
-        imgr.add(elements);
+
+        imgr.add(document.querySelectorAll('#test-case div'));
         expect(imgr.divs).to.have.length(4);
         done();
       });
@@ -131,23 +121,19 @@ describe('Imager.js', function () {
       var imgr = new Imager('.delayed-image-load');
       imgr.ready(function () {
         var elements = document.querySelectorAll('#test-case div');
-        elements = applyEach(elements, function (element) {
-          return element;
-        });
+        elements = applyEach(elements, element => element);
+
         imgr.add(elements);
         expect(imgr.divs).to.have.length(4);
         done();
       });
     });
 
-    it('should handle "null" selector scenario gracefully', function (done) {
+    it('should handle "null" selector scenario gracefully', function () {
       fixtures = loadFixtures('add');
       var imgr = new Imager([]);
-      imgr.ready(function () {
-        imgr.add();
-        expect(imgr.divs).to.have.length(0);
-        done();
-      });
+
+      expect(() => imgr.add(null)).to.throwError();
     });
   });
 
@@ -156,7 +142,7 @@ describe('Imager.js', function () {
 
     beforeEach(function () {
       fixtures = loadFixtures('widths');
-      imgr = new Imager({availableWidths: availableWidths});
+      imgr = new Imager('.delayed-image-load', {availableWidths: availableWidths});
       windowWidth = window.innerWidth;
     });
 

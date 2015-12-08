@@ -20,9 +20,6 @@ const DEFAULT_WIDTHS = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 48
  // Available widths for your images
  availableWidths: [Number],
 
- // Selector to be used to locate your div placeholders
- selector: '',
-
  // Class name to give your resizable images
  className: '',
 
@@ -41,25 +38,8 @@ const DEFAULT_WIDTHS = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 48
  */
 
 export default class Imager {
-  constructor (elements, opts = {}) {
-    if (elements === undefined) {
-      throw new Error('Imager.js now expects the first argument to be either a CSS string selector or a collection of HTMLElement.');
-    }
-
-    // selector string (not elements)
-    if (typeof elements === 'string') {
-      opts.selector = elements;
-      elements = undefined;
-    }
-
-    // 'opts' object (not elements)
-    else if (typeof elements.length === 'undefined') {
-      opts = elements;
-      elements = undefined;
-    }
-
+  constructor (elementsOrSelector, opts = {}) {
     this.availableWidths = opts.availableWidths || DEFAULT_WIDTHS;
-    this.selector = !elements ? (opts.selector || '.delayed-image-load') : null;
     this.className = opts.className || 'image-replace';
     this.onResize = opts.hasOwnProperty('onResize') ? opts.onResize : true;
     this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
@@ -93,7 +73,7 @@ export default class Imager {
       this.availableWidths = this.availableWidths.sort((a, b) => a - b);
     }
 
-    this.add(elements || this.selector);
+    this.add(elementsOrSelector);
     this.ready(opts.onReady);
 
     setTimeout(() => this.init(), 0);
@@ -131,12 +111,19 @@ export default class Imager {
     this.onReady = fn || noop;
   }
 
+  /**
+   * Adds images/div placeholders to the watch list
+   *
+   * @param {String|Array|NodeList} elementsOrSelector
+   */
   add (elementsOrSelector) {
-    elementsOrSelector = elementsOrSelector || this.selector;
-
     const elements = typeof elementsOrSelector === 'string' ?
       document.querySelectorAll(elementsOrSelector) : // Selector
       elementsOrSelector; // Elements (NodeList or array of Nodes)
+
+    if (elements === undefined || elements.hasOwnProperty('length') === false) {
+      throw new Error('Imager.add() first and only parameter is expected to be a CSS selector, a NodeList or an array of HTML elements.');
+    }
 
     if (elements && elements.length) {
       const additional = applyEach(elements, returnFn);
