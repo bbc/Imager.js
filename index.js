@@ -1,6 +1,5 @@
 'use strict';
 
-import { applyEach } from './src/shims';
 import { getClosestValue, createWidthsMap } from './src/calc';
 import * as dom from './src/dom';
 import { returnFn, noop, trueFn, debounce } from './src/utils';
@@ -8,7 +7,6 @@ import { returnFn, noop, trueFn, debounce } from './src/utils';
 import * as lazyloadPlugin from './src/plugins/lazyload';
 import * as transforms from './src/transforms';
 
-const doc = document;
 const DEFAULT_WIDTHS = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
 
 /*
@@ -81,11 +79,10 @@ export default class Imager {
 
   init () {
     this.initialized = true;
-    var filterFn = trueFn;
+    let filterFn = trueFn;
 
     if (this.lazyload) {
       lazyloadPlugin.register(this)();
-
 
       filterFn = (element) => this.isPlaceholder(element) === false;
     }
@@ -101,14 +98,19 @@ export default class Imager {
   }
 
   /**
+   * @callback Imager~onReady
+   * @param {Imager} imgr
+   */
+
+  /**
    * Executes a function when Imager is ready to work
    * It acts as a convenient/shortcut for `new Imager({ onReady: fn })`
    *
    * @since 0.3.1
-   * @param {Function} fn
+   * @param {Imager~onReady} fn
    */
-  ready (fn) {
-    this.onReady = fn || noop;
+  ready (fn = noop) {
+    this.onReady = fn;
   }
 
   /**
@@ -125,11 +127,7 @@ export default class Imager {
       throw new Error('Imager.add() first and only parameter is expected to be a CSS selector, a NodeList or an array of HTML elements.');
     }
 
-    if (elements && elements.length) {
-      const additional = applyEach(elements, returnFn);
-      dom.convertToPlaceholderImages(this, additional);
-      this.divs = this.divs.concat(additional);
-    }
+    this.divs = this.divs.concat(dom.convertToPlaceholderImages(this, elements));
   }
 
   /**
@@ -143,18 +141,12 @@ export default class Imager {
     return element.src === this.gif.src;
   }
 
-  checkImagesNeedReplacing (images, filterFn) {
-    filterFn = filterFn || trueFn;
-
+  checkImagesNeedReplacing (images, filterFn = trueFn) {
     if (!this.isResizing) {
       this.isResizing = true;
       this.refreshPixelRatio();
 
-      applyEach(images, image => {
-        if (filterFn(image)) {
-          this.replaceImagesBasedOnScreenDimensions(image);
-        }
-      });
+      images.filter(filterFn).forEach(image => this.replaceImagesBasedOnScreenDimensions(image));
 
       this.isResizing = false;
       this.onImagesReplaced(images);
@@ -167,10 +159,8 @@ export default class Imager {
    * @param {HTMLImageElement} image
    */
   replaceImagesBasedOnScreenDimensions (image) {
-    var computedWidth, naturalWidth;
-
-    naturalWidth = dom.getNaturalWidth(image);
-    computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
+    const naturalWidth = dom.getNaturalWidth(image);
+    const computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
       : this.determineAppropriateResolution(image);
 
     image.width = computedWidth;

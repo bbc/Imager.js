@@ -1,7 +1,3 @@
-'use strict';
-
-import { applyEach } from './shims';
-
 /**
  * Returns the naturalWidth of an image element.
  *
@@ -76,11 +72,13 @@ export function convertToPlaceholderImages (imgr, elements) {
     placeholderElement: imgr.gif
   };
 
-  applyEach(elements, (element, i) => {
-    elements[i] = createPlaceholder(element, placeholderOptions);
+  elements = [].slice.call(elements).map(element => {
+    return createPlaceholder(element, placeholderOptions);
   });
 
   if (imgr.initialized) {
     imgr.checkImagesNeedReplacing(elements);
   }
+
+  return elements;
 }

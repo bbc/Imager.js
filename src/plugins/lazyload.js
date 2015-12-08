@@ -1,7 +1,6 @@
 'use strict';
 
 import { convertToPlaceholderImages } from '../dom';
-import { applyEach } from '../shims';
 
 export function register (imgr) {
   imgr.viewportHeight = document.documentElement.clientHeight;
@@ -42,8 +41,6 @@ export function getPageOffsetGenerator (testCase) {
 }
 
 function scrollCheck (imgr) {
-  const elements = [];
-
   if (imgr.scrolled) {
     const imgrAttributes = {
       lazyloadOffset: imgr.lazyloadOffset,
@@ -51,10 +48,8 @@ function scrollCheck (imgr) {
     };
 
     // collects a subset of not-yet-responsive images and not offscreen anymore
-    applyEach(imgr.divs, element => {
-      if (imgr.isPlaceholder(element) && isThisElementOnScreen(element, imgrAttributes)) {
-        elements.push(element);
-      }
+    const elements = imgr.divs.filter(element => {
+      return imgr.isPlaceholder(element) && isThisElementOnScreen(element, imgrAttributes);
     });
 
     if (elements.length) {

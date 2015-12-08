@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Returns the closest upper value.
  *

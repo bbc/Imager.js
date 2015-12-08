@@ -2,11 +2,9 @@
 
 import Imager from '../../index';
 import { getPixelRatio } from '../../src/dom'
-import { applyEach } from '../../src/shims'
 import { loadFixtures, cleanFixtures } from '../helpers';
 
 describe('Imager.js HTML data-* API', function () {
-  // Simili-Array.map for IE8 compat purpose
   var fixtures, sandbox;
 
   beforeEach(function () {
@@ -25,10 +23,10 @@ describe('Imager.js HTML data-* API', function () {
       var imgr = new Imager('.delayed-image-load', {availableWidths: [320, 640]});
 
       imgr.ready(function () {
-        applyEach(imgr.divs, function (el) {
-          expect(el).to.have.property('nodeName', 'IMG');
-          expect(el.src).to.contain(el.getAttribute('data-src'));
-        });
+        const el = imgr.divs[1];
+
+        expect(el).to.have.property('nodeName', 'IMG');
+        expect(el.src).to.contain(el.getAttribute('data-src'));
 
         done();
       });
@@ -39,9 +37,7 @@ describe('Imager.js HTML data-* API', function () {
       var imgr = new Imager('.delayed-image-load', {availableWidths: [640, 320]});
 
       imgr.ready(function () {
-        var src = applyEach(imgr.divs, function (el) {
-          return el.getAttribute('src');
-        });
+        var src = imgr.divs.map(el => el.getAttribute('src'));
 
         expect(src).to.eql([
           'base/test/fixtures/media/C-640.jpg',
@@ -64,9 +60,7 @@ describe('Imager.js HTML data-* API', function () {
       });
 
       imgr.ready(function () {
-        var src = applyEach(imgr.divs, function (el) {
-          return el.getAttribute('src');
-        });
+        var src = imgr.divs.map(el => el.getAttribute('src'));
 
         expect(src).to.eql([
           'base/test/fixtures/interpolated/B-z_d.jpg',
@@ -86,9 +80,7 @@ describe('Imager.js HTML data-* API', function () {
       });
 
       imgr.ready(function () {
-        var src = applyEach(imgr.divs, function (el) {
-          return el.getAttribute('src');
-        });
+        var src = imgr.divs.map(el => el.getAttribute('src'));
 
         expect(src).to.eql([
           'base/test/fixtures/media/C-640.jpg',
@@ -116,9 +108,7 @@ describe('Imager.js HTML data-* API', function () {
       });
 
       imgr.ready(function () {
-        var src = applyEach(imgr.divs, function (el) {
-          return el.getAttribute('src');
-        });
+        var src = imgr.divs.map(el => el.getAttribute('src'));
 
         expect(src).to.eql([
           'base/test/fixtures/interpolated/B-z_d.jpg',
@@ -144,12 +134,6 @@ describe('Imager.js HTML data-* API', function () {
   });
 
   describe('handling {pixel_ratio} in data-src', function () {
-    xit('should transform {pixel_ratio} as "" or "-<pixel ratio value>x"', function () {
-      expect(Imager.transforms.pixelRatio(1)).to.equal('');
-      expect(Imager.transforms.pixelRatio(0.5)).to.equal('-0.5x');
-      expect(Imager.transforms.pixelRatio(1.5)).to.equal('-1.5x');
-    });
-
     it('should replace {pixel_ratio} from the `data-src`', function () {
       var dataSrc,
         imgr = new Imager('.delayed-image-load');
