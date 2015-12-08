@@ -123,7 +123,7 @@ export default class Imager {
       document.querySelectorAll(elementsOrSelector) : // Selector
       elementsOrSelector; // Elements (NodeList or array of Nodes)
 
-    if (elements === undefined || elements.hasOwnProperty('length') === false) {
+    if (elements === undefined || typeof elements.length !== 'number') {
       throw new Error('Imager.add() first and only parameter is expected to be a CSS selector, a NodeList or an array of HTML elements.');
     }
 

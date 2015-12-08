@@ -261,6 +261,6 @@ module.exports = function (config) {
   config.set({
     browsers: browsers || (isCI
       ? filterBrowsers(config.customLaunchers, /^BS/)
-      : ['PhantomJSCustom'])
+      : ['PhantomJSCustom', 'Firefox'])
   });
 };

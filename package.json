@@ -39,6 +39,7 @@
     "karma-browserify": "^4.4.2",
     "karma-browserstack-launcher": "^0.1.1",
     "karma-expect": "^1.0.0",
+    "karma-firefox-launcher": "^0.1.7",
     "karma-html2js-preprocessor": "^0.1.0",
     "karma-ievms": "^0.1.0",
     "karma-mocha": "^0.2.0",
