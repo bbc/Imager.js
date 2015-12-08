@@ -172,9 +172,9 @@ describe('Imager.js', function () {
   });
 
   describe('devicePixelRatio', function () {
-    it('should compute and store a value after initialisation', function (done) {
+    it('should compute and store a device specific devicePixelRatio after initialisation', function (done) {
       (new Imager('.delayed-image-load')).ready((imgr) => {
-        expect(imgr).to.have.property('devicePixelRatio', 1);
+        expect(imgr.devicePixelRatio).to.be.within(1, Infinity);
         done();
       });
     });
