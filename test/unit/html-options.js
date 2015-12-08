@@ -129,7 +129,7 @@ describe('Imager.js HTML data-* API', function () {
 
       expect(interpolatorStub.firstCall.args).to.have.length(2);
       expect(interpolatorStub.firstCall.args[0]).to.equal(640);
-      expect(interpolatorStub.firstCall.args[1]).to.equal(1);
+      expect(interpolatorStub.firstCall.args[1]).to.be.within(1, Infinity);
     });
   });
 

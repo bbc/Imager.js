@@ -137,17 +137,11 @@ describe('Imager.js', function () {
   });
 
   describe('determineAppropriateResolution', function () {
-    var imgr, windowWidth, availableWidths = [320, 640, 1024];
+    var imgr, availableWidths = [320, 640, 1024];
 
     beforeEach(function () {
       fixtures = loadFixtures('widths');
       imgr = new Imager('.delayed-image-load', { availableWidths });
-      windowWidth = window.innerWidth;
-    });
-
-    it('should pick the closest value from the container\'s width (no container size)', function () {
-      var maxContainerWidth = getClosestValue(windowWidth, availableWidths);
-      expect(imgr.determineAppropriateResolution(imgr.divs[0])).to.equal(maxContainerWidth);
     });
 
     it('should pick the data-width and not the container\'s size (no container size)', function () {
