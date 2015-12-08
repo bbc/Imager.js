@@ -45,7 +45,8 @@ module.exports = function (config) {
 
     browserify: {
       debug: true,
-      transform: ['babelify', 'envify']
+      transform: ['babelify', 'envify'],
+      require: process.env.BUILD === 'legacy' ? 'es5-shim' : ''
     },
 
     // list of files to exclude

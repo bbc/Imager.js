@@ -146,7 +146,7 @@ export default class Imager {
       this.isResizing = true;
       this.refreshPixelRatio();
 
-      images.filter(filterFn).forEach(image => this.replaceImagesBasedOnScreenDimensions(image));
+      images.filter(filterFn).map(image => this.replaceImagesBasedOnScreenDimensions(image));
 
       this.isResizing = false;
       this.onImagesReplaced(images);
