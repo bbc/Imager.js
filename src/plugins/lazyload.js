@@ -4,6 +4,7 @@ import { convertToPlaceholderImages } from '../dom';
 import { applyEach } from '../shims';
 
 export function register (imgr) {
+  imgr.viewportHeight = document.documentElement.clientHeight;
   imgr.scrolled = false;
 
   imgr.interval = window.setInterval(() => scrollCheck(imgr), imgr.scrollDelay);

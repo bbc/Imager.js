@@ -77,7 +77,6 @@ export default class Imager {
     // non-configurable options
     this.initialized = false;
     this.divs = [];
-    this.viewportHeight = doc.documentElement.clientHeight;
     this.widthsMap = {};
 
     this.refreshPixelRatio();
