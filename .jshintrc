@@ -1,5 +1,7 @@
 {
   "esversion": 6,
   "browser": true,
-  "strict": "global"
+  "strict": true,
+  "module": true,
+  "eqeqeq": true
 }
