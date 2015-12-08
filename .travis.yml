@@ -19,4 +19,9 @@ matrix:
   allow_failures:
     - env: BROWSER=BSIE7
 
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
 script: "npm test -- --browsers $BROWSER"
