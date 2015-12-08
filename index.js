@@ -97,7 +97,7 @@ export default class Imager {
       this.registerResizeEvent(filterFn);
     }
 
-    this.onReady();
+    this.onReady(this);
   }
 
   /**

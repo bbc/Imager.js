@@ -2,6 +2,7 @@
 
 import Imager from '../../index';
 import { getClosestValue } from '../../src/calc'
+import { getPixelRatio } from '../../src/dom'
 import { applyEach } from '../../src/shims'
 import { loadFixtures, cleanFixtures } from '../helpers';
 
@@ -142,7 +143,7 @@ describe('Imager.js', function () {
 
     beforeEach(function () {
       fixtures = loadFixtures('widths');
-      imgr = new Imager('.delayed-image-load', {availableWidths: availableWidths});
+      imgr = new Imager('.delayed-image-load', { availableWidths });
       windowWidth = window.innerWidth;
     });
 
@@ -172,28 +173,12 @@ describe('Imager.js', function () {
     });
   });
 
-  xdescribe('devicePixelRatio', function () {
-    var imgrOptions = {availablePixelRatios: [1, 1.3, 2]};
-
-    it('should pick a value of 1 if the device pixel ratio is lower than 1', function () {
-      sandbox.stub(Imager, 'getPixelRatio', function () {
-        return 0.8
+  describe('devicePixelRatio', function () {
+    it('should compute and store a value after initialisation', function (done) {
+      (new Imager('.delayed-image-load')).ready((imgr) => {
+        expect(imgr).to.have.property('devicePixelRatio', 1);
+        done();
       });
-      expect(new Imager(imgrOptions)).to.have.property('devicePixelRatio', 1);
-    });
-
-    it('should pick a value of 1.3 if the device pixel ratio is equal to 1.3', function () {
-      sandbox.stub(Imager, 'getPixelRatio', function () {
-        return 1.3
-      });
-      expect(new Imager(imgrOptions)).to.have.property('devicePixelRatio', 1.3);
-    });
-
-    it('should pick the biggest ratio if the device pixel ratio is greater than the biggest available one', function () {
-      sandbox.stub(Imager, 'getPixelRatio', function () {
-        return 3
-      });
-      expect(new Imager(imgrOptions)).to.have.property('devicePixelRatio', 2);
     });
   });
 });
