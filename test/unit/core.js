@@ -3,6 +3,7 @@
 import Imager from '../../index';
 import { getClosestValue } from '../../src/calc'
 import { getPixelRatio } from '../../src/dom'
+import { toArray } from '../../src/utils';
 import { loadFixtures, cleanFixtures } from '../helpers';
 
 import jQuery from 'jquery';
@@ -122,7 +123,7 @@ describe('Imager.js', function () {
       imgr.ready(function () {
         var elements = document.querySelectorAll('#test-case div');
 
-        imgr.add([].slice.call(elements));
+        imgr.add(toArray(elements));
         expect(imgr.divs).to.have.length(4);
         done();
       });

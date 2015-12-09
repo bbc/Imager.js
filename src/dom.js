@@ -1,3 +1,5 @@
+import { toArray } from './utils';
+
 /**
  * Returns the naturalWidth of an image element.
  *
@@ -72,7 +74,7 @@ export function convertToPlaceholderImages (imgr, elements) {
     placeholderElement: imgr.gif
   };
 
-  elements = [].slice.call(elements).map(element => {
+  elements = toArray(elements).map(element => {
     return createPlaceholder(element, placeholderOptions);
   });
 

@@ -30,6 +30,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'https://cdn.polyfill.io/v2/polyfill.min.js',
       'test/fixtures/*.html',
       'test/*.js',
       'test/unit/**/*.js',
@@ -45,7 +46,11 @@ module.exports = function (config) {
 
     browserify: {
       debug: true,
-      transform: ['babelify', 'envify']
+      transform: [
+        ['babelify', { 'presets': 'es2015' }],
+        'envify',
+        'es3ify'
+      ]
     },
 
     // list of files to exclude
@@ -255,7 +260,7 @@ module.exports = function (config) {
 
     browserNoActivityTimeout: 45000,
 
-    captureTimeout: isCI ? 120000 : 5000
+    captureTimeout: isCI ? 120000 : 30000
   });
 
   config.set({

@@ -11,6 +11,17 @@ export function trueFn () {
   return true;
 }
 
+export function toArray (collection) {
+  const array = [];
+  const collection_length = collection.length;
+
+  for (let i = 0; i < collection_length; i++) {
+    array.push(collection[i]);
+  }
+
+  return array;
+}
+
 export function debounce (fn, wait) {
   var timeout;
   return function () {
