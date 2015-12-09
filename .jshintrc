@@ -1,17 +1,7 @@
 {
-  "curly": true,
-  "eqeqeq": true,
-  "immed": true,
-  "latedef": true,
-  "newcap": true,
-  "noarg": true,
-  "sub": true,
-  "undef": true,
-  "unused": true,
-  "boss": true,
-  "eqnull": true,
+  "esversion": 6,
   "browser": true,
-  "globalstrict": true,
-  "es3": true,
-  "globals": {}
+  "strict": true,
+  "module": true,
+  "eqeqeq": true
 }

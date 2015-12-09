@@ -8,7 +8,7 @@
 
 The *JavaScript API* helps you instantiate and control how Imager works from a *business logic point of view*.
 
-### `new Imager([selector|elements, [options]])`
+### `new Imager(selector|elements[, options])`
 
 Calling the constructor will initialise responsive images for the provided `elements` or the HTML elements concerned by the `selector`.
 
@@ -54,7 +54,6 @@ var imgr = new Imager('.delayed-image-load');
 
 imgr.add('.new-delayed-image-load-selector');
 imgr.add(newElements);
-imgr.add();     // reuses the constructor selector ('.delayed-image-load')
 ```
 
 

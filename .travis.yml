@@ -8,12 +8,13 @@ env:
     - secure: REkbK7Qre238qK7lW4tokWUgUto3xevxNrsIlbubqyBQX8LZpjUvQFruW2F5t8Jb4LAj7jkT11+bRcy9tlz/H4xZeIr5LxSJVDlqBtsQd6gO2mqArM/ooQkNb8SMPzdFJwehtdttiVHrYFFmmb2+VgwlWz1lu7Huf/SqY/x1l0c=
     - secure: DK26MDZlb7vSYF9SAfBQbcpZLh34jTnNLTU6nM9nD1lPdIounQ8I+xGYGKgb3lA1BdFQgiA1s5VaWxwO/B3B91WF2kIPsXq1hghRQrXdFEae17XfjyiGEFI6oKyO+yKZvu/y86jz54xxwP0XCwspS3ZJI4BvQ8gKfdBEPkWb9Rc=
   matrix:
-    - BROWSER=BSIE8,BSIE9,BSIE9,BSIE10,BSIE11
-    - BROWSER=BSEDGE12
-    - BROWSER=BSOS4,BSOS5,BSOS6,BSOS7,BSOS8
-    - BROWSER=BSAndroid2,BSAndroid4
-    - BROWSER=BSSafari5,BSSafari6,BSSafari7,BSSafari8,BSSafari9
-    - BROWSER=BSFirefox,BSChrome,BSOpera
+    - BROWSER=BSIE8,BSAndroid2,BSOS4 BUILD=legacy
+    - BROWSER=BSIE9,BSIE9,BSIE10,BSIE11 BUILD=modern
+    - BROWSER=BSEDGE12 BUILD=modern
+    - BROWSER=BSOS5,BSOS6,BSOS7,BSOS8 BUILD=modern
+    - BROWSER=BSAndroid4,BSAndroid5 BUILD=modern
+    - BROWSER=BSSafari5,BSSafari6,BSSafari7,BSSafari8,BSSafari9 BUILD=modern
+    - BROWSER=BSFirefox,BSChrome,BSOpera BUILD=modern
 
 matrix:
   allow_failures:

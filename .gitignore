@@ -1,7 +1,8 @@
 node_modules
+*.log*
 .tmp
-.sass-cache
 .jpg
 .png
 .gif
 .DS_Store
+Imager.js
