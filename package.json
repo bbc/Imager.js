@@ -7,7 +7,8 @@
     "test": "./node_modules/karma/bin/karma start",
     "posttest": "jshint Imager.js",
     "test:watch": "npm run test -- --auto-watch --no-single-run",
-    "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist"
+    "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist",
+    "preversion": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",
