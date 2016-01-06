@@ -17,6 +17,77 @@ describe('Imager.js HTML data-* API', function () {
         cleanFixtures(fixtures);
     });
 
+    describe('CSS Background Support', function () {
+      it('should not replace divs with images', function (done) {
+        fixtures = loadFixtures('data-src-new');
+        var imgr = new Imager({cssBackgrounds: true, availableWidths: [640, 320]});
+
+        imgr.ready(function () {
+          applyEach(imgr.divs, function (el) {
+            expect(el).to.have.property('nodeName', 'DIV');
+          });
+
+          done();
+        });
+      });
+
+      it('should apply a css class to cssBackground enables divs', function (done) {
+        fixtures = loadFixtures('data-src-new');
+        var imgr = new Imager({cssBackgrounds: true, availableWidths: [640, 320], className: 'bg-responsive-img image-replace'});
+
+        imgr.ready(function () {
+          applyEach(imgr.divs, function (el) {
+            expect(el.className).to.equal('bg-responsive-img image-replace');
+          });
+
+          done();
+        });
+      });
+
+      it('should set the inline background-image', function (done) {
+        fixtures = loadFixtures('data-src-new');
+        var imgr = new Imager({cssBackgrounds: true, availableWidths: [640, 320]});
+
+        imgr.ready(function () {
+            var src = applyEach(imgr.divs, function (el) {
+                return el.getAttribute('style');
+            });
+
+            expect(src).to.eql([
+              'background-image: url(http://localhost:9876/base/test/fixtures/media/C-640.jpg); ',
+              'background-image: url(http://localhost:9876/base/test/fixtures/media/B-640.jpg); ',
+              'background-image: url(http://localhost:9876/base/test/fixtures/media-640/fillmurray.jpg); '
+            ]);
+
+            done();
+        });
+      });
+
+      it('should work for both images and background images', function (done) {
+        fixtures = loadFixtures('multiple');
+        var images = document.querySelectorAll('.imager-image');
+        var backgrounds = document.querySelectorAll('.responsive-background-image');
+        var imageImgr = new Imager(images, {availableWidths: [320, 640]});
+        var backgroundImgr = new Imager(backgrounds, {cssBackgrounds: true, availableWidths: [320, 640]});
+
+        imageImgr.ready(function () {
+          var src = applyEach(imageImgr.divs, function (el) {
+              return el.getAttribute('src');
+          });
+          expect(src).to.eql(['base/test/fixtures/media/C-640.jpg', 'base/test/fixtures/media-320/fillmurray.jpg']);
+
+          backgroundImgr.ready(function () {
+            var src = applyEach(backgroundImgr.divs, function (el) {
+              return el.getAttribute('style');
+            });
+            expect(src).to.eql(['background-image: url(http://localhost:9876/base/test/fixtures/media/B-640.jpg); ']);
+            done();
+          });
+
+        });
+      });
+    });
+
     describe('handling {width} in data-src', function () {
         it('should not use RegExp anymore', function (done) {
             fixtures = loadFixtures('data-src-old');
