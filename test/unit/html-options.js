@@ -199,6 +199,34 @@ describe('Imager.js HTML data-* API', function () {
             });
         });
     });
+    
+    describe('handling data-title', function () {
+        it('should generate an empty title attribute for the responsive image', function (done) {
+            fixtures = loadFixtures('regular');
+            var imgr = new Imager('#main .delayed-image-load');
+
+            expect(imgr.gif).to.have.property('title', '');
+
+            imgr.ready(function () {
+                expect(imgr.divs[0]).to.have.property('title', imgr.gif.title);
+
+                done();
+            });
+        });
+
+        it('should generate an title attribute with the same value as the placeholder data-title attribute', function (done) {
+            fixtures = loadFixtures('regular');
+            var imgr = new Imager('#main .delayed-image-load');
+
+            expect(imgr.gif).to.have.property('title', '');
+
+            imgr.ready(function () {
+                expect(imgr.divs[1]).to.have.property('title', 'Responsive Image title');
+
+                done();
+            });
+        });
+    });
 
     describe('handling data-width', function () {
         beforeEach(function () {
