@@ -113,7 +113,7 @@
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className    = this.className;
         this.gif.alt          = '';
-        this.gif.title          = '';
+        this.gif.title        = '';
         this.lazyloadOffset   = opts.lazyloadOffset || 0;
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
