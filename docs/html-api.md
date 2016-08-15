@@ -50,20 +50,22 @@ So the following HTML...
 </div>
 ```
 
-### `data-alt` and `data-class`
+### `data-alt`, `data-title` and `data-class`
 
-These two `data-*` attributes are copied from the responsive placeholder to the response `img` element.nnot process images or who have image loading disabled. It is converted to the `alt` attribute of the `img element.
+These three `data-*` attributes are copied from the responsive placeholder to the response `img` element.nnot process images or who have image loading disabled. `data-alt` attribute is converted to the `alt` attribute of the `img` element. `data-title` attribute is converted to the `title` attribute of the `img` element.
 
 So the following HTML...
 
 ```html
 <div data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
+<div data-src="http://placehold.it/{width}" data-title="Title text"></div>
 <div data-src="http://placehold.it/{width}" data-class="london calling"></div>
 ```
 
 ...is converted to...
 
 ```html
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="" class="london calling image-replace">
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" title="" class="image-replace">
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="" title="Title text" class="image-replace">
+<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="" title="" class="london calling image-replace">
 ```
