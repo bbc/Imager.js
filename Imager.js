@@ -113,6 +113,7 @@
         this.gif.src          = 'data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7';
         this.gif.className    = this.className;
         this.gif.alt          = '';
+        this.gif.title          = '';
         this.lazyloadOffset   = opts.lazyloadOffset || 0;
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
@@ -248,7 +249,8 @@
         gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
-
+        gif.setAttribute('title', element.getAttribute('data-title') || this.gif.title);
+        
         element.parentNode.replaceChild(gif, element);
 
         return gif;
