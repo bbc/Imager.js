@@ -324,17 +324,9 @@
      * @param {HTMLImageElement} image
      */
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
-        var computedWidth, naturalWidth;
-
-	naturalWidth = Imager.getNaturalWidth(image);
-        computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
-                                                                   : this.determineAppropriateResolution(image);
+        var computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image) : this.determineAppropriateResolution(image);
 
         image.width = computedWidth;
-
-        if (!this.isPlaceholder(image) && computedWidth <= naturalWidth) {
-            return;
-        }
 
         image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
         image.removeAttribute('width');
@@ -457,26 +449,6 @@
         }
     };
 
-    /**
-     * Returns the naturalWidth of an image element.
-     *
-     * @since 1.3.1
-     * @param {HTMLImageElement} image
-     * @return {Number} Image width in pixels
-     */
-    Imager.getNaturalWidth = (function () {
-        if ('naturalWidth' in (new Image())) {
-            return function (image) {
-                return image.naturalWidth;
-            };
-        }
-        // non-HTML5 browsers workaround
-        return function (image) {
-            var imageCopy = document.createElement('img');
-            imageCopy.src = image.src;
-            return imageCopy.width;
-        };
-    })();
 
     // This form is used because it seems impossible to stub `window.pageYOffset`
     Imager.getPageOffset = Imager.getPageOffsetGenerator(Object.prototype.hasOwnProperty.call(window, 'pageYOffset'));
