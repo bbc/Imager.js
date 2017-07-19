@@ -486,7 +486,7 @@
     Imager.addEvent = addEvent;
     Imager.debounce = debounce;
 
-    /* global module, exports: true, define */
+    /* jshint ignore:start */
     if (typeof module === 'object' && typeof module.exports === 'object') {
         // CommonJS, just export
         module.exports = exports = Imager;
@@ -497,6 +497,6 @@
         // If no AMD and we are in the browser, attach to window
         window.Imager = Imager;
     }
-    /* global -module, -exports, -define */
+    /* jshint ignore:end */
 
 }(window, document));
