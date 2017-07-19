@@ -198,6 +198,20 @@ describe('Imager.js HTML data-* API', function () {
                 done();
             });
         });
+
+        it('should honour the existing alt attribute if no data-alt attribute is available', function (done) {
+            fixtures = loadFixtures('img-placeholders');
+            var imgr = new Imager('#main .delayed-image-load');
+
+            expect(imgr.gif).to.have.property('alt', '');
+
+            imgr.ready(function () {
+                expect(imgr.divs[1]).to.have.property('alt', 'Responsive Image alternative');
+                expect(imgr.divs[2]).to.have.property('alt', 'Placeholder image alternative');
+
+                done();
+            });
+        });
     });
 
     describe('handling data-width', function () {
