@@ -1,6 +1,9 @@
 ## Change Log
 
 ### 0.5.0 (2015/01/09 19:30 +00:00)
+- [#140](https://github.com/BBC-News/Imager.js/pull/140) Respect alt attribute of placeholder img (@wildlyinaccurate)
+
+### 0.5.0 (2015/01/09 19:30 +00:00)
 - [#118](https://github.com/BBC-News/Imager.js/pull/118) Ability to add elements to Imager after initialisation (WebSeed)
 - [#113](https://github.com/BBC-News/Imager.js/pull/113) Add Imager.addEvent and Imager.debounce
 
