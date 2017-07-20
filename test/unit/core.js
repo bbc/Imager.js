@@ -276,4 +276,77 @@ describe('Imager.js', function () {
             expect(imgr.isThisElementOnScreen(element)).to.equal(true);
         });
     });
+
+    describe('checkImagesNeedReplacing', function () {
+
+        it('ignores images which are hidden when loadHidden is set to false', function () {
+            var imager = new Imager({
+                    loadHidden: false
+                }),
+                imageVisibilities = [true, false, true];
+
+            sandbox.stub(imager, 'refreshPixelRatio');
+            sandbox.stub(Imager, 'isElementVisible').returnsArg(0);
+            sandbox.stub(imager, 'replaceImagesBasedOnScreenDimensions');
+
+            imager.checkImagesNeedReplacing(imageVisibilities);
+
+            // Only the first and third image should be replaced
+            expect(imager.replaceImagesBasedOnScreenDimensions.callCount).to.equal(2);
+            expect(imager.replaceImagesBasedOnScreenDimensions.getCall(0).args[0]).to.equal(true);
+            expect(imager.replaceImagesBasedOnScreenDimensions.getCall(1).args[0]).to.equal(true);
+        });
+
+        it('replaces all images if loadHidden is set to true (default)', function () {
+            var imager = new Imager(),
+                imageVisibilities = [true, false, true];
+
+            sandbox.stub(imager, 'refreshPixelRatio');
+            sandbox.stub(Imager, 'isElementVisible').returnsArg(0);
+            sandbox.stub(imager, 'replaceImagesBasedOnScreenDimensions');
+
+            imager.checkImagesNeedReplacing(imageVisibilities);
+
+            // All images should be loaded
+            expect(imager.replaceImagesBasedOnScreenDimensions.callCount).to.equal(3);
+            expect(imager.replaceImagesBasedOnScreenDimensions.getCall(0).args[0]).to.equal(true);
+            expect(imager.replaceImagesBasedOnScreenDimensions.getCall(1).args[0]).to.equal(false);
+            expect(imager.replaceImagesBasedOnScreenDimensions.getCall(2).args[0]).to.equal(true);
+        });
+    });
+
+    describe('isElementVisible', function () {
+
+        it('should return true if element is visible', function () {
+            fixtures = loadFixtures('hidden');
+            expect(Imager.isElementVisible(fixtures.querySelector('#visible-element'))).to.equal(true);
+            expect(Imager.isElementVisible(fixtures.querySelector('#visible-element'))).to.equal(true);
+        });
+
+        it('should return true if the element is set to visiblity: hidden', function () {
+            fixtures = loadFixtures('hidden');
+            expect(Imager.isElementVisible(fixtures.querySelector('#hidden-element-visibility'))).to.equal(true);
+        });
+
+        it('should return false if the element itself is display: none', function () {
+            fixtures = loadFixtures('hidden');
+            expect(Imager.isElementVisible(fixtures.querySelector('#hidden-element'))).to.equal(false);
+        });
+
+        it('should return false if the element has no height or width', function () {
+            fixtures = loadFixtures('hidden');
+            expect(Imager.isElementVisible(fixtures.querySelector('#hidden-element-implicit'))).to.equal(false);
+        });
+
+
+        it('should return false if the element is within a display: none element', function () {
+            fixtures = loadFixtures('hidden');
+            expect(Imager.isElementVisible(fixtures.querySelector('#hidden-child'))).to.equal(false);
+        });
+
+        it('should return false if the element is within a child of a display: none element', function () {
+            fixtures = loadFixtures('hidden');
+            expect(Imager.isElementVisible(fixtures.querySelector('#hidden-sub-child'))).to.equal(false);
+        });
+    });
 });
