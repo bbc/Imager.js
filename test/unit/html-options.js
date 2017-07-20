@@ -17,6 +17,22 @@ describe('Imager.js HTML data-* API', function () {
         cleanFixtures(fixtures);
     });
 
+    describe('customising matcher for interpolation', function () {
+      it('should successfully resolve custom match expression', function (done) {
+        fixtures = loadFixtures('custom-matcher');
+        var imgr = new Imager({availableWidths: [320, 640], widthInterpolationSelector: 'xxwidthxx'});
+
+        imgr.ready(function () {
+          var src = applyEach(imgr.divs, function (el) {
+            return el.getAttribute('src');
+          });
+
+          expect(src).to.eql(['base/test/fixtures/media/C-640.jpg', 'base/test/fixtures/media/B-640.jpg', 'base/test/fixtures/media-320/fillmurray.jpg']);
+          done();
+        });
+      });
+    });
+
     describe('handling {width} in data-src', function () {
         it('should not use RegExp anymore', function (done) {
             fixtures = loadFixtures('data-src-old');
