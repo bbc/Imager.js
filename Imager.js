@@ -86,8 +86,8 @@
         @return {object} instance of Imager
      */
     var Imager = function (elements, opts) {
-        var self = this;
-        var doc  = document;
+        var self = this,
+        	doc = document;
 
         opts = opts || {};
 
@@ -153,25 +153,32 @@
     };
 
     Imager.prototype.add = function (elementsOrSelector) {
-
+    	var elements, additional;
+    	
         elementsOrSelector = elementsOrSelector || this.selector;
-        var elements = typeof elementsOrSelector === 'string' ?
+        elements = typeof elementsOrSelector === 'string' ?
             document.querySelectorAll(elementsOrSelector) : // Selector
             elementsOrSelector; // Elements (NodeList or array of Nodes)
 
         if (elements && elements.length) {
-            var additional = applyEach(elements, returnFn);
+            additional = applyEach(elements, returnFn);
             this.changeDivsToEmptyImages(additional);
             this.divs = this.divs.concat(additional);
         }
     };
+	
+	Imager.prototype.update = function() {
+		this.divs = [];
+		this.add();
+		this.lazyLoad && this.scrollCheck(true);	
+	};
+	
+    Imager.prototype.scrollCheck = function (force) {
+        var self = this,
+        	offscreenImageCount = 0,
+        	elements = [];
 
-    Imager.prototype.scrollCheck = function () {
-        var self = this;
-        var offscreenImageCount = 0;
-        var elements = [];
-
-        if (this.scrolled) {
+        if (Boolean(force) || this.scrolled) {
             // collects a subset of not-yet-responsive images and not offscreen anymore
             applyEach(this.divs, function (element) {
                 if (self.isPlaceholder(element)) {
@@ -193,10 +200,10 @@
     };
 
     Imager.prototype.init = function () {
-        var self = this;
+        var self = this,
+			filterFn = trueFn;
 
         this.initialized = true;
-        var filterFn = trueFn;
 
         if (this.lazyload) {
             this.registerScrollEvent();
@@ -236,9 +243,9 @@
             return element;
         }
 
-        var elementClassName = element.getAttribute('data-class');
-        var elementWidth = element.getAttribute('data-width');
-        var gif = this.gif.cloneNode(false);
+        var elementClassName = element.getAttribute('data-class'),
+        	elementWidth = element.getAttribute('data-width'),
+        	gif = this.gif.cloneNode(false);
 
         if (elementWidth) {
           gif.width = elementWidth;
@@ -286,8 +293,8 @@
     Imager.prototype.isThisElementOnScreen = function (element) {
         // document.body.scrollTop was working in Chrome but didn't work on Firefox, so had to resort to window.pageYOffset
         // but can't fallback to document.body.scrollTop as that doesn't work in IE with a doctype (?) so have to use document.documentElement.scrollTop
-        var elementOffsetTop = 0;
-        var offset = Imager.getPageOffset() + this.lazyloadOffset;
+        var elementOffsetTop = 0,
+        	offset = Imager.getPageOffset() + this.lazyloadOffset;
 
         if (element.offsetParent) {
             do {
@@ -326,9 +333,10 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-	naturalWidth = Imager.getNaturalWidth(image);
-        computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
-                                                                   : this.determineAppropriateResolution(image);
+		naturalWidth = Imager.getNaturalWidth(image);
+        computedWidth = typeof this.availableWidths === 'function' ? 
+			this.availableWidths(image) :
+            this.determineAppropriateResolution(image);
 
         image.width = computedWidth;
 
@@ -342,7 +350,7 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+    	return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
     };
 
     /**
@@ -370,7 +378,7 @@
 
     Imager.createWidthsMap = function createWidthsMap (widths, interpolator, pixelRatio) {
         var map = {},
-            i   = widths.length;
+            i = widths.length;
 
         while (i--) {
             map[widths[i]] = interpolator(widths[i], pixelRatio);
@@ -407,7 +415,7 @@
      * @returns {Number}
      */
     Imager.getClosestValue = function getClosestValue(baseValue, candidates) {
-        var i             = candidates.length,
+        var i = candidates.length,
             selectedWidth = candidates[i - 1];
 
         baseValue = parseFloat(baseValue);
