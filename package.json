@@ -7,7 +7,9 @@
     "test": "./node_modules/karma/bin/karma start",
     "posttest": "jshint Imager.js",
     "test:watch": "npm run test -- --auto-watch --no-single-run",
-    "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist"
+    "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -26,19 +28,23 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "expect.js": "^0.3.0",
-    "jquery": "^1.10.2",
+    "jquery": "^3.0.0",
     "jshint": "^2.4.3",
-    "karma": "^0.13.0",
+    "karma": "^2.0.3",
     "karma-browserstack-launcher": "^0.1.1",
     "karma-expect": "^1.0.0",
     "karma-html2js-preprocessor": "^0.1.0",
     "karma-ievms": "^0.1.0",
     "karma-mocha": "^0.2.0",
-    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-phantomjs-launcher": "^1.0.0",
     "karma-sinon": "^1.0.3",
-    "mocha": "^2.0.0",
-    "phantomjs": "^1.9.19",
+    "mocha": "^4.0.0",
+    "phantomjs": "^2.1.1",
     "sinon": "^1.8.1",
     "uglify-js": "^2.4.3"
+  },
+  "snyk": true,
+  "dependencies": {
+    "snyk": "^1.90.2"
   }
 }
