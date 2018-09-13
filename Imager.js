@@ -117,6 +117,7 @@
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.multiplyPixelRatio   = opts.hasOwnProperty('multiplyPixelRatio') ? opts.multiplyPixelRatio : true;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -326,7 +327,7 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-	naturalWidth = Imager.getNaturalWidth(image);
+    naturalWidth = Imager.getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
@@ -342,7 +343,13 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+        var targetWidth = image.getAttribute('data-width') || image.parentNode.clientWidth;
+        if (this.multiplyPixelRatio){
+            var pixelRatio = Imager.getPixelRatio();
+            targetWidth = targetWidth * pixelRatio;
+        }
+        console.log("target width is", targetWidth)
+      return Imager.getClosestValue(targetWidth, this.availableWidths);
     };
 
     /**
