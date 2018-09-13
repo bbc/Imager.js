@@ -19,7 +19,7 @@ Available placeholders are:
 So the following HTML...
 
 ```html
-<div data-src="http://placehold.it/{width}"></div>
+<img data-src="http://placehold.it/{width}"></img>
 ```
 
 ...is converted to...
@@ -38,7 +38,7 @@ So the following HTML...
 
 ```html
 <div style="width:600px">
-    <div data-src="http://placehold.it/{width}" data-width="300" data-alt="alternative text"></div>
+    <img data-src="http://placehold.it/{width}" data-width="300" data-alt="alternative text"></img>
 </div>
 ```
 
@@ -48,22 +48,4 @@ So the following HTML...
 <div style="width:600px">
     <img src="http://placehold.it/300" data-src="http://placehold.it/{width}" width="300" alt="alternative text" class="image-replace">
 </div>
-```
-
-### `data-alt` and `data-class`
-
-These two `data-*` attributes are copied from the responsive placeholder to the response `img` element.nnot process images or who have image loading disabled. It is converted to the `alt` attribute of the `img element.
-
-So the following HTML...
-
-```html
-<div data-src="http://placehold.it/{width}" data-alt="alternative text"></div>
-<div data-src="http://placehold.it/{width}" data-class="london calling"></div>
-```
-
-...is converted to...
-
-```html
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
-<img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="" class="london calling image-replace">
 ```
