@@ -14,7 +14,7 @@
         }
     })();
 
-    var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+    var defaultWidths = [50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1400, 1600, 1800, 2000];
 
     var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
         var keys = [],
