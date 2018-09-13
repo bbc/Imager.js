@@ -46,13 +46,25 @@ npm                            | bower                            | old school
 -------------------------------|----------------------------------|------------------------------------------------------------------------------
 `npm install --save imager.js` | `bower install --save imager.js` | [download zip file](https://github.com/BBC-News/Imager.js/archive/master.zip)
 
-## Using 2018
+# Documentation
+
+Browse Imager public APIs and options – versioned alongside the source code of the project:
+
+- [HTML options](docs/html-api.md)
+- [JavaScript options](docs/js-options.md)
+- [JavaScript API](docs/js-api.md)
+
+## Notes - 2018
+
+Examples in this repo may be out of date.
+
+## Using
 
 Changes below made in 2018 by Ed Horsford
 
 ```html
 <div style="width: 240px">
-    <img class="delayed-image-load" data-src="http://placehold.it/{width}" data-alt="alternative text"></img>
+    <img class="delayed-image-load" data-src="http://placehold.it/{width}" data-alt="alternative text">
 </div>
 
 <script>
@@ -83,7 +95,7 @@ in 3 different pixel ratio flavours (`1`, `1.3` and `2`):
 
 ```html
 <div style="width: 240px">
-    <img class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png" data-alt="alternative text"></img>
+    <img class="delayed-image-load" data-src="http://example.com/assets/{width}/imgr{pixel_ratio}.png" data-alt="alternative text">
 </div>
 
 <script>
@@ -107,7 +119,7 @@ string to be injected into the image URL for a given width. This feature allows 
 
 ```html
 <div style="width: 240px">
-    <img class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png" data-alt="alternative text"></img>
+    <img class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png" data-alt="alternative text">
 </div>
 
 <script>
@@ -126,7 +138,7 @@ Alternatively you can define `availableWidths` as an `Object` where the key is t
 
 ```html
 <div style="width: 240px">
-    <img class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png" data-alt="alternative text"></img>
+    <img class="delayed-image-load" data-src="http://example.com/assets/imgr-{width}.png" data-alt="alternative text">
 </div>
 
 <script>
@@ -152,8 +164,8 @@ Here is an example to serve your own images alongside [Flickr images](http://www
 
 ```html
 <div style="width: 240px">
-    <img class="delayed-image-load"        data-src="http://placehold.it/{width}" data-alt="alternative text 1"></img>
-    <img class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" data-alt="alternative text 2"></img>
+    <img class="delayed-image-load"        data-src="http://placehold.it/{width}" data-alt="alternative text 1">
+    <img class="delayed-flickr-image-load" data-src="//farm5.staticflickr.com/4148/4990539658_a38ed4ec6e_{width}.jpg" data-alt="alternative text 2">
 </div>
 
 <script>
@@ -186,7 +198,7 @@ You might want to pass a NodeList or an array of **placeholder elements** as the
 
 ```html
 <div style="width: 240px">
-    <img class="delayed-image-load" data-src="http://placehold.it/{width}" data-alt="alternative text"></img>
+    <img class="delayed-image-load" data-src="http://placehold.it/{width}" data-alt="alternative text">
 </div>
 
 <script>
@@ -204,14 +216,6 @@ This will result in the following HTML output:
     <img src="http://placehold.it/260" data-src="http://placehold.it/{width}" alt="alternative text" class="image-replace">
 </div>
 ```
-
-# Documentation
-
-Browse Imager public APIs and options – versioned alongside the source code of the project:
-
-- [HTML options](docs/html-api.md)
-- [JavaScript options](docs/js-options.md)
-- [JavaScript API](docs/js-api.md)
 
 # Demos
 

@@ -19,7 +19,7 @@ Available placeholders are:
 So the following HTML...
 
 ```html
-<img data-src="http://placehold.it/{width}"></img>
+<img data-src="http://placehold.it/{width}">
 ```
 
 ...is converted to...
@@ -38,7 +38,7 @@ So the following HTML...
 
 ```html
 <div style="width:600px">
-    <img data-src="http://placehold.it/{width}" data-width="300" data-alt="alternative text"></img>
+    <img data-src="http://placehold.it/{width}" data-width="300" data-alt="alternative text">
 </div>
 ```
 
