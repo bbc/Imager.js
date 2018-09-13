@@ -2,6 +2,8 @@
 
 ### 0.6.0 (2018/09/13 14:30 +00:00)
 - Add option to multiply width by device pixel ratio
+- Provide new set of default widths
+- Add version number information as comment to js
 
 ### 0.5.0 (2015/01/09 19:30 +00:00)
 - [#140](https://github.com/BBC-News/Imager.js/pull/140) Respect alt attribute of placeholder img (@wildlyinaccurate)

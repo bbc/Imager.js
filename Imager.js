@@ -1,3 +1,16 @@
+/*
+ 
+ * Imager.js
+ * v0.6.0
+
+ * Original project:
+ * https://github.com/BBC-News/Imager.js
+ *
+ * Forked by Ed Horsford:
+ * https://github.com/edwardhorsford/Imager.js
+ 
+*/
+
 ;(function (window, document) {
     'use strict';
 
