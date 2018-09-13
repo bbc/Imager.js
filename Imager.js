@@ -132,6 +132,7 @@
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.multiplyPixelRatio   = opts.hasOwnProperty('multiplyPixelRatio') ? opts.multiplyPixelRatio : true;
         this.targetAttribute       = opts.targetAttribute || 'src';
+        this.sourceAttribute       = opts.sourceAttribute || 'data-src';
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -358,7 +359,7 @@
             return;
         }
 
-        var src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+        var src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute(this.sourceAttribute), computedWidth);
         image.setAttribute(this.targetAttribute, src);
         image.removeAttribute('width');
         image.removeAttribute('height');
