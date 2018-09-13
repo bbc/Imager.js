@@ -131,6 +131,7 @@
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.multiplyPixelRatio   = opts.hasOwnProperty('multiplyPixelRatio') ? opts.multiplyPixelRatio : true;
+        this.targetAttribute       = opts.targetAttribute || 'src';
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -358,7 +359,7 @@
         }
 
         var src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
-        image.setAttribute('src', src);
+        image.setAttribute(this.targetAttribute, src);
         image.removeAttribute('width');
         image.removeAttribute('height');
     };
@@ -501,7 +502,7 @@
         // non-HTML5 browsers workaround
         return function (image) {
             var imageCopy = document.createElement('img');
-            imageCopy.src = image.src;
+            imageCopy.src = image.targetAttribute;
             return imageCopy.width;
         };
     })();
