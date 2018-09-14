@@ -361,6 +361,16 @@
 
         var src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute(this.sourceAttribute), computedWidth);
         image.setAttribute(this.targetAttribute, src);
+        var classSelector = this.selector;
+        if (classSelector.startsWith(".")){
+            classSelector = classSelector.substring(1);
+        }
+        if (image.classList.contains(classSelector)){
+            image.classList.remove(classSelector);
+        };
+        if (!image.classList.contains(this.className)){
+            image.classList.add(this.className);
+        };
         image.removeAttribute('width');
         image.removeAttribute('height');
     };
