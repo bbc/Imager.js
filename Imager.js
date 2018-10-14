@@ -1,3 +1,16 @@
+/*
+ 
+ * Imager.js
+ * v0.6.0
+
+ * Original project:
+ * https://github.com/BBC-News/Imager.js
+ *
+ * Forked by Ed Horsford:
+ * https://github.com/edwardhorsford/Imager.js
+
+*/
+
 ;(function (window, document) {
     'use strict';
 
@@ -14,7 +27,7 @@
         }
     })();
 
-    var defaultWidths = [96, 130, 165, 200, 235, 270, 304, 340, 375, 410, 445, 485, 520, 555, 590, 625, 660, 695, 736];
+    var defaultWidths = [50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1400, 1600, 1800, 2000];
 
     var getKeys = typeof Object.keys === 'function' ? Object.keys : function (object) {
         var keys = [],
@@ -117,6 +130,10 @@
         this.scrollDelay      = opts.scrollDelay || 250;
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
+        this.multiplyPixelRatio   = opts.hasOwnProperty('multiplyPixelRatio') ? opts.multiplyPixelRatio : true;
+        this.useClientWidth         = opts.hasOwnProperty('useClientWidth') ? opts.useClientWidth : false;
+        this.targetAttribute       = opts.targetAttribute || 'src';
+        this.sourceAttribute       = opts.sourceAttribute || 'data-src';
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -161,7 +178,10 @@
 
         if (elements && elements.length) {
             var additional = applyEach(elements, returnFn);
-            this.changeDivsToEmptyImages(additional);
+            // Not sure this check is needed
+            if (this.initialized) {
+                this.checkImagesNeedReplacing(elements);
+            }
             this.divs = this.divs.concat(additional);
         }
     };
@@ -187,7 +207,11 @@
                 window.clearInterval(self.interval);
             }
 
-            this.changeDivsToEmptyImages(elements);
+            // This check might not be needed
+            if (this.initialized) {
+                this.checkImagesNeedReplacing(elements);
+            }
+
             this.scrolled = false;
         }
     };
@@ -230,41 +254,41 @@
         this.onReady = fn || noop;
     };
 
-    Imager.prototype.createGif = function (element) {
-        // if the element is already a responsive image then we don't replace it again
-        if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
-            return element;
-        }
+    // Imager.prototype.createGif = function (element) {
+    //     // if the element is already a responsive image then we don't replace it again
+    //     if (element.className.match(new RegExp('(^| )' + this.className + '( |$)'))) {
+    //         return element;
+    //     }
 
-        var elementClassName = element.getAttribute('data-class');
-        var elementWidth = element.getAttribute('data-width');
-        var gif = this.gif.cloneNode(false);
+    //     var elementClassName = element.getAttribute('data-class');
+    //     var elementWidth = element.getAttribute('data-width');
+    //     var gif = this.gif.cloneNode(false);
 
-        if (elementWidth) {
-          gif.width = elementWidth;
-          gif.setAttribute('data-width', elementWidth);
-        }
+    //     if (elementWidth) {
+    //       gif.width = elementWidth;
+    //       gif.setAttribute('data-width', elementWidth);
+    //     }
 
-        gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
-        gif.setAttribute('data-src', element.getAttribute('data-src'));
-        gif.setAttribute('alt', element.getAttribute('data-alt') || element.alt || this.gif.alt);
+    //     gif.className = (elementClassName ? elementClassName + ' ' : '') + this.className;
+    //     gif.setAttribute('data-src', element.getAttribute('data-src'));
+    //     gif.setAttribute('alt', element.getAttribute('data-alt') || element.alt || this.gif.alt);
 
-        element.parentNode.replaceChild(gif, element);
+    //     element.parentNode.replaceChild(gif, element);
 
-        return gif;
-    };
+    //     return gif;
+    // };
 
-    Imager.prototype.changeDivsToEmptyImages = function (elements) {
-        var self = this;
+    // Imager.prototype.changeDivsToEmptyImages = function (elements) {
+    //     var self = this;
 
-        applyEach(elements, function (element, i) {
-            elements[i] = self.createGif(element);
-        });
+    //     applyEach(elements, function (element, i) {
+    //         elements[i] = self.createGif(element);
+    //     });
 
-        if (this.initialized) {
-            this.checkImagesNeedReplacing(elements);
-        }
-    };
+    //     if (this.initialized) {
+    //         this.checkImagesNeedReplacing(elements);
+    //     }
+    // };
 
     /**
      * Indicates if an element is an Imager placeholder
@@ -326,7 +350,7 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-	naturalWidth = Imager.getNaturalWidth(image);
+    naturalWidth = Imager.getNaturalWidth(image);
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
@@ -336,13 +360,33 @@
             return;
         }
 
-        image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+        var src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute(this.sourceAttribute), computedWidth);
+        image.setAttribute(this.targetAttribute, src);
+        var classSelector = this.selector;
+        if (classSelector.startsWith(".")){
+            classSelector = classSelector.substring(1);
+        }
+        if (image.classList.contains(classSelector)){
+            image.classList.remove(classSelector);
+        };
+        if (!image.classList.contains(this.className)){
+            image.classList.add(this.className);
+        };
         image.removeAttribute('width');
         image.removeAttribute('height');
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-      return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+        var targetWidth;
+        if (this.useClientWidth){
+            targetWidth = document.documentElement.clientWidth;
+        }
+        else targetWidth = image.getAttribute('data-width') || image.parentNode.clientWidth;
+        if (this.multiplyPixelRatio){
+            var pixelRatio = Imager.getPixelRatio();
+            targetWidth = targetWidth * pixelRatio;
+        }
+      return Imager.getClosestValue(targetWidth, this.availableWidths);
     };
 
     /**
@@ -473,7 +517,7 @@
         // non-HTML5 browsers workaround
         return function (image) {
             var imageCopy = document.createElement('img');
-            imageCopy.src = image.src;
+            imageCopy.src = image.targetAttribute;
             return imageCopy.width;
         };
     })();

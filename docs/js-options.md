@@ -24,6 +24,8 @@ new Imager({
 });
 ```
 
+**Default value**: `[50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1400, 1600, 1800, 2000]`
+
 `Object`: the widths associate a string value for their numeric counterpart
 
 ```js
@@ -123,4 +125,48 @@ new Imager({
         console.log('the src of all relevant images has been updated');
     }
 });
+```
+
+### `multiplyPixelRatio`
+
+An *experimental* Boolean value. If set to true, the measured width of the container will be multiplied by the device pixel ratio.
+
+For example, with a container of 400px width and device pixel ratio of 2, the computed width will be 800px.
+
+This option should be disabled if requesting images with the `{pixel_ratio}` placeholder.
+
+**Default value**: `true`
+
+```js
+new Imager({ multiplyPixelRatio: false });
+```
+
+### `sourceAttribute`
+
+The attribute to get the src url from. Useful if `data-src` is already being used.
+
+**Default value**: `data-src`
+
+```js
+new Imager({ sourceAttribute: 'data-src-url' });
+```
+
+### `targetAttribute`
+
+The attribute to set with the computed url. Useful if you don't want to set src yet or want to do other processing.
+
+**Default value**: `src`
+
+```js
+new Imager({ targetAttribute: 'data-src-new' });
+```
+
+### `useClientWidth`
+
+Set whether Imager should use the  page width rather than `img` container width. Useful for images that are to be displayed full screen.
+
+**Default value**: `false`
+
+```js
+new Imager({ useClientWidth: true });
 ```
