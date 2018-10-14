@@ -133,7 +133,7 @@ An *experimental* Boolean value. If set to true, the measured width of the conta
 
 For example, with a container of 400px width and device pixel ratio of 2, the computed width will be 800px.
 
-This option should be disabled if requesting images with the `{pixel_ratio}`` placeholder.
+This option should be disabled if requesting images with the `{pixel_ratio}` placeholder.
 
 **Default value**: `true`
 
@@ -159,4 +159,14 @@ The attribute to set with the computed url. Useful if you don't want to set src 
 
 ```js
 new Imager({ targetAttribute: 'data-src-new' });
+```
+
+### `useClientWidth`
+
+Set whether Imager should use the  page width rather than `img` container width. Useful for images that are to be displayed full screen.
+
+**Default value**: `false`
+
+```js
+new Imager({ useClientWidth: true });
 ```

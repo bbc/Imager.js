@@ -131,6 +131,7 @@
         this.onResize         = opts.hasOwnProperty('onResize') ? opts.onResize : true;
         this.lazyload         = opts.hasOwnProperty('lazyload') ? opts.lazyload : false;
         this.multiplyPixelRatio   = opts.hasOwnProperty('multiplyPixelRatio') ? opts.multiplyPixelRatio : true;
+        this.useClientWidth         = opts.hasOwnProperty('useClientWidth') ? opts.useClientWidth : false;
         this.targetAttribute       = opts.targetAttribute || 'src';
         this.sourceAttribute       = opts.sourceAttribute || 'data-src';
         this.scrolled         = false;
@@ -376,12 +377,15 @@
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
-        var targetWidth = image.getAttribute('data-width') || image.parentNode.clientWidth;
+        var targetWidth;
+        if (this.useClientWidth){
+            targetWidth = document.documentElement.clientWidth;
+        }
+        else targetWidth = image.getAttribute('data-width') || image.parentNode.clientWidth;
         if (this.multiplyPixelRatio){
             var pixelRatio = Imager.getPixelRatio();
             targetWidth = targetWidth * pixelRatio;
         }
-        console.log("target width is", targetWidth)
       return Imager.getClosestValue(targetWidth, this.availableWidths);
     };
 
