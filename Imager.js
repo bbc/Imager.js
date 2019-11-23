@@ -134,6 +134,7 @@
         this.useClientWidth         = opts.hasOwnProperty('useClientWidth') ? opts.useClientWidth : false;
         this.targetAttribute       = opts.targetAttribute || 'src';
         this.sourceAttribute       = opts.sourceAttribute || 'data-src';
+        this.conditional      =  (opts.conditional) ? opts.conditional : false;
         this.scrolled         = false;
         this.availablePixelRatios = opts.availablePixelRatios || [1, 2];
         this.availableWidths  = opts.availableWidths || defaultWidths;
@@ -362,6 +363,14 @@
 
         var src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute(this.sourceAttribute), computedWidth);
         image.setAttribute(this.targetAttribute, src);
+
+        // Conditionally set a second target
+        if (this.conditional){
+            if (image.classList.contains(this.conditional.selector)){
+                image.setAttribute(this.conditional.targetAttribute, src);
+            }
+        }
+
         var classSelector = this.selector;
         if (classSelector.startsWith(".")){
             classSelector = classSelector.substring(1);
