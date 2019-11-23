@@ -170,3 +170,20 @@ Set whether Imager should use the  page width rather than `img` container width.
 ```js
 new Imager({ useClientWidth: true });
 ```
+
+### `conditional`
+
+An object to specify a second target selector to conditionally be set based on whether a class is present.
+
+If `conditional.selector` is present on the image, then `conditional.targetAttribute` will also be set. 
+
+Used for cases where lazyloading has already happened.
+
+**Default value**: `false`
+
+```js
+new Imager({ conditional: {
+                selector: 'lazyloaded',
+                targetAttribute: 'src'
+            } });
+```
