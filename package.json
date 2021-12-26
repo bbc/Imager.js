@@ -1,44 +1,44 @@
 {
-  "name": "imager.js",
-  "version": "0.5.1",
-  "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
-  "main": "./Imager.js",
-  "scripts": {
-    "test": "./node_modules/karma/bin/karma start",
-    "posttest": "jshint Imager.js",
-    "test:watch": "npm run test -- --auto-watch --no-single-run",
-    "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/BBC-News/Imager.js.git"
-  },
-  "keywords": [
-    "responsive",
-    "srcset",
-    "images",
-    "resize",
-    "polyfill",
-    "shim",
-    "img",
-    "PictureFill"
-  ],
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "expect.js": "^0.3.0",
-    "jquery": "^1.10.2",
-    "jshint": "^2.4.3",
-    "karma": "^0.13.0",
-    "karma-browserstack-launcher": "^0.1.1",
-    "karma-expect": "^1.0.0",
-    "karma-html2js-preprocessor": "^0.1.0",
-    "karma-ievms": "^0.1.0",
-    "karma-mocha": "^0.2.0",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "karma-sinon": "^1.0.3",
-    "mocha": "^2.0.0",
-    "phantomjs": "^1.9.19",
-    "sinon": "^1.8.1",
-    "uglify-js": "^2.4.3"
-  }
+    "name": "imager.js",
+    "version": "0.5.1",
+    "description": "Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.",
+    "main": "./Imager.js",
+    "scripts": {
+        "test": "./node_modules/karma/bin/karma start",
+        "posttest": "jshint Imager.js",
+        "test:watch": "npm run test -- --auto-watch --no-single-run",
+        "build": "uglifyjs ./Imager.js -c -m -o ./Imager.min.js --source-map ./Imager.map.js && mv -f Imager.{map,min}.js ./dist"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/BBC-News/Imager.js.git"
+    },
+    "keywords": [
+        "responsive",
+        "srcset",
+        "images",
+        "resize",
+        "polyfill",
+        "shim",
+        "img",
+        "PictureFill"
+    ],
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "expect.js": "^0.3.0",
+        "jquery": "^3.6.0",
+        "jshint": "^2.4.3",
+        "karma": "^6.3.9",
+        "karma-browserstack-launcher": "^1.6.0",
+        "karma-expect": "^1.0.0",
+        "karma-html2js-preprocessor": "^1.1.0",
+        "karma-ievms": "^0.1.0",
+        "karma-mocha": "^2.0.1",
+        "karma-phantomjs-launcher": "^1.0.4",
+        "karma-sinon": "^1.0.3",
+        "mocha": "^9.1.3",
+        "phantomjs": "^2.1.7",
+        "sinon": "^1.17.7",
+        "uglify-js": "^3.14.5"
+    }
 }
