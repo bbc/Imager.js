@@ -1,0 +1,19 @@
+<style>
+  div { height: 10px; }
+  #hidden-element-implicit { height: 0; width: 0; }
+</style>
+
+<div id="visible-element" class="delayed-image-load" data-src="base/test/fixtures/media/A-320.jpg"></div>
+
+<div id="main" style="display: none;">
+  <div id="hidden-child" class="delayed-image-load" data-src="base/test/fixtures/media/B-320.jpg"></div>
+  <div class="child">
+    <div id="hidden-sub-child" class="delayed-image-load" data-src="base/test/fixtures/media/B-640.jpg"></div>
+  </div>
+</div>
+
+<div id="hidden-element" style="display: none;" class="delayed-image-load" data-src="base/test/fixtures/media/C-320.jpg"></div>
+<div id="hidden-element-visibility" style="visibility: hidden;" class="delayed-image-load" data-src="base/test/fixtures/media/C-320.jpg"></div>
+<div id="hidden-element-implicit" class="delayed-image-load" data-src="base/test/fixtures/media/C-320.jpg">
+  <!-- no height -->
+</div>
