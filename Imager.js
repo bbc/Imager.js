@@ -124,6 +124,7 @@
         this.widthsMap        = {};
         this.refreshPixelRatio();
         this.widthInterpolator = opts.widthInterpolator || returnFn;
+        this.cssBackgrounds    = opts.cssBackgrounds || false;
 
         // Needed as IE8 adds a default `width`/`height` attribute…
         this.gif.removeAttribute('height');
@@ -161,7 +162,13 @@
 
         if (elements && elements.length) {
             var additional = applyEach(elements, returnFn);
-            this.changeDivsToEmptyImages(additional);
+
+            if (!this.cssBackgrounds) {
+              this.changeDivsToEmptyImages(additional);
+            } else {
+              this.prepareCssBackground(additional);
+            }
+
             this.divs = this.divs.concat(additional);
         }
     };
@@ -187,7 +194,12 @@
                 window.clearInterval(self.interval);
             }
 
-            this.changeDivsToEmptyImages(elements);
+            if (!this.cssBackgrounds) {
+              this.changeDivsToEmptyImages(elements);
+            } else {
+              this.prepareCssBackground(elements);
+            }
+
             this.scrolled = false;
         }
     };
@@ -266,6 +278,19 @@
         }
     };
 
+    Imager.prototype.prepareCssBackground = function (elements) {
+      var self = this;
+
+      applyEach(elements, function(element) {
+        var elementClassName = element.getAttribute('data-class');
+        element.className = (elementClassName ? elementClassName + ' ' : '') + self.className;
+      });
+
+      if (this.initialized) {
+          this.checkImagesNeedReplacing(elements);
+      }
+    };
+
     /**
      * Indicates if an element is an Imager placeholder
      *
@@ -326,9 +351,14 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, naturalWidth;
 
-	naturalWidth = Imager.getNaturalWidth(image);
-        computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
-                                                                   : this.determineAppropriateResolution(image);
+        naturalWidth = Imager.getNaturalWidth(image);
+        if (!this.cssBackgrounds) {
+          computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
+                                                                     : this.determineAppropriateResolution(image);
+        } else {
+          computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
+                                                                     : this.getBackgroundElementWidth(image);
+        }
 
         image.width = computedWidth;
 
@@ -336,13 +366,25 @@
             return;
         }
 
-        image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
-        image.removeAttribute('width');
-        image.removeAttribute('height');
+        if (!this.cssBackgrounds) {
+          image.src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
+          image.removeAttribute('width');
+          image.removeAttribute('height');
+        } else {
+          this.applyBackgroundImage(image, this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth));
+        }
+    };
+
+    Imager.prototype.applyBackgroundImage = function (image, url) {
+      image.style.backgroundImage = 'url(' + url + ')';
     };
 
     Imager.prototype.determineAppropriateResolution = function (image) {
       return Imager.getClosestValue(image.getAttribute('data-width') || image.parentNode.clientWidth, this.availableWidths);
+    };
+
+    Imager.prototype.getBackgroundElementWidth = function (element) {
+      return Imager.getClosestValue(element.clientWidth, this.availableWidths);
     };
 
     /**
