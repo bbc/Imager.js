@@ -231,6 +231,74 @@ describe('Imager.js', function () {
         });
     });
 
+    describe('cleanup', function() {
+        var removeEvtStub, getExpectedEvtName;
+
+        beforeEach(function() {
+            if(document.removeEventListener) {
+                removeEvtStub = sandbox.stub(window, 'removeEventListener');
+                getExpectedEvtName = function(name) {
+                    return name;
+                };
+
+            } else {
+                removeEvtStub = sandbox.stub(window, 'detachEvent');
+                getExpectedEvtName = function(name) {
+                    return 'on' + name;
+                };
+            }
+        });
+
+        it('should cleanup after using onResize option', function(done) {
+            fixtures = loadFixtures('cleanup');
+            var imgr = new Imager({
+                onResize: true
+            });
+            imgr.ready(function () {
+                expect(imgr.resizeListeners.length).to.be(1);
+                expect(imgr.scrollListeners.length).to.be(0);
+
+                imgr.cleanup();
+
+                expect(imgr.resizeListeners.length).to.be(0);
+                expect(imgr.scrollListeners.length).to.be(0);
+
+                expect(removeEvtStub.called).to.be(true);
+                expect(removeEvtStub.callCount).to.be(1);
+                expect(removeEvtStub.firstCall.args[0]).to.be(getExpectedEvtName('resize'));
+                done();
+            });
+        });
+
+        it('should cleanup after using lazyload option', function(done) {
+            sandbox.stub(window, 'clearInterval');
+            fixtures = loadFixtures('cleanup');
+            var imgr = new Imager({
+                lazyload: true
+            });
+            imgr.ready(function () {
+                expect(imgr.resizeListeners.length).to.be(2);
+                expect(imgr.scrollListeners.length).to.be(1);
+                expect(imgr.interval).to.be.defined;
+
+                imgr.cleanup();
+
+                expect(imgr.resizeListeners.length).to.be(0);
+                expect(imgr.scrollListeners.length).to.be(0);
+                expect(imgr.interval).to.be.null;
+
+                expect(removeEvtStub.called).to.be(true);
+                expect(removeEvtStub.callCount).to.be(3);
+                expect(removeEvtStub.firstCall.args[0]).to.be(getExpectedEvtName('resize'));
+                expect(removeEvtStub.secondCall.args[0]).to.be(getExpectedEvtName('resize'));
+                expect(removeEvtStub.thirdCall.args[0]).to.be(getExpectedEvtName('scroll'));
+                expect(window.clearInterval.called).to.be(true);
+
+                done();
+            });
+        });
+    });
+
     describe('isThisElementOnScreen', function(){
         var offsetStub, imgr;
 
